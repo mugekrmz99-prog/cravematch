@@ -53,8 +53,8 @@ npm run build
 
 1. **Çift Senkronizasyonu & Eşleşme:**
    - Canlı QR kod okuma
-   - 6 haneli PIN / Kod ile tek dokunuşla eşleşme (`CRAVE-9821`)
-   - Otomatik cihaz kimliği (Müge 👩 ve Cihat 👨)
+   - 6 haneli PIN / Masa Kodu ile tek dokunuşla eşleşme (`CRAVE-9821`)
+   - Dinamik partner kimliği ve avatar seçimi
    - İnternet üzerinden canlı çift senkronizasyonu (SSE / Polling / BroadcastChannel)
 
 2. **İnteraktif Çift Sohbeti:**

@@ -277,6 +277,7 @@ function pairingApiPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [react(), tailwindcss(), pairingApiPlugin()],
     resolve: {
       alias: {
