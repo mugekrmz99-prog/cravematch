@@ -1,6 +1,9 @@
 // Real-time Pairing & Chat Synchronization Engine
-// Uses Server-Sent Events (SSE) for instant cross-device live sync,
-// BroadcastChannel for sub-millisecond local tabs, and persistent backend DB.
+// Uses MQTT over Secure WebSockets (WSS) for true cross-device, cross-network mobile sync
+// (works across cellular 4G/5G, separate Wi-Fi, and GitHub Pages static hosting),
+// complemented with BroadcastChannel for instant local tabs and optional backend DB.
+
+import mqtt from 'mqtt';
 
 export interface SyncPayload<T = unknown> {
   id?: string;
@@ -18,6 +21,7 @@ export interface SyncPayload<T = unknown> {
     | 'ROLL_DICE';
   pairCode: string;
   sender: string;
+  sessionId?: string;
   timestamp: number;
   data: T;
 }
@@ -36,13 +40,16 @@ class PairingSyncService {
   private listeners: Set<SyncListener> = new Set();
   private activePairCode: string = 'CRAVE-9821';
   private activeUser: string = '';
-  private eventSource: EventSource | null = null;
-  private pollingInterval: ReturnType<typeof setInterval> | null = null;
+  private sessionId: string = `sess-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+  private mqttClient: mqtt.MqttClient | null = null;
+  private currentSubscribedTopic: string | null = null;
   private seenEventIds: Set<string> = new Set();
   private storageHandler: ((e: StorageEvent) => void) | null = null;
   private networkInfo: NetworkInfo | null = null;
+  private isConnectingMqtt: boolean = false;
 
   constructor() {
+    // 1. BroadcastChannel for zero-latency communication across tabs on the same machine
     if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
       try {
         this.channel = new BroadcastChannel('cravematch_pair_channel');
@@ -50,10 +57,11 @@ class PairingSyncService {
           this.handleIncomingPayload(event.data);
         };
       } catch (err) {
-        console.warn('BroadcastChannel not supported or blocked:', err);
+        console.warn('BroadcastChannel unavailable:', err);
       }
     }
 
+    // 2. LocalStorage storage event fallback
     if (typeof window !== 'undefined') {
       this.storageHandler = (e: StorageEvent) => {
         if (e.key === 'cravematch_last_sync_event' && e.newValue) {
@@ -68,21 +76,28 @@ class PairingSyncService {
       window.addEventListener('storage', this.storageHandler);
     }
 
-    // Connect real-time stream
-    this.initStream();
+    // 3. Connect to MQTT Cloud Pub/Sub
+    this.initMqtt();
     this.fetchNetworkInfo();
   }
 
   public setActiveUser(name: string) {
-    if (this.activeUser === name) return;
-    this.activeUser = name;
-    this.initStream();
+    const cleanName = (name || '').trim();
+    if (this.activeUser === cleanName) return;
+    this.activeUser = cleanName;
+    if (cleanName) {
+      this.announcePresence();
+    }
   }
 
   public setPairCode(code: string) {
-    if (!code || this.activePairCode === code) return;
-    this.activePairCode = code;
-    this.initStream();
+    const cleanCode = (code || '').trim().toUpperCase();
+    if (!cleanCode || this.activePairCode === cleanCode) return;
+    this.activePairCode = cleanCode;
+    this.resubscribeMqttTopic();
+    if (this.activeUser) {
+      this.announcePresence();
+    }
   }
 
   public getPairCode(): string {
@@ -91,6 +106,99 @@ class PairingSyncService {
 
   public getUser(): string {
     return this.activeUser;
+  }
+
+  private getTopicForRoom(code: string): string {
+    const clean = (code || 'CRAVE-9821').trim().toUpperCase();
+    return `cravematch/v2/room/${encodeURIComponent(clean)}`;
+  }
+
+  // Connect to public secure WebSocket MQTT broker
+  private initMqtt() {
+    if (typeof window === 'undefined') return;
+    if (this.mqttClient || this.isConnectingMqtt) return;
+    this.isConnectingMqtt = true;
+
+    try {
+      const brokerUrl = 'wss://broker.emqx.io:8084/mqtt';
+      const clientId = `crave_${this.sessionId}`;
+
+      const client = mqtt.connect(brokerUrl, {
+        clientId,
+        clean: true,
+        connectTimeout: 7000,
+        reconnectPeriod: 2500,
+        keepalive: 30
+      });
+
+      this.mqttClient = client;
+
+      client.on('connect', () => {
+        console.log('[CraveMatch Sync] Connected to Cloud MQTT broker!');
+        this.isConnectingMqtt = false;
+        this.resubscribeMqttTopic();
+        if (this.activeUser) {
+          this.announcePresence();
+        }
+      });
+
+      client.on('message', (topic, messageBuffer) => {
+        try {
+          const str = messageBuffer.toString('utf8');
+          const payload: SyncPayload = JSON.parse(str);
+          this.handleIncomingPayload(payload);
+        } catch (err) {
+          console.warn('[CraveMatch Sync] Failed to parse message:', err);
+        }
+      });
+
+      client.on('error', (err) => {
+        console.warn('[CraveMatch Sync] MQTT Error:', err);
+      });
+
+      client.on('offline', () => {
+        console.log('[CraveMatch Sync] MQTT client offline, reconnecting...');
+      });
+    } catch (err) {
+      this.isConnectingMqtt = false;
+      console.warn('[CraveMatch Sync] MQTT initialization failed:', err);
+    }
+  }
+
+  private resubscribeMqttTopic() {
+    if (!this.mqttClient || !this.mqttClient.connected) return;
+
+    const newTopic = this.getTopicForRoom(this.activePairCode);
+    if (this.currentSubscribedTopic === newTopic) return;
+
+    if (this.currentSubscribedTopic) {
+      try {
+        this.mqttClient.unsubscribe(this.currentSubscribedTopic);
+      } catch {
+        // ignore
+      }
+    }
+
+    this.mqttClient.subscribe(newTopic, { qos: 1 }, (err) => {
+      if (!err) {
+        this.currentSubscribedTopic = newTopic;
+        console.log('[CraveMatch Sync] Subscribed to room:', newTopic);
+      } else {
+        console.warn('[CraveMatch Sync] Subscription error:', err);
+      }
+    });
+  }
+
+  // Announces user's presence to partner over MQTT
+  public announcePresence(customName?: string) {
+    const sender = customName || this.activeUser;
+    if (!sender) return;
+
+    this.broadcast('PARTNER_CONNECTED', sender, {
+      name: sender,
+      pairCode: this.activePairCode,
+      timestamp: Date.now()
+    });
   }
 
   public async fetchNetworkInfo(): Promise<NetworkInfo | null> {
@@ -111,19 +219,6 @@ class PairingSyncService {
     return this.networkInfo;
   }
 
-  public async getRoomState(): Promise<any> {
-    if (typeof window === 'undefined') return null;
-    try {
-      const res = await fetch(`/api/db/state?code=${encodeURIComponent(this.activePairCode)}`);
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch {
-      // ignore
-    }
-    return null;
-  }
-
   public subscribe(listener: SyncListener) {
     this.listeners.add(listener);
     return () => {
@@ -131,64 +226,22 @@ class PairingSyncService {
     };
   }
 
-  private initStream() {
-    if (typeof window === 'undefined') return;
-
-    if (this.eventSource) {
-      this.eventSource.close();
-      this.eventSource = null;
-    }
-
-    try {
-      const url = `/api/db/events?code=${encodeURIComponent(this.activePairCode)}&user=${encodeURIComponent(this.activeUser)}`;
-      const es = new EventSource(url);
-      this.eventSource = es;
-
-      const handleEvent = (type: SyncPayload['type'], e: MessageEvent) => {
-        try {
-          const parsed = JSON.parse(e.data);
-          this.handleIncomingPayload({
-            id: `sse-${Date.now()}-${Math.random()}`,
-            type,
-            pairCode: this.activePairCode,
-            sender: parsed.user || parsed.data?.author || 'server',
-            timestamp: parsed.timestamp || Date.now(),
-            data: parsed.data || parsed
-          });
-        } catch {
-          // ignore
-        }
-      };
-
-      es.addEventListener('INITIAL_STATE', (e) => handleEvent('INITIAL_STATE', e));
-      es.addEventListener('CHAT_MESSAGE', (e) => handleEvent('CHAT_MESSAGE', e));
-      es.addEventListener('PARTNER_CONNECTED', (e) => handleEvent('PARTNER_CONNECTED', e));
-      es.addEventListener('PARTNER_DISCONNECTED', (e) => handleEvent('PARTNER_DISCONNECTED', e));
-      es.addEventListener('DISH_MATCH', (e) => handleEvent('DISH_MATCH', e));
-      es.addEventListener('SWIPE_EVENT', (e) => handleEvent('SWIPE_EVENT', e));
-      es.addEventListener('CART_UPDATE', (e) => handleEvent('CART_UPDATE', e));
-      es.addEventListener('DICE_ROLL', (e) => handleEvent('DICE_ROLL', e));
-      es.addEventListener('PROFILE_UPDATE', (e) => handleEvent('PROFILE_UPDATE', e));
-
-      es.onerror = () => {
-        // Fallback to polling if SSE is disconnected
-        if (!this.pollingInterval) {
-          this.startHttpPolling();
-        }
-      };
-    } catch (err) {
-      console.warn('SSE failed to initialize, starting polling:', err);
-      this.startHttpPolling();
-    }
-  }
-
   private handleIncomingPayload(payload: SyncPayload) {
     if (!payload || !payload.type) return;
 
-    if (payload.pairCode && this.activePairCode && payload.pairCode !== this.activePairCode) {
+    // Discard messages originating from the same browser session
+    if (payload.sessionId && payload.sessionId === this.sessionId) {
       return;
     }
 
+    // Filter by pairCode if both payload and activePairCode are present
+    const payloadRoom = (payload.pairCode || '').trim().toUpperCase();
+    const activeRoom = (this.activePairCode || '').trim().toUpperCase();
+    if (payloadRoom && activeRoom && payloadRoom !== activeRoom) {
+      return;
+    }
+
+    // Deduplicate repeated event deliveries
     const eventKey =
       payload.id ||
       `${payload.type}_${payload.sender}_${payload.timestamp}_${JSON.stringify(payload.data || '')}`;
@@ -197,7 +250,7 @@ class PairingSyncService {
     }
     this.seenEventIds.add(eventKey);
 
-    if (this.seenEventIds.size > 200) {
+    if (this.seenEventIds.size > 300) {
       const first = this.seenEventIds.values().next().value;
       if (first) this.seenEventIds.delete(first);
     }
@@ -221,21 +274,34 @@ class PairingSyncService {
       id: eventId,
       type,
       pairCode: this.activePairCode,
-      sender,
+      sender: sender || this.activeUser || 'User',
+      sessionId: this.sessionId,
       timestamp: Date.now(),
       data
     };
 
     this.seenEventIds.add(eventId);
 
-    // 1. BroadcastChannel
+    // 1. MQTT Cloud Publish (cross-device & cellular)
+    if (this.mqttClient && this.mqttClient.connected) {
+      try {
+        const topic = this.getTopicForRoom(this.activePairCode);
+        this.mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
+      } catch (err) {
+        console.warn('[CraveMatch Sync] MQTT publish error:', err);
+      }
+    } else if (this.mqttClient && !this.mqttClient.connected) {
+      this.resubscribeMqttTopic();
+    }
+
+    // 2. BroadcastChannel (local tabs)
     try {
       this.channel?.postMessage(payload);
     } catch {
       // ignore
     }
 
-    // 2. localStorage
+    // 3. localStorage (same origin tabs)
     try {
       if (typeof window !== 'undefined') {
         localStorage.setItem('cravematch_last_sync_event', JSON.stringify(payload));
@@ -244,10 +310,10 @@ class PairingSyncService {
       // ignore
     }
 
-    // 3. Persistent DB Endpoint
+    // 4. Optional backend endpoint push (silent offline fallback)
     this.pushToDatabase(type, payload);
 
-    // Notify local listeners
+    // Notify local subscribers
     this.notifyListeners(payload);
   }
 
@@ -256,91 +322,46 @@ class PairingSyncService {
       if (typeof window === 'undefined') return;
 
       if (type === 'CHAT_MESSAGE') {
-        await fetch('/api/db/message', {
+        fetch('/api/db/message', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pairCode: this.activePairCode, message: payload.data })
-        });
+        }).catch(() => {});
       } else if (type === 'PROFILE_UPDATE') {
-        await fetch('/api/db/profile', {
+        fetch('/api/db/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pairCode: this.activePairCode, profile: payload.data })
-        });
+        }).catch(() => {});
       } else if (type === 'CART_UPDATE' || type === 'GROCERY_UPDATE') {
-        await fetch('/api/db/cart', {
+        fetch('/api/db/cart', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pairCode: this.activePairCode, cart: payload.data })
-        });
+        }).catch(() => {});
       } else if (type === 'DICE_ROLL' || type === 'ROLL_DICE') {
-        await fetch('/api/db/dice', {
+        fetch('/api/db/dice', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pairCode: this.activePairCode, winner: payload.data })
-        });
-      } else {
-        // Fallback pair sync
-        await fetch('/api/pair/sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        }).catch(() => {});
       }
     } catch {
       // Offline fallback
     }
   }
 
-  public async recordSwipe(dishId: string, liked: boolean): Promise<{ isMatch: boolean }> {
-    try {
-      const res = await fetch('/api/db/swipe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pairCode: this.activePairCode,
-          user: this.activeUser,
-          dishId,
-          liked
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return { isMatch: !!data.isMatch };
-      }
-    } catch {
-      // ignore
-    }
-    return { isMatch: false };
-  }
-
-  private startHttpPolling() {
-    if (typeof window === 'undefined') return;
-    if (this.pollingInterval) clearInterval(this.pollingInterval);
-
-    this.pollingInterval = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/pair/sync?code=${encodeURIComponent(this.activePairCode)}`);
-        if (res.ok) {
-          const events: SyncPayload[] = await res.json();
-          if (Array.isArray(events)) {
-            events.forEach((ev) => this.handleIncomingPayload(ev));
-          }
-        }
-      } catch {
-        // Fallback silently
-      }
-    }, 2500);
-  }
-
   public destroy() {
-    if (this.eventSource) {
-      this.eventSource.close();
-      this.eventSource = null;
-    }
-    if (this.pollingInterval) {
-      clearInterval(this.pollingInterval);
-      this.pollingInterval = null;
+    if (this.mqttClient) {
+      try {
+        if (this.currentSubscribedTopic) {
+          this.mqttClient.unsubscribe(this.currentSubscribedTopic);
+        }
+        this.mqttClient.end(true);
+      } catch {
+        // ignore
+      }
+      this.mqttClient = null;
     }
     if (typeof window !== 'undefined' && this.storageHandler) {
       window.removeEventListener('storage', this.storageHandler);

@@ -128,7 +128,7 @@ async function runTests() {
   // TEST 4: Mock Data Recipe, Badges & Step Integrity
   console.log('\n🍲 TEST 4: Mock Data Recipe & Badges Integrity');
   try {
-    const mockDataCode = fs.readFileSync('src/data/mockData.ts', 'utf8');
+    const mockDataCode = fs.readFileSync('src/data/mockData.ts', 'utf8') + (fs.existsSync('src/data/dishesData.ts') ? fs.readFileSync('src/data/dishesData.ts', 'utf8') : '');
     assert(mockDataCode.includes('INITIAL_DISHES'), 'INITIAL_DISHES array exported');
     assert(mockDataCode.includes('INITIAL_BADGES'), 'INITIAL_BADGES array exported');
     assert(mockDataCode.includes('INITIAL_TASTE_DUELS'), 'INITIAL_TASTE_DUELS array exported');

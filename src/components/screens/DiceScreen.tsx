@@ -7,6 +7,7 @@ import { CraveLogo } from '../CraveLogo';
 import { ThreeDDice } from '../ThreeDDice';
 import { sound } from '../../utils/sound';
 import { translations } from '../../utils/i18n';
+import { pairingSync } from '../../utils/pairingSync';
 
 interface ContenderItem {
   id: string;
@@ -39,45 +40,95 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   const myName = user.name || (lang === 'tr' ? 'Ben' : 'Me');
   const partnerName = user.partner.name || (lang === 'tr' ? 'Partnerim' : 'Partner');
 
-  const [contenders, setContenders] = useState<ContenderItem[]>([
-    {
-      id: 'taco',
-      name: 'Meksika Usulü Çıtır Taco',
-      matchScore: 100,
-      selected: true,
-      dishRef: dishes.find(d => d.id === 'dish-3'),
-      image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=200&q=80',
-      partners: [myName, partnerName]
-    },
-    {
-      id: 'ramen',
-      name: 'Acılı Tonkotsu Ramen',
-      matchScore: 50,
-      selected: true,
-      dishRef: dishes.find(d => d.id === 'dish-4'),
-      image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=200&q=80',
-      partners: [partnerName]
-    },
-    {
-      id: 'burger',
-      name: 'Gurme Trüflü Dana Burger',
-      matchScore: 85,
-      selected: true,
-      dishRef: dishes.find(d => d.id === 'dish-2'),
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=200&q=80',
-      partners: [myName]
-    },
-    {
-      id: 'pasta',
-      name: 'Sarımsaklı Karidesli Makarna',
-      matchScore: 96,
-      selected: true,
-      dishRef: dishes.find(d => d.id === 'dish-1'),
-      image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=200&q=80',
-      partners: [myName, partnerName]
-    }
-  ]);
+  // Helper to build initial contenders dynamically from authentic dishes
+  const buildInitialContenders = (): ContenderItem[] => {
+    const list: ContenderItem[] = [];
+    const addedIds = new Set<string>();
 
+    if (initialSelectedDish) {
+      list.push({
+        id: initialSelectedDish.id,
+        name: initialSelectedDish.title,
+        matchScore: initialSelectedDish.matchScore || 100,
+        selected: true,
+        dishRef: initialSelectedDish,
+        image: initialSelectedDish.image,
+        partners: [myName, partnerName]
+      });
+      addedIds.add(initialSelectedDish.id);
+    }
+
+    // 1. Prioritize dishes liked by user or partner
+    const likedDishes = (dishes || []).filter(
+      (d) => (d.userLiked || d.partnerLiked) && !addedIds.has(d.id)
+    );
+    for (const d of likedDishes) {
+      list.push({
+        id: d.id,
+        name: d.title,
+        matchScore: d.matchScore || (d.userLiked && d.partnerLiked ? 100 : 88),
+        selected: true,
+        dishRef: d,
+        image: d.image,
+        partners: [
+          ...(d.userLiked ? [myName] : []),
+          ...(d.partnerLiked ? [partnerName] : [])
+        ]
+      });
+      addedIds.add(d.id);
+      if (list.length >= 6) break;
+    }
+
+    // 2. If fewer than 4 contenders, supplement with popular authentic Turkish recipes
+    const popularTitles = [
+      'Karnıyarık',
+      'Kayseri Mantısı',
+      'Bursa İskender Kebabı',
+      'Süzme Kırmızı Mercimek Çorbası',
+      'Gaziantep Baklavası',
+      'Hünkar Beğendi'
+    ];
+
+    for (const popTitle of popularTitles) {
+      if (list.length >= 4) break;
+      const found = (dishes || []).find(
+        (d) => !addedIds.has(d.id) && d.title.toLowerCase().includes(popTitle.toLowerCase())
+      );
+      if (found) {
+        list.push({
+          id: found.id,
+          name: found.title,
+          matchScore: found.matchScore || 90,
+          selected: true,
+          dishRef: found,
+          image: found.image,
+          partners: [myName, partnerName]
+        });
+        addedIds.add(found.id);
+      }
+    }
+
+    // 3. Fallback: take first available dishes if still < 4
+    for (const d of dishes || []) {
+      if (list.length >= 4) break;
+      if (!addedIds.has(d.id)) {
+        list.push({
+          id: d.id,
+          name: d.title,
+          matchScore: d.matchScore || 85,
+          selected: true,
+          dishRef: d,
+          image: d.image,
+          partners: [myName, partnerName]
+        });
+        addedIds.add(d.id);
+      }
+    }
+
+    return list;
+  };
+
+  const [contenders, setContenders] = useState<ContenderItem[]>(buildInitialContenders);
   const [isRolling, setIsRolling] = useState(false);
   const [winner, setWinner] = useState<ContenderItem | null>(null);
   const [cartAdded, setCartAdded] = useState(false);
@@ -86,13 +137,15 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   const [newDishName, setNewDishName] = useState('');
   const [warningMessage, setWarningMessage] = useState<string | null>(null);
 
-  // If initial dish provided and not present, select it
+  // If initial dish provided and not present, select or prepend it
   useEffect(() => {
     if (initialSelectedDish) {
-      setContenders(prev => {
-        const exists = prev.find(c => c.dishRef?.id === initialSelectedDish.id || c.name === initialSelectedDish.title);
+      setContenders((prev) => {
+        const exists = prev.find(
+          (c) => c.dishRef?.id === initialSelectedDish.id || c.name === initialSelectedDish.title
+        );
         if (exists) {
-          return prev.map(c => c.id === exists.id ? { ...c, selected: true } : c);
+          return prev.map((c) => (c.id === exists.id ? { ...c, selected: true } : c));
         }
         return [
           {
@@ -108,17 +161,79 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
         ];
       });
     }
-  }, [initialSelectedDish]);
+  }, [initialSelectedDish, myName, partnerName]);
+
+  // Synchronize incoming roll events across devices
+  useEffect(() => {
+    const unsub = pairingSync.subscribe((payload) => {
+      if (payload.type === 'DICE_ROLL') {
+        const data = payload.data as any;
+        if (!data) return;
+
+        setIsRolling(true);
+        setWinner(null);
+        setCartAdded(false);
+        sound.playDiceRoll();
+
+        setTimeout(() => {
+          setIsRolling(false);
+          const targetFace = data.face || Math.floor(Math.random() * 6) + 1;
+          setDiceFace(targetFace);
+
+          // Find winner dish in contenders or global dishes
+          const foundInContenders = contenders.find(
+            (c) => c.id === data.winnerId || c.name === data.winnerName
+          );
+          const foundDish =
+            data.winnerDish ||
+            dishes.find((d) => d.id === data.winnerId || d.title === data.winnerName);
+
+          const winnerItem: ContenderItem = foundInContenders || {
+            id: data.winnerId || `dish-${Date.now()}`,
+            name: data.winnerName || foundDish?.title || 'Seçilen Yemek',
+            matchScore: 100,
+            selected: true,
+            dishRef: foundDish,
+            image:
+              foundDish?.image ||
+              'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80',
+            partners: [myName, partnerName]
+          };
+
+          setWinner(winnerItem);
+          sound.playSuccess();
+
+          if (winnerItem.dishRef) {
+            onAddToCart(winnerItem.dishRef);
+            setCartAdded(true);
+          }
+
+          try {
+            confetti({
+              particleCount: 75,
+              spread: 80,
+              origin: { y: 0.4 },
+              colors: ['#F2A900', '#E05A3D', '#2B6777', '#FFFFFF']
+            });
+          } catch {
+            // fallback
+          }
+        }, 1250);
+      }
+    });
+
+    return unsub;
+  }, [contenders, dishes, myName, partnerName, onAddToCart]);
 
   const handleToggleSelect = (id: string) => {
     sound.playTap();
-    setContenders(prev =>
-      prev.map(c => c.id === id ? { ...c, selected: !c.selected } : c)
+    setContenders((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, selected: !c.selected } : c))
     );
   };
 
   const handleRoll = () => {
-    const active = contenders.filter(c => c.selected);
+    const active = contenders.filter((c) => c.selected);
     if (active.length === 0) {
       setWarningMessage(t.chooseAtLeastOneDish);
       setTimeout(() => setWarningMessage(null), 2500);
@@ -130,10 +245,18 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
     setCartAdded(false);
     sound.playDiceRoll();
 
-    // Pick random winner
+    // Pick random winner from active contenders
     const picked = active[Math.floor(Math.random() * active.length)];
     const randomFace = Math.floor(Math.random() * 6) + 1;
     setDiceFace(randomFace);
+
+    // Broadcast DICE_ROLL event to partner's phone in real-time
+    pairingSync.broadcast('DICE_ROLL', user.name || 'User', {
+      winnerId: picked.id,
+      winnerName: picked.name,
+      winnerDish: picked.dishRef,
+      face: randomFace
+    });
 
     setTimeout(() => {
       setIsRolling(false);
@@ -170,7 +293,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=80',
       partners: [myName, partnerName]
     };
-    setContenders(prev => [newContender, ...prev]);
+    setContenders((prev) => [newContender, ...prev]);
     setNewDishName('');
     setShowAddModal(false);
   };

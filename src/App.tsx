@@ -188,6 +188,16 @@ export default function App() {
     currentTabRef.current = currentTab;
   }, [currentTab]);
 
+  // Auto-dismiss partner welcome banner after 4 seconds
+  useEffect(() => {
+    if (partnerWelcomeBanner) {
+      const timer = setTimeout(() => {
+        setPartnerWelcomeBanner(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [partnerWelcomeBanner]);
+
   // Cleanup pairingSync on component unmount
   useEffect(() => {
     return () => {
@@ -228,6 +238,39 @@ export default function App() {
       })
       .catch(() => {});
   }, [user.name, user.partner.pairCode]);
+
+  // Grocery cart state updater with real-time MQTT broadcast
+  const handleUpdateGroceries = (updatedGroceries: GroceryItem[]) => {
+    setGroceries(updatedGroceries);
+    pairingSync.broadcast('CART_UPDATE', user.name || 'User', updatedGroceries);
+  };
+
+  // Handle adding recipe ingredients to grocery cart automatically with MQTT broadcast
+  const handleAddIngredientsToGrocery = (dish: Dish, portions: number = 2) => {
+    const ratio = portions / (dish.basePortions || 2);
+    setGroceries((prev) => {
+      const existingNames = new Set(prev.map((item) => item.name.toLowerCase().trim()));
+      const newItems: GroceryItem[] = (dish.ingredients || [])
+        .map((ing, idx) => ({
+          id: `recipe-item-${Date.now()}-${idx}`,
+          name: `${Math.round(ing.amount * ratio * 10) / 10} ${ing.unit} ${ing.name}`,
+          fromRecipe: dish.title,
+          checked: false,
+          addedBy: user.name,
+          category: ing.category || 'Pantry'
+        }))
+        .filter((item) => !existingNames.has(item.name.toLowerCase().trim()));
+
+      if (newItems.length === 0) {
+        return prev;
+      }
+      const combined = [...newItems, ...prev];
+      pairingSync.broadcast('CART_UPDATE', user.name || 'User', combined);
+      return combined;
+    });
+    setSelectedRecipeDish(dish);
+    sound.playSuccess();
+  };
 
   // Real-time synchronization listener (SSE, cross-device & cross-tab)
   useEffect(() => {
@@ -297,7 +340,42 @@ export default function App() {
         if (Array.isArray(items)) {
           setGroceries(items);
         }
+      } else if (payload.type === 'SWIPE_EVENT') {
+        const swipeData = payload.data as any;
+        if (swipeData && swipeData.dishId) {
+          const { dishId, direction } = swipeData;
+          if (direction === 'like' || direction === 'super') {
+            setDishes((prev) =>
+              prev.map((d) => {
+                if (d.id === dishId) {
+                  const wasUserLiked = d.userLiked;
+                  const updated = { ...d, partnerLiked: true };
+                  if (wasUserLiked) {
+                    sound.playSuccess();
+                    try {
+                      confetti({ particleCount: 90, spread: 80, origin: { y: 0.5 } });
+                    } catch {}
+                  }
+                  return updated;
+                }
+                return d;
+              })
+            );
+          }
+        }
+      } else if (payload.type === 'DICE_ROLL') {
+        const rollData = payload.data as any;
+        if (rollData && rollData.winnerDish) {
+          setSelectedRecipeDish(rollData.winnerDish);
+          handleAddIngredientsToGrocery(rollData.winnerDish, 2);
+        }
       } else if (payload.type === 'DISH_MATCH') {
+        const matchData = payload.data as any;
+        if (matchData && matchData.dishId) {
+          setDishes((prev) =>
+            prev.map((d) => (d.id === matchData.dishId ? { ...d, partnerLiked: true } : d))
+          );
+        }
         sound.playSuccess();
         try {
           confetti({ particleCount: 100, spread: 90, origin: { y: 0.5 } });
@@ -388,29 +466,32 @@ export default function App() {
     setDishes((prev) => [...imported, ...prev]);
   };
 
-  // Handle adding recipe ingredients to grocery cart automatically without duplication
-  const handleAddIngredientsToGrocery = (dish: Dish, portions: number = 2) => {
-    const ratio = portions / (dish.basePortions || 2);
-    setGroceries((prev) => {
-      const existingNames = new Set(prev.map((item) => item.name.toLowerCase().trim()));
-      const newItems: GroceryItem[] = dish.ingredients
-        .map((ing, idx) => ({
-          id: `recipe-item-${Date.now()}-${idx}`,
-          name: `${Math.round(ing.amount * ratio * 10) / 10} ${ing.unit} ${ing.name}`,
-          fromRecipe: dish.title,
-          checked: false,
-          addedBy: user.name,
-          category: ing.category || 'Pantry'
-        }))
-        .filter((item) => !existingNames.has(item.name.toLowerCase().trim()));
+  // Handle dish swipe with real-time MQTT broadcasting and mutual match detection
+  const handleSwipe = (dish: Dish, direction: 'like' | 'pass' | 'super') => {
+    const isLike = direction === 'like' || direction === 'super';
 
-      if (newItems.length === 0) {
-        return prev;
-      }
-      return [...newItems, ...prev];
+    setDishes((prev) =>
+      prev.map((d) => (d.id === dish.id ? { ...d, userLiked: isLike } : d))
+    );
+
+    pairingSync.broadcast('SWIPE_EVENT', user.name || 'User', {
+      dishId: dish.id,
+      dishTitle: dish.title,
+      direction,
+      timestamp: Date.now()
     });
-    setSelectedRecipeDish(dish);
-    sound.playSuccess();
+
+    if (isLike && dish.partnerLiked) {
+      pairingSync.broadcast('DISH_MATCH', user.name || 'User', {
+        dishId: dish.id,
+        dishTitle: dish.title,
+        dish
+      });
+      sound.playSuccess();
+      try {
+        confetti({ particleCount: 100, spread: 90, origin: { y: 0.5 } });
+      } catch {}
+    }
   };
 
   // Switch to recipe screen
@@ -625,6 +706,7 @@ export default function App() {
                   onNavigateToDice={handleNavigateToDice}
                   onNavigateToProfile={() => setCurrentTab('profile')}
                   onOpenSettings={() => setIsSettingsOpen(true)}
+                  onSwipe={handleSwipe}
                 />
               </motion.div>
             )}
@@ -663,7 +745,7 @@ export default function App() {
                   groceries={groceries}
                   selectedDish={selectedRecipeDish}
                   lang={lang}
-                  onUpdateGroceries={setGroceries}
+                  onUpdateGroceries={handleUpdateGroceries}
                   onNavigateToDice={() => setCurrentTab('dice')}
                   onNavigateToRecipe={handleOpenRecipe}
                 />

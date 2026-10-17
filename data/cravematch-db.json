@@ -412,6 +412,118 @@
         }
       ],
       "diceWinner": null
+    },
+    "CRAVE-TEST-1452": {
+      "pairCode": "CRAVE-TEST-1452",
+      "hostName": "Deniz",
+      "createdAt": 1792273164853,
+      "users": {
+        "Deniz": {
+          "id": "usr-1",
+          "name": "Deniz",
+          "title": "Gurme Şef",
+          "level": 1,
+          "matchesCount": 0,
+          "badgesCount": 0,
+          "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+          "allergies": [
+            "Glüten"
+          ],
+          "isSurveyCompleted": true,
+          "joinedAt": 1792273164873
+        }
+      },
+      "messages": [
+        {
+          "id": "msg-1792273164897",
+          "sender": "usr-1",
+          "author": "Deniz",
+          "text": "Bu akşam ne yiyoruz? 🍕",
+          "timestamp": "19:30"
+        }
+      ],
+      "swipes": {
+        "dish-1": {
+          "Deniz": true,
+          "Baran": true
+        }
+      },
+      "matches": [
+        "dish-1"
+      ],
+      "cart": [
+        {
+          "id": "item-1",
+          "name": "Domates",
+          "amount": 500,
+          "unit": "g",
+          "checked": false
+        },
+        {
+          "id": "item-2",
+          "name": "Fettuccine",
+          "amount": 1,
+          "unit": "paket",
+          "checked": true
+        }
+      ],
+      "diceWinner": null
+    },
+    "CRAVE-TEST-4946": {
+      "pairCode": "CRAVE-TEST-4946",
+      "hostName": "Deniz",
+      "createdAt": 1792273188779,
+      "users": {
+        "Deniz": {
+          "id": "usr-1",
+          "name": "Deniz",
+          "title": "Gurme Şef",
+          "level": 1,
+          "matchesCount": 0,
+          "badgesCount": 0,
+          "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+          "allergies": [
+            "Glüten"
+          ],
+          "isSurveyCompleted": true,
+          "joinedAt": 1792273188796
+        }
+      },
+      "messages": [
+        {
+          "id": "msg-1792273188799",
+          "sender": "usr-1",
+          "author": "Deniz",
+          "text": "Bu akşam ne yiyoruz? 🍕",
+          "timestamp": "19:30"
+        }
+      ],
+      "swipes": {
+        "dish-1": {
+          "Deniz": true,
+          "Baran": true
+        }
+      },
+      "matches": [
+        "dish-1"
+      ],
+      "cart": [
+        {
+          "id": "item-1",
+          "name": "Domates",
+          "amount": 500,
+          "unit": "g",
+          "checked": false
+        },
+        {
+          "id": "item-2",
+          "name": "Fettuccine",
+          "amount": 1,
+          "unit": "paket",
+          "checked": true
+        }
+      ],
+      "diceWinner": null
     }
   }
 }

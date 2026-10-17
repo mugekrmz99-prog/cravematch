@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Send,
@@ -9,14 +9,11 @@ import {
   Bell,
   CheckCheck,
   Sparkles,
-  ChefHat,
-  User,
   ArrowRight,
-  Info,
-  X
+  X,
+  Share2
 } from 'lucide-react';
 import { UserProfile, ChatMessage, Language } from '../../types';
-import { CraveLogo } from '../CraveLogo';
 import { sound } from '../../utils/sound';
 import { translations } from '../../utils/i18n';
 
@@ -37,23 +34,27 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 }) => {
   const t = translations[lang];
   const [inputText, setInputText] = useState('');
-  const [activeSender, setActiveSender] = useState<'me' | 'partner'>('me');
   const [notificationToast, setNotificationToast] = useState<string | null>(null);
   const [showPartnerModal, setShowPartnerModal] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const showToast = (text: string) => {
     setNotificationToast(text);
-    setTimeout(() => setNotificationToast(null), 3000);
+    setTimeout(() => setNotificationToast(null), 3500);
   };
 
   const handleSendCustomText = () => {
     if (!inputText.trim()) return;
     sound.playTap();
 
-    const senderRole = activeSender;
     const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      sender: senderRole,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      sender: 'me',
+      author: user.name || (lang === 'tr' ? 'Ben' : 'Me'),
       text: inputText.trim(),
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       type: 'text'
@@ -61,19 +62,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
     onSendMessage(newMsg);
     setInputText('');
-
-    // If partner is not connected yet, show a gentle toast suggesting sharing the code
-    if (!user.partner.isConnected && senderRole === 'me') {
-      setTimeout(() => {
-        showToast(
-          lang === 'tr'
-            ? `${user.partner.name} henüz bağlanmadı. QR veya PIN ile bağlanınca burada canlı sohbet edeceksiniz!`
-            : lang === 'de'
-            ? `${user.partner.name} ist noch nicht verbunden. Verbindet euch per QR oder PIN!`
-            : `${user.partner.name} is not connected yet. Connect via QR or PIN!`
-        );
-      }, 1500);
-    }
   };
 
   const handleSendQuickAlert = (type: 'timer_alert' | 'dice_alert' | 'cart_alert' | 'love_alert') => {
@@ -81,13 +69,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     let text = '';
     let toast = '';
 
+    const partnerDisplayName = user.partner.name || (lang === 'tr' ? 'Aşkım' : 'Honey');
+
     if (type === 'timer_alert') {
       text =
         lang === 'tr'
-          ? `⏰ ${user.partner.name}, zamanımız doluyor! Günün menüsü seçimini yap, geri sayım bitmek üzere!`
+          ? `⏰ ${partnerDisplayName}, zamanımız doluyor! Günün menüsü seçimini yap, geri sayım bitmek üzere!`
           : lang === 'de'
-          ? `⏰ ${user.partner.name}, die Zeit läuft ab! Schließe deine Auswahl ab!`
-          : `⏰ ${user.partner.name}, time is running out! Lock in your dinner picks before the countdown ends!`;
+          ? `⏰ ${partnerDisplayName}, die Zeit läuft ab! Schließe deine Auswahl ab!`
+          : `⏰ ${partnerDisplayName}, time is running out! Lock in your dinner picks before the countdown ends!`;
       toast = lang === 'tr' ? 'Zaman Doluyor bildirimi gönderildi ⏰' : lang === 'de' ? 'Timer-Benachrichtigung gesendet ⏰' : 'Timer alert sent ⏰';
     } else if (type === 'dice_alert') {
       text =
@@ -116,8 +106,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     }
 
     const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      sender: activeSender,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      sender: 'me',
+      author: user.name || (lang === 'tr' ? 'Ben' : 'Me'),
       text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       type: type === 'love_alert' ? 'text' : type
@@ -125,56 +116,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
     onSendMessage(newMsg);
     showToast(toast);
-
-    // Partner acknowledgment
-    setTimeout(() => {
-      sound.playNotification();
-      let partnerReply = '';
-      if (type === 'timer_alert') {
-        partnerReply =
-          lang === 'tr'
-            ? 'Hemen girip son seçimimi yapıyorum! 🏃‍♂️'
-            : lang === 'de'
-            ? 'Ich treffe sofort meine letzte Auswahl! 🏃‍♂️'
-            : 'Jumping in right now! 🏃‍♂️';
-      } else if (type === 'dice_alert') {
-        partnerReply =
-          lang === 'tr'
-            ? 'Hazırım! Zar ekranını açıyorum, hadi atalım! 🎲✨'
-            : lang === 'de'
-            ? 'Ich bin bereit! Öffne den Würfel, los geht’s! 🎲✨'
-            : 'Ready! Opening dice screen, let’s roll! 🎲✨';
-      } else if (type === 'cart_alert') {
-        partnerReply =
-          lang === 'tr'
-            ? 'Gördüm listeyi, eksikleri alıp hemen geliyorum! 🥦🛒'
-            : lang === 'de'
-            ? 'Habe die Liste gesehen, ich kaufe die Zutaten ein! 🥦🛒'
-            : 'Checked the list, grabbing them on the way! 🥦🛒';
-      } else {
-        partnerReply =
-          lang === 'tr'
-            ? 'Tabii ki! Mutfakta şef yardımcın olmaya hazırım 👩‍🍳'
-            : lang === 'de'
-            ? 'Sehr gerne! Ich bin dein Beikoch in der Küche 👩‍🍳'
-            : 'Always! Ready to be your sous-chef 👩‍🍳';
-      }
-
-      onSendMessage({
-        id: `msg-${Date.now() + 1}`,
-        sender: 'partner',
-        text: partnerReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        type: 'text'
-      });
-      showToast(`${user.partner.name}: "${partnerReply}"`);
-    }, 1300);
   };
+
+  const partnerHasJoined = user.partner.isConnected && Boolean(user.partner.name);
 
   return (
     <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] px-3 pt-2 pb-2 select-none overflow-hidden">
       {/* Top Header with Partner Profile & Online Indicator */}
-      <div className="flex items-center justify-between pb-2 px-1 border-b border-stone-200/80 bg-white/60 -mx-3 px-4 pt-1 backdrop-blur-xs">
+      <div className="flex items-center justify-between pb-2 px-1 border-b border-stone-200/80 bg-white/70 -mx-3 px-4 pt-1 backdrop-blur-xs">
         <div
           onClick={() => {
             sound.playTap();
@@ -185,55 +134,50 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           <div className="relative">
             <img
               src={user.partner.avatarUrl}
-              alt={user.partner.name}
+              alt={user.partner.name || 'Partner'}
               className="w-10 h-10 rounded-full object-cover border-2 border-[#E05A3D] shadow-xs"
             />
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white" />
+            <span
+              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                partnerHasJoined ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'
+              }`}
+            />
           </div>
 
           <div>
             <div className="flex items-center gap-1.5">
               <h3 className="font-black text-[#2B6777] text-sm tracking-tight font-['Outfit',sans-serif]">
-                {user.partner.name}
+                {user.partner.name || (lang === 'tr' ? 'Partner Bekleniyor...' : 'Awaiting Partner...')}
               </h3>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-rose-100 text-rose-800 font-bold">
-                {t.matchedTag}
-              </span>
+              {partnerHasJoined && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 font-bold">
+                  {lang === 'tr' ? 'Canlı Bağlı' : 'Live Connected'}
+                </span>
+              )}
             </div>
             <div className="text-[10px] text-stone-500 flex items-center gap-1 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-              <span>{t.onlineBrowsing}</span>
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  partnerHasJoined ? 'bg-emerald-500' : 'bg-amber-400'
+                }`}
+              />
+              <span>
+                {partnerHasJoined
+                  ? t.onlineBrowsing
+                  : `${lang === 'tr' ? 'Masa Kodu' : 'Table Code'}: ${user.partner.pairCode || 'CRAVE-9821'}`}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Sender Role Toggle for Real 2-Way Testing */}
-        <div className="flex items-center bg-stone-100 p-0.5 rounded-xl border border-stone-200 text-[10px] font-bold">
-          <button
-            onClick={() => {
-              sound.playTap();
-              setActiveSender('me');
-            }}
-            className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${
-              activeSender === 'me' ? 'bg-[#2B6777] text-white shadow-2xs' : 'text-stone-600'
-            }`}
-            title="Benim kimliğimle yaz"
-          >
-            {user.name} {t.mePill}
-          </button>
-          <button
-            onClick={() => {
-              sound.playTap();
-              setActiveSender('partner');
-            }}
-            className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${
-              activeSender === 'partner' ? 'bg-[#E05A3D] text-white shadow-2xs' : 'text-stone-600'
-            }`}
-            title="Partnerim olarak yanıtla"
-          >
-            {user.partner.name}
-          </button>
-        </div>
+        {/* Invite / Info Pill */}
+        <button
+          onClick={() => setShowPartnerModal(true)}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-stone-200 text-[11px] font-bold text-[#2B6777] shadow-2xs hover:bg-stone-50 active:scale-95 transition-all cursor-pointer"
+        >
+          <Share2 className="w-3.5 h-3.5 text-[#E05A3D]" />
+          <span>{lang === 'tr' ? 'QR / Davet' : 'QR / Invite'}</span>
+        </button>
       </div>
 
       {/* Floating Alert Toast */}
@@ -251,7 +195,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </div>
             <button
               onClick={() => setNotificationToast(null)}
-              className="text-stone-400 hover:text-white"
+              className="text-stone-400 hover:text-white cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -291,58 +235,63 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             className="px-2.5 py-1.5 rounded-xl bg-rose-100/80 hover:bg-rose-200 text-rose-950 text-[11px] font-bold flex items-center gap-1.5 whitespace-nowrap shadow-2xs cursor-pointer border border-rose-200 active:scale-95 transition-all"
           >
             <Heart className="w-3.5 h-3.5 text-rose-600 fill-rose-600" />
-            <span>{t.cookTogether}</span>
+            <span>{t.whatToEatAlert}</span>
           </button>
         </div>
       </div>
 
-      {/* Chat Messages Scrollable Container */}
-      <div className="flex-1 overflow-y-auto no-scrollbar space-y-2.5 py-1.5 pr-0.5">
+      {/* Messages Scroll Area */}
+      <div className="flex-1 overflow-y-auto no-scrollbar space-y-2.5 py-2 px-1">
         {messages.map((msg) => {
+          const isSystem = msg.sender === 'system';
           const isMe = msg.sender === 'me';
+
+          if (isSystem) {
+            return (
+              <div key={msg.id} className="flex justify-center my-1">
+                <span className="px-3 py-1 rounded-full bg-stone-200/80 text-stone-600 text-[10px] font-medium text-center">
+                  {msg.text}
+                </span>
+              </div>
+            );
+          }
+
           return (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex items-end gap-2 ${isMe ? 'justify-end' : 'justify-start'}`}
             >
+              {!isMe && (
+                <img
+                  src={user.partner.avatarUrl}
+                  alt={user.partner.name}
+                  className="w-7 h-7 rounded-full object-cover border border-[#2B6777] mb-1"
+                />
+              )}
+
               <div
-                className={`max-w-[82%] px-3.5 py-2.5 rounded-2xl shadow-xs text-xs font-semibold leading-relaxed relative ${
+                className={`max-w-[78%] rounded-2xl p-3 shadow-xs ${
                   isMe
-                    ? 'bg-[#2B6777] text-white rounded-tr-xs'
-                    : 'bg-white text-[#1A3B44] border border-stone-200/90 rounded-tl-xs'
+                    ? 'bg-[#2B6777] text-white rounded-br-xs'
+                    : 'bg-white text-stone-800 rounded-bl-xs border border-stone-200/80'
                 }`}
               >
-                {/* Special alert styling */}
-                {msg.type === 'timer_alert' && (
-                  <div className="flex items-center gap-1 text-[10px] font-extrabold text-amber-300 pb-1 border-b border-white/20 mb-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{t.quickAlertTimeOut}</span>
-                  </div>
-                )}
-                {msg.type === 'dice_alert' && (
-                  <div className="flex items-center gap-1 text-[10px] font-extrabold text-purple-200 pb-1 border-b border-white/20 mb-1">
-                    <Dices className="w-3 h-3" />
-                    <span>{t.decisionDice}</span>
-                  </div>
-                )}
-                {msg.type === 'cart_alert' && (
-                  <div className="flex items-center gap-1 text-[10px] font-extrabold text-emerald-300 pb-1 border-b border-white/20 mb-1">
-                    <ShoppingCart className="w-3 h-3" />
-                    <span>{t.groceryList}</span>
+                {!isMe && (
+                  <div className="text-[10px] font-bold text-[#E05A3D] mb-0.5">
+                    {msg.author || user.partner.name || (lang === 'tr' ? 'Partner' : 'Partner')}
                   </div>
                 )}
 
-                <p>{msg.text}</p>
+                <p className="text-xs font-medium leading-relaxed">{msg.text}</p>
 
-                {/* Direct Action Link inside Alert */}
                 {msg.type === 'dice_alert' && onNavigateToTab && (
                   <button
                     onClick={() => onNavigateToTab('dice')}
                     className="mt-2 w-full py-1.5 px-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-[10px] font-black flex items-center justify-center gap-1 cursor-pointer transition-colors"
                   >
-                    <span>Zarı Birlikte At</span>
+                    <span>{t.decisionDice || 'Karar Zarı'}</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 )}
@@ -352,7 +301,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                     onClick={() => onNavigateToTab('cart')}
                     className="mt-2 w-full py-1.5 px-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-[10px] font-black flex items-center justify-center gap-1 cursor-pointer transition-colors"
                   >
-                    <span>Sepeti Görüntüle</span>
+                    <span>{lang === 'tr' ? 'Sepeti Görüntüle' : 'View Cart'}</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 )}
@@ -369,11 +318,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </motion.div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Bottom Message Input Bar */}
-      <div className="pt-1 border-t border-stone-200/80 bg-white/60 -mx-3 px-3 pt-1 space-y-1">
-        {/* Quick Romantic / Food Reaction Pills */}
+      <div className="pt-1 border-t border-stone-200/80 bg-white/70 -mx-3 px-3 pt-1 space-y-1 backdrop-blur-xs">
+        {/* Quick Reaction Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
           {[
             '❤️ Harika seçim!',
@@ -388,8 +338,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               onClick={() => {
                 sound.playTap();
                 const newMsg: ChatMessage = {
-                  id: `msg-${Date.now()}`,
+                  id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
                   sender: 'me',
+                  author: user.name || (lang === 'tr' ? 'Ben' : 'Me'),
                   text: quick,
                   timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                   type: 'text'
@@ -409,7 +360,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSendCustomText()}
-            placeholder={`${activeSender === 'me' ? user.name : user.partner.name} olarak yaz...`}
+            placeholder={t.typeMessagePlaceholder || 'Partnerine bir mesaj yaz...'}
             className="flex-1 px-3 py-2 bg-white rounded-2xl border border-stone-300 text-xs font-semibold text-[#1A3B44] focus:outline-none focus:border-[#2B6777] shadow-2xs"
           />
 
@@ -422,7 +373,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         </div>
       </div>
 
-      {/* PARTNER PROFILE POPUP MODAL */}
+      {/* PARTNER PROFILE / INVITE MODAL */}
       <AnimatePresence>
         {showPartnerModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs select-none">
@@ -442,39 +393,52 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               <div className="w-18 h-18 rounded-full overflow-hidden border-3 border-[#E05A3D] shadow-md mx-auto">
                 <img
                   src={user.partner.avatarUrl}
-                  alt={user.partner.name}
+                  alt={user.partner.name || 'Partner'}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <div>
                 <h3 className="text-lg font-black text-[#2B6777] font-['Outfit',sans-serif]">
-                  {user.partner.name}
+                  {user.partner.name || (lang === 'tr' ? 'Partner Bekleniyor' : 'Awaiting Partner')}
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold inline-block mt-0.5">
-                  Çevrimiçi • Bağlı ✓
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold inline-block mt-0.5 ${
+                    partnerHasJoined
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}
+                >
+                  {partnerHasJoined ? 'Çevrimiçi • Bağlı ✓' : 'Bağlantı Bekleniyor'}
                 </span>
               </div>
 
-              <div className="p-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-left text-xs space-y-1">
+              <div className="p-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-left text-xs space-y-1.5">
                 <div className="flex justify-between font-bold text-stone-600 text-[11px]">
-                  <span>Eşleşme Kodu:</span>
-                  <span className="font-mono text-[#2B6777]">{user.partner.pairCode || 'CRV-9821'}</span>
+                  <span>{lang === 'tr' ? 'Masa Kodu (PIN):' : 'Table PIN:'}</span>
+                  <span className="font-mono text-[#2B6777] font-black">{user.partner.pairCode || 'CRAVE-9821'}</span>
                 </div>
-                <div className="flex justify-between font-bold text-stone-600 text-[11px]">
-                  <span>Lezzet Uyumu:</span>
-                  <span className="text-[#E05A3D]">%96 Mükemmel</span>
+                <div className="text-[10px] text-stone-500 leading-tight">
+                  {lang === 'tr'
+                    ? 'Eşiniz bu kodu girerek veya WhatsApp bağlantısını açarak doğrudan masaya bağlanabilir.'
+                    : 'Your partner can join directly by entering this code or opening the invite link.'}
                 </div>
               </div>
 
               <button
                 onClick={() => {
+                  sound.playSuccess();
+                  const shareUrl = `${window.location.origin}${window.location.pathname}?pair=${encodeURIComponent(
+                    user.partner.pairCode || 'CRAVE-9821'
+                  )}&inviter=${encodeURIComponent(user.name || 'Partner')}`;
+                  navigator.clipboard?.writeText(shareUrl);
+                  showToast(lang === 'tr' ? 'Davet bağlantısı kopyalandı! 📋' : 'Invite link copied! 📋');
                   setShowPartnerModal(false);
-                  if (onNavigateToTab) onNavigateToTab('profile');
                 }}
-                className="w-full py-2 bg-[#2B6777] text-white rounded-xl text-xs font-bold hover:bg-[#235866] cursor-pointer"
+                className="w-full py-2 bg-[#2B6777] text-white rounded-xl text-xs font-bold hover:bg-[#235866] cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
-                Profil Sayfasında İncele
+                <Share2 className="w-3.5 h-3.5" />
+                <span>{lang === 'tr' ? 'Davet Bağlantısını Kopyala' : 'Copy Invite Link'}</span>
               </button>
             </motion.div>
           </div>

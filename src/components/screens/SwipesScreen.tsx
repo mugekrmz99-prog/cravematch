@@ -18,6 +18,7 @@ interface SwipesScreenProps {
   onNavigateToDice: (dish?: Dish) => void;
   onNavigateToProfile: () => void;
   onOpenSettings: () => void;
+  onSwipe?: (dish: Dish, direction: 'like' | 'pass' | 'super') => void;
 }
 
 export const SwipesScreen: React.FC<SwipesScreenProps> = ({
@@ -30,19 +31,16 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   onSelectDishForRecipe,
   onNavigateToDice,
   onNavigateToProfile,
-  onOpenSettings
+  onOpenSettings,
+  onSwipe
 }) => {
   const t = translations[lang];
   const [deck, setDeck] = useState<Dish[]>(dishes);
   const [history, setHistory] = useState<Dish[]>([]);
   const [matchModalDish, setMatchModalDish] = useState<Dish | null>(null);
   const [biteCardId, setBiteCardId] = useState<string | null>(null);
-  const [biteEffectPosition, setBiteEffectPosition] = useState<{ x: number; y: number } | null>(null);
+  const [isSwipingActive, setIsSwipingActive] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
-
-  // Mystery Countdown for Partner Reveal (Dinner decision reveal clock)
-  const [partnerLikesUnlocked, setPartnerLikesUnlocked] = useState(false);
-  const [countdownSeconds, setCountdownSeconds] = useState(3600 * 2 + 14 * 60 + 20); // 02:14:20
 
   // Category horizontal scroll ref
   const categoryScrollRef = useRef<HTMLDivElement>(null);
@@ -55,29 +53,6 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
     setDeck(dishes);
     setHistory([]);
   }, [dishes, activeCategory]);
-
-  // Live countdown ticker
-  useEffect(() => {
-    if (partnerLikesUnlocked) return;
-    const interval = setInterval(() => {
-      setCountdownSeconds((prev) => {
-        if (prev <= 1) {
-          setPartnerLikesUnlocked(true);
-          sound.playSuccess();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [partnerLikesUnlocked]);
-
-  const formatCountdown = (totalSec: number) => {
-    const hours = Math.floor(totalSec / 3600);
-    const mins = Math.floor((totalSec % 3600) / 60);
-    const secs = totalSec % 60;
-    return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  };
 
   // Current top dish
   const currentDish = deck.length > 0 ? deck[0] : null;
@@ -109,61 +84,63 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   };
 
   const triggerMatchCelebration = (dish: Dish) => {
-    // 1. Play realistic crunchy card bite sound ("hırt!") and show visual bite animation
-    sound.playCrunchBite();
-    setBiteCardId(dish.id);
-    setBiteEffectPosition({ x: 260, y: 40 });
-
-    // 2. Short delay for bite effect before showing the celebratory match modal
-    setTimeout(() => {
-      sound.playSuccess();
-      setMatchModalDish(dish);
-      setBiteCardId(null);
-      setBiteEffectPosition(null);
-      try {
-        confetti({
-          particleCount: 90,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#E05A3D', '#2B6777', '#F2A900', '#FFD166']
-        });
-      } catch {
-        // fallback
-      }
-    }, 550);
+    sound.playSuccess();
+    setMatchModalDish(dish);
+    try {
+      confetti({
+        particleCount: 100,
+        spread: 85,
+        origin: { y: 0.6 },
+        colors: ['#E05A3D', '#2B6777', '#F2A900', '#FFD166']
+      });
+    } catch {
+      // fallback
+    }
   };
 
   const handleSwipe = (direction: 'like' | 'pass' | 'super') => {
-    if (!currentDish) return;
+    if (!currentDish || isSwipingActive) return;
+    const dishToSwipe = currentDish;
 
     if (direction === 'like' || direction === 'super') {
-      // Crunchy bite sound on like!
+      setIsSwipingActive(true);
+      // 1. Play realistic crunch bite sound ("Hırt chomp!")
       sound.playCrunchBite();
-      setBiteCardId(currentDish.id);
-      setBiteEffectPosition({ x: 270, y: 50 });
+      setBiteCardId(dishToSwipe.id);
 
-      // Check mutual match
-      const isMutual = currentDish.partnerLiked;
+      // Check mutual match (partner also liked this dish)
+      const isMutual = Boolean(dishToSwipe.partnerLiked);
 
+      // 2. Keep the bitten card visible for 380ms with the teeth scalloped mark and flying crumbs
       setTimeout(() => {
-        if (isMutual) {
-          triggerMatchCelebration(currentDish);
-        } else {
-          setBiteCardId(null);
-          setBiteEffectPosition(null);
+        setHistory((prev) => [dishToSwipe, ...prev]);
+        setDeck((prev) => prev.slice(1));
+        x.set(0);
+        setBiteCardId(null);
+        setIsSwipingActive(false);
+
+        if (onSwipe) {
+          onSwipe(dishToSwipe, direction);
         }
-      }, 350);
+
+        if (isMutual) {
+          triggerMatchCelebration(dishToSwipe);
+        }
+      }, 380);
     } else {
       sound.playSwipe('pass');
-    }
+      setHistory((prev) => [dishToSwipe, ...prev]);
+      setDeck((prev) => prev.slice(1));
+      x.set(0);
 
-    setHistory((prev) => [currentDish, ...prev]);
-    setDeck((prev) => prev.slice(1));
-    x.set(0);
+      if (onSwipe) {
+        onSwipe(dishToSwipe, 'pass');
+      }
+    }
   };
 
   const handleUndo = () => {
-    if (history.length === 0) return;
+    if (history.length === 0 || isSwipingActive) return;
     sound.playTap();
     const last = history[0];
     setHistory((prev) => prev.slice(1));
@@ -177,14 +154,16 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   };
 
   const categories = [
-    { id: 'All', label: t.catAll },
-    { id: 'Spicy', label: t.catSpicy },
-    { id: 'Vegetarian', label: t.catVegetarian },
-    { id: 'Sweet', label: t.catSweet },
-    { id: 'Fast Food', label: t.catFastFood },
-    { id: 'Healthy', label: t.catHealthy },
-    { id: 'Seafood', label: t.catSeafood },
-    { id: 'Italian', label: t.catItalian }
+    { id: 'All', label: t.catAll || 'Tümü' },
+    { id: 'Çorba', label: lang === 'tr' ? 'Çorbalar' : lang === 'de' ? 'Suppen' : 'Soups' },
+    { id: 'Ev Yemeği', label: lang === 'tr' ? 'Ev & Tencere' : lang === 'de' ? 'Hausmannskost' : 'Home Cooking' },
+    { id: 'Kebap', label: lang === 'tr' ? 'Et & Kebap' : lang === 'de' ? 'Kebab & Fleisch' : 'Meat & Kebab' },
+    { id: 'Meze', label: lang === 'tr' ? 'Meze & Zeytinyağlı' : lang === 'de' ? 'Meze & Olivenöl' : 'Meze & Starters' },
+    { id: 'Börek', label: lang === 'tr' ? 'Börek & Hamur' : lang === 'de' ? 'Börek & Teig' : 'Pastries & Pide' },
+    { id: 'Tatlı', label: lang === 'tr' ? 'Tatlılar' : lang === 'de' ? 'Desserts' : 'Desserts' },
+    { id: 'Sağlıklı', label: t.catHealthy || 'Sağlıklı' },
+    { id: 'Vejetaryen', label: t.catVegetarian || 'Vejetaryen' },
+    { id: 'Acılı', label: t.catSpicy || 'Acılı' }
   ];
 
   return (
@@ -245,28 +224,36 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
                 >
                   <div className="font-bold text-[#2B6777] pb-1 flex items-center gap-1.5 border-b border-stone-100">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    <span>{user.partner.name || (lang === 'tr' ? 'Partner' : 'Partner')} {lang === 'tr' ? 'ile Senkronizasyon' : lang === 'de' ? 'Synchronisation' : 'Sync'}</span>
+                    <span>{user.partner.name || (lang === 'tr' ? 'Partner' : 'Partner')} {lang === 'tr' ? 'ile Canlı Masa' : 'Live Table'}</span>
                   </div>
-                  <div className="pt-2 text-stone-700 leading-snug space-y-1">
-                    <p className="font-semibold text-stone-900">
-                      {user.partner.name} {lang === 'tr' ? 'akşam yemeği için tercihlerini kilitledi!' : lang === 'de' ? 'hat die Essensauswahl gesperrt!' : 'locked in dinner picks!'}
-                    </p>
-                    <p className="text-[#E05A3D] font-medium text-[11px]">
-                      {lang === 'tr' ? 'Karşılıklı beğeni geri sayım bitince açıklanır.' : lang === 'de' ? 'Matches werden nach Ablauf des Timers enthüllt.' : 'Mutual likes revealed when timer ends.'}
-                    </p>
-                    <div className="pt-1 flex items-center justify-between text-[10px] text-stone-400">
-                      <span>{formatCountdown(countdownSeconds)}</span>
-                      <button
-                        onClick={() => {
-                          sound.playSuccess();
-                          setPartnerLikesUnlocked(true);
-                          setNotificationOpen(false);
-                        }}
-                        className="text-[#2B6777] underline font-bold cursor-pointer"
-                      >
-                        {t.unlockNow}
-                      </button>
-                    </div>
+                  <div className="pt-2 text-stone-700 leading-snug space-y-1.5">
+                    {user.partner.isConnected && user.partner.name ? (
+                      <>
+                        <p className="font-semibold text-stone-900 text-[11px]">
+                          🟢 {user.partner.name} {lang === 'tr' ? 'ile odanız canlı bağlı!' : 'is connected live!'}
+                        </p>
+                        <p className="text-emerald-700 font-medium text-[10px]">
+                          {lang === 'tr'
+                            ? 'Her iki tarafın sağa kaydırdığı (beğendiği) yemekler anında eşleşecek ve karar zarına eklenecektir.'
+                            : 'Dishes liked by both will match instantly and enter the decision pool.'}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="font-semibold text-stone-900 text-[11px]">
+                          🟡 {lang === 'tr' ? 'Partner bağlantısı bekleniyor' : 'Waiting for partner'}
+                        </p>
+                        <p className="text-stone-500 font-medium text-[10px]">
+                          {lang === 'tr' ? 'Masa Kodunuz:' : 'Table Code:'}{' '}
+                          <strong className="text-[#2B6777] font-mono">{user.partner.pairCode || 'CRAVE-9821'}</strong>
+                        </p>
+                        <p className="text-[#E05A3D] text-[10px]">
+                          {lang === 'tr'
+                            ? 'Ayarlar veya Profil ekranından QR kodu göstererek eşinizi bağlayabilirsiniz.'
+                            : 'Share your QR code from Settings or Profile to connect.'}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -275,40 +262,24 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
         </div>
       </header>
 
-      {/* Mystery Partner Reveal Countdown Banner */}
+      {/* Live Partner Connection Status Banner */}
       <div className="w-full max-w-[340px] mx-auto mb-1 flex items-center justify-between px-3 py-1.5 rounded-xl bg-white/90 border border-stone-200 shadow-2xs text-[11px]">
         <div className="flex items-center gap-1.5 truncate">
-          {partnerLikesUnlocked ? (
-            <Unlock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-          ) : (
-            <Lock className="w-3.5 h-3.5 text-amber-600 animate-pulse shrink-0" />
-          )}
+          <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${user.partner.isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
           <span className="font-bold text-[#1A3B44] truncate">
-            {partnerLikesUnlocked
-              ? `${user.partner.name} ${lang === 'tr' ? 'Tercihleri Açık!' : lang === 'de' ? 'Vorlieben offen!' : 'Picks Unlocked!'}`
-              : t.partnerHiddenNotice}
+            {user.partner.isConnected && user.partner.name
+              ? `${user.partner.name} ${lang === 'tr' ? 'ile Masadasınız!' : lang === 'de' ? 'am Tisch!' : 'at the table!'}`
+              : lang === 'tr' ? 'Partner Bekleniyor...' : 'Waiting for Partner...'}
           </span>
         </div>
 
-        {!partnerLikesUnlocked ? (
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="font-mono font-bold text-[#E05A3D]">
-              {formatCountdown(countdownSeconds)}
-            </span>
-            <button
-              onClick={() => {
-                sound.playSuccess();
-                setPartnerLikesUnlocked(true);
-              }}
-              className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#2B6777]/10 text-[#2B6777] font-bold hover:bg-[#2B6777]/20 cursor-pointer"
-              title="Test: Saat dolmuş gibi sonuçları aç"
-            >
-              {t.unlockNow}
-            </button>
-          </div>
-        ) : (
+        {user.partner.isConnected ? (
           <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0">
             {t.matchesActive}
+          </span>
+        ) : (
+          <span className="text-[10px] font-mono font-bold text-[#2B6777] bg-[#2B6777]/10 px-2 py-0.5 rounded-full shrink-0">
+            PIN: {user.partner.pairCode || 'CRAVE-9821'}
           </span>
         )}
       </div>
@@ -450,24 +421,17 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
                 {t.pass} ✕
               </motion.div>
 
-              {/* Partner Badge Indicator: Secret Lock vs Unlocked Badge */}
+              {/* Partner Liked Indicator */}
               {currentDish.partnerLiked && (
                 <div className="absolute top-4 right-4 z-20">
-                  {partnerLikesUnlocked ? (
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-bold text-[#2B6777] animate-bounce">
-                      <img
-                        src={user.partner.avatarUrl}
-                        alt={user.partner.name}
-                        className="w-4 h-4 rounded-full object-cover"
-                      />
-                      <span>{user.partner.name} {t.partnerLikedNotice}</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/80 backdrop-blur-md shadow-md text-[10px] font-bold text-amber-300 border border-amber-400/50">
-                      <Lock className="w-3 h-3 text-amber-300" />
-                      <span>{user.partner.name} {t.partnerSecretPick}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-bold text-[#2B6777] animate-bounce">
+                    <img
+                      src={user.partner.avatarUrl}
+                      alt={user.partner.name || 'Partner'}
+                      className="w-4 h-4 rounded-full object-cover border border-[#E05A3D]"
+                    />
+                    <span>{user.partner.name || (lang === 'tr' ? 'Partnerin' : 'Partner')} {t.partnerLikedNotice || (lang === 'tr' ? 'de bunu beğendi!' : 'also liked this!')}</span>
+                  </div>
                 </div>
               )}
 

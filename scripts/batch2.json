@@ -1,0 +1,2985 @@
+[
+  {
+    "id": "dish-41",
+    "title": "Zırhtan Çekilmiş Adana Kebap",
+    "title_en": "Traditional Adana Kebab",
+    "title_de": "Adana Kebab vom Grill",
+    "subtitle": "Közlenmiş domates, acı sivri biber, sumaklı soğan ve sıcak lavaş ile",
+    "subtitle_en": "Hand-minced spicy lamb kebab grilled on wide flat skewers",
+    "subtitle_de": "Pikantes Hackfleisch am Spieß gegrillt mit Fladenbrot",
+    "description": "Hakiki Adana usulü: Zırhla kıyılmış kuzu döş ve kuyruk yağı, pul biber ve tuz ile yoğrulup kömür ateşinde pişirilen efsane.",
+    "description_en": "Famous hand-chopped spicy lamb skewer grilled over charcoal, accompanied by sumac onions and warm flatbread.",
+    "description_de": "Würziger Lammschashlik aus Adana mit gegrilltem Gemüse und Zwiebelsalat.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Medium",
+    "rating": 5,
+    "reviewCount": 820,
+    "tags": [
+      "Kebap",
+      "Et",
+      "Acılı"
+    ],
+    "allergens": [
+      "Aşırı Acı"
+    ],
+    "basePortions": 2,
+    "matchScore": 99,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu Boşluk / Döş Kıyma",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuyruk Yağı",
+        "amount": 80,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Acı Kapya Biberi & Pul Biber",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Tırnak Pide / Lavaş",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      },
+      {
+        "name": "Sumaklı Kırmızı Soğan & Maydanoz",
+        "amount": 1,
+        "unit": "porsiyon",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Kıymayı Zırhla Yoğur",
+        "description": "Kuzu kıyması, kuyruk yağı, ince kıyılmış kapya biber ve pul biberi macun kıvamına gelene kadar yoğurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Şişe Sapla",
+        "description": "Ellerinizi hafifçe ıslatarak harcı geniş yassı demir şişlere eşit kalınlıkta saplayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Közde veya Dökümde Pişir",
+        "description": "Köz ateşinde veya çok sıcak döküm ızgarada her iki yüzünü 3er dakika pişirin. Lavaşla sarıp servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 6
+      }
+    ]
+  },
+  {
+    "id": "dish-42",
+    "title": "Hakiki Urfa Kebap",
+    "title_en": "Mild Urfa Kebab",
+    "title_de": "Milder Urfa Kebab",
+    "subtitle": "Acısız kuzu zırh kıyması, köz domates ve tırnak pide ile",
+    "subtitle_en": "Hand-chopped mild lamb kebab grilled over hot embers",
+    "subtitle_de": "Milder Lammspieß mit gegrillten Tomaten und Brot",
+    "description": "Etin saf lezzeti: Acısız kuzu kıymasının sade baharatlarla yoğrulup kömür ateşinde sulu sulu pişirilmesi.",
+    "description_en": "Mild counterpart to Adana kebab, letting the rich natural flavor of succulent lamb take center stage.",
+    "description_de": "Wunderbar saftiger Fleischspieß ohne Schärfe, perfekt über Holzkohle gegrillt.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Medium",
+    "rating": 4.8,
+    "reviewCount": 410,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu Döş Kıyması",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuyruk Yağı",
+        "amount": 60,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Tuz & Hafif Karabiber",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Tırnak Pide",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      },
+      {
+        "name": "Közlenmiş Domates & Biber",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Harcı Yoğur",
+        "description": "Kuzu kıymasını tuz ve karabiberle özleşene kadar yoğurup dolapta 20 dakika dinlendirin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Şişlere Geçir",
+        "description": "Dinlenen eti geniş şişlere parmak izleri belirgin olacak şekilde saplayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Döküm Izgarada Çevir",
+        "description": "Döküm tavada veya ızgarada etlerin suyunu kurutmadan pembe kalacak şekilde pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 7
+      }
+    ]
+  },
+  {
+    "id": "dish-43",
+    "title": "Bursa Usulü İskender Kebap",
+    "title_en": "Bursa Iskender Kebab",
+    "title_de": "Bursa Iskender Kebab",
+    "subtitle": "Tereyağlı tırnak pide, yaprak döner, domates sosu ve tava yoğurdu",
+    "subtitle_en": "Thin shavings of doner meat over buttered pita with tomato sauce",
+    "subtitle_de": "Zarte Fleischstreifen auf geröstetem Brot mit Butter und Joghurt",
+    "description": "Dünya çapında bilinen lezzet abidesi: Kare doğranıp fırınlanan tırnak pideler üzerine incecik yaprak etler, kaynayan tereyağı ve özel domates sosu.",
+    "description_en": "World-famous masterpiece: crispy pita cubes layered with shaved meat, tangy tomato butter sauce, and rich yogurt.",
+    "description_de": "Der König unter den Kebab-Gerichten mit schäumender Butter und fruchtiger Tomatensauce.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 5,
+    "reviewCount": 950,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [
+      "Süt & Laktoz",
+      "Glüten"
+    ],
+    "basePortions": 2,
+    "matchScore": 99,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "İnce Dilim Dana/Kuzu Döner",
+        "amount": 350,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Tırnak Pide (Küp Doğranmış)",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      },
+      {
+        "name": "Köy Tereyağı (Cızırdayan)",
+        "amount": 4,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Özel Domates Sosu",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Koyun Tava Yoğurdu",
+        "amount": 1,
+        "unit": "kase",
+        "category": "Dairy"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Pideleri Fırınla",
+        "description": "Küp doğranmış pideleri tavada veya fırında çıtırlaşana dek tereyağında ısıtıp servis tabağına yayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Eti Isıt ve Sosu Pişir",
+        "description": "İnce yaprak döner etlerini tavada ısıtın, domates sosunu fokurdayana kadar kaynatın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Birleştir ve Tereyağı Yak",
+        "description": "Etleri pidelerin üzerine serin, domates sosunu gezdirin. Yanına yoğurt koyup kaynar tereyağını cızırdatarak dökün.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-44",
+    "title": "Gaziantep Usulü Ali Nazik Kebabı",
+    "title_en": "Ali Nazik Kebab",
+    "title_de": "Ali Nazik Kebab",
+    "subtitle": "Köz patlıcanlı sarımsaklı süzme yoğurt ve tereyağlı kuzu kuşbaşı",
+    "subtitle_en": "Charred eggplant and garlic yogurt topped with spiced lamb sauté",
+    "subtitle_de": "Rauchige Auberginen-Joghurt-Creme mit zartem Lammfleisch",
+    "description": "Damağı mest eden zıtlık: İpeksi soğuk köz patlıcan yoğurtlaması üzerinde tereyağında cızırdayan sıcacık baharatlı kuzu etleri.",
+    "description_en": "Harmonious blend of warm spiced lamb bites over cool, smoky roasted eggplant whisked with garlic yogurt.",
+    "description_de": "Harmonische Kombination aus warmer Lammfleischpfanne und rauchiger Auberginencreme.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 dk",
+    "prepTimeMinutes": 30,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 560,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 98,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu Kuşbaşı Et",
+        "amount": 350,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Közlenmiş Patlıcan",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Süzme Yoğurt",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 3,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Tereyağı & Pul Biber",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Patlıcanlı Yoğurt Yatağını Hazırla",
+        "description": "Köz patlıcanları ince kıyın, sarımsaklı süzme yoğurt ve tuzla karıştırıp tabağa yayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Kuzu Etlerini Kavur",
+        "description": "Kuzu kuşbaşı etlerini tereyağında suyunu çekip kızarana dek pul biberle soteleyin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 12
+      },
+      {
+        "id": 3,
+        "title": "Sıcak Eti Yoğurdun Üzerine Dök",
+        "description": "Cızırdayan sıcak kuzu etlerini ve tereyağını patlıcanlı yoğurdun üzerine döküp sıcak servis yapın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-45",
+    "title": "Bodrum Çökertme Kebabı",
+    "title_en": "Bodrum Cokertme Kebab",
+    "title_de": "Bodrum Çökertme Kebab",
+    "subtitle": "Çıtır kibrit patates, sarımsaklı süzme yoğurt ve marine dana bonfile",
+    "subtitle_en": "Crispy matchstick potatoes topped with garlic yogurt and steak strips",
+    "subtitle_de": "Knusprige Kartoffel-Stäbchen mit Rinderfiletstreifen und Joghurt",
+    "description": "Ege kıyılarının imza lezzeti: İncecik kibrit kesilmiş çıtır patatesler, sarımsaklı yoğurt, lokum bonfile dilimleri ve tereyağlı salça sosu.",
+    "description_en": "Bodrum coastal showstopper: a bed of crispy matchstick potatoes crowned with garlic yogurt and seared beef tenderloin.",
+    "description_de": "Berühmtes Gericht der Ägäisküste mit knusprigen Kartoffelsticks und Filetstreifen.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 dk",
+    "prepTimeMinutes": 30,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 680,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 98,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Dana Bonfile / Antrikot Şeritleri",
+        "amount": 350,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kibrit Kesilmiş Patates",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sarımsaklı Süzme Yoğurt",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Tereyağlı Domates Sosu",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kekik & Pul Biber",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Kibrit Patatesleri Kızart",
+        "description": "İncecik kibrit patatesleri kızgın yağda altın sarısı çıtır olana kadar kızartın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Bonfileleri Yüksek Ateşte Sotele",
+        "description": "Jülyen doğranmış bonfileleri döküm tavada tereyağı ve kekikle 4-5 dakika mühürleyin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Kat Kat Diz ve Sun",
+        "description": "Servis tabağına çıtır patatesleri dizin, üzerine sarımsaklı yoğurt, sıcak etler ve tereyağlı sos dökün.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-46",
+    "title": "Özel Soslu Beyti Sarma Kebap",
+    "title_en": "Beyti Sarma Kebab",
+    "title_de": "Beyti Sarma Kebab",
+    "subtitle": "Çıtır lavaşa sarılı zırh kebabı, domates sosu ve süzme yoğurt",
+    "subtitle_en": "Spiced minced lamb rolled in crisp lavash with melted butter and yogurt",
+    "subtitle_de": "Gewürztes Fleisch in dünnem Fladenbrot gerollt mit Tomatensauce",
+    "description": "Lavaşın içine sarılıp dilimlenen zırh kıymasının fırınlanıp üzerine domates sosu, kızgın tereyağı ve süzme yoğurt dökülmesi.",
+    "description_en": "Succulent lamb kebab wrapped in thin flatbread, sliced into pinwheels, and drizzled with sizzling butter and tomato reduction.",
+    "description_de": "Raffinierte Kebab-Rollen im Fladenbrot überbacken mit Joghurt und warmer Butter.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "35 dk",
+    "prepTimeMinutes": 35,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 540,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [
+      "Glüten",
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu & Dana Zırh Kıyma",
+        "amount": 350,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Taze Lavaş / Yufka",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      },
+      {
+        "name": "Tereyağı & Domates Sosu",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Süzme Yoğurt",
+        "amount": 1,
+        "unit": "kase",
+        "category": "Dairy"
+      },
+      {
+        "name": "Kaşar Peyniri (İsteğe Bağlı)",
+        "amount": 50,
+        "unit": "g",
+        "category": "Dairy"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Köfteleri Pişir",
+        "description": "Uzun ince şekillendirdiğiniz kıymaları fırında veya tavada yarı kıvamda pişirin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Lavaşa Sar ve Dilimle",
+        "description": "Pişen kebapları lavaşa sarıp verev dilimler halinde kesin, tepsiye dizip 5 dakika fırınlayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Sosla ve Yoğurtla Sun",
+        "description": "Ortasına süzme yoğurt koyun, dilimlerin üzerine sıcak domates sosu ve eritilmiş tereyağı gezdirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-47",
+    "title": "Erzurum Cağ Kebabı",
+    "title_en": "Erzurum Cag Kebab",
+    "title_de": "Erzurum Cag Kebab",
+    "subtitle": "Odun ateşinde yatık pişen kuzu but, lavaş ve köz biber",
+    "subtitle_en": "Horizontally spit-roasted tender marinated lamb skewers",
+    "subtitle_de": "Horizontal am Spieß gegrilltes Lammfleisch aus Erzurum",
+    "description": "Erzurum’un tarihi lezzeti: Özel marine edilmiş kuzu etlerinin meşe odunu ateşinde yatık olarak dönerek pişip cağ şişlerine geçirilmesi.",
+    "description_en": "Traditional horizontal spit-roasted lamb marinated with black pepper and onions, cut straight onto mini skewers.",
+    "description_de": "Am offenen Buchenholzfeuer gedrehter Lammspieß mit unvergleichlichem Aroma.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Medium",
+    "rating": 5,
+    "reviewCount": 490,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 98,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Marine Edilmiş Kuzu But Dilimleri",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuru Soğan Suyu & Karabiber",
+        "amount": 1,
+        "unit": "yemek kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Sıcak Tandır Lavaşı",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      },
+      {
+        "name": "Köz Biber & Domates",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Etleri Marine Et",
+        "description": "İnce kuzu etlerini soğan suyu, tuz ve karabiber ile marine edin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Şişlere Sapla ve Pişir",
+        "description": "Etleri cağ şişlerine dizip yüksek ısıda közde çevirerek sulu pişirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 3,
+        "title": "Lavaşla Çek",
+        "description": "Şişteki sıcacık etleri tandır lavaşıyla sararak şişten çekip hemen tüketin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-48",
+    "title": "Fırında Ağır Pişmiş Kuzu İncik",
+    "title_en": "Slow-Roasted Lamb Shank",
+    "title_de": "Geschmorte Lammhaxe aus dem Ofen",
+    "subtitle": "Arpacık soğan, tane karabiber, kekik ve fırınlanmış bebek patatesler",
+    "subtitle_en": "Fall-off-the-bone tender lamb shanks braised with shallots and herbs",
+    "subtitle_de": "Butterzarte Lammhaxe mit Schalotten und Rosmarinkartoffeln",
+    "description": "Etin kemikten kendi kendine ayrıldığı lezzet zirvesi: Ağır ateşte arpacık soğan ve taze kekikle pişen sulu kuzu incikler.",
+    "description_en": "Succulent lamb shanks roasted slowly until meltingly tender, accompanied by whole baby shallots and herb jus.",
+    "description_de": "Stundenlang im eigenen Saft geschmorte Haxe mit feinen Kräutern und Zwiebeln.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "60 dk",
+    "prepTimeMinutes": 60,
+    "difficulty": "Medium",
+    "rating": 5,
+    "reviewCount": 520,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 99,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu İncik",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Meat"
+      },
+      {
+        "name": "Arpacık Soğan",
+        "amount": 10,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Bebek Patates & Havuç",
+        "amount": 4,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Taze Biberiye & Kekik",
+        "amount": 2,
+        "unit": "dal",
+        "category": "Spices"
+      },
+      {
+        "name": "Tane Karabiber & Sarımsak",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "İncikleri Mühürle",
+        "description": "Kuzu incikleri döküm tavada yüksek ateşte her tarafı nar gibi kızarana kadar mühürleyin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Garnitürleri Fırın Kabına Al",
+        "description": "Arpacık soğan, patates ve sarımsakları fırın kabına dizip incikleri yerleştirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Ağır Ateşte Fırınla",
+        "description": "Taze otlar ve 1 bardak et suyu ekleyip üzerini kapatarak 170°C fırında 60 dakika kemiğinden ayrılana dek pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 60
+      }
+    ]
+  },
+  {
+    "id": "dish-49",
+    "title": "Fırında Sebzeli Tavuk Baget",
+    "title_en": "Oven Roasted Chicken Drumsticks",
+    "title_de": "Ofen-Hähnchenschenkel mit Gemüse",
+    "subtitle": "Elma dilim patates, biberiye, sarımsak ve salçalı yoğurt marinasyonu",
+    "subtitle_en": "Crispy herb-marinated chicken drumsticks with golden potato wedges",
+    "subtitle_de": "Knusprig gebackene Hähnchenkeulen mit Kartoffelspalten",
+    "description": "Hafta içi akşamlarının kurtarıcısı: Baharatlı yoğurt sosunda marine edilen tavuk bagetlerin patateslerle çıtır çıtır kızarması.",
+    "description_en": "Succulent chicken drumsticks coated in a spiced yogurt marinade, baked until skin is crackling and potatoes are golden.",
+    "description_de": "Aromatisch marinierte Hähnchenkeulen, knusprig gebacken mit Kartoffeln.",
+    "image": "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "40 dk",
+    "prepTimeMinutes": 40,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 420,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Tavuk Baget",
+        "amount": 6,
+        "unit": "adet",
+        "category": "Meat"
+      },
+      {
+        "name": "Patates (Elma Dilim)",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Yoğurt & Salça Marinasyonu",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Taze Biberiye & Kekik",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Sarımsak & Zeytinyağı",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Marinasyonu Hazırla",
+        "description": "Yoğurt, salça, sarımsak, zeytinyağı ve kekiği karıştırıp tavuk bagetleri harmanlayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Patatesleri Baharatla",
+        "description": "Elma dilim patatesleri tuz, karabiber ve zeytinyağı ile karıştırın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Fırında Nar Gibi Kızart",
+        "description": "Tepsiye dizip 200°C fırında üzeri altın rengi alana dek 35 dakika pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 35
+      }
+    ]
+  },
+  {
+    "id": "dish-50",
+    "title": "Marine Tavuk Şiş Izgara",
+    "title_en": "Grilled Chicken Shish Kebab",
+    "title_de": "Gegrillte Hähnchenspieße",
+    "subtitle": "Yoğurt ve kekikli marinasyon, köz sebzeler ve tane bulgur pilavı ile",
+    "subtitle_en": "Tender marinated chicken breast cubes char-grilled on skewers",
+    "subtitle_de": "Zarte marinierte Hähnchenbrustwürfel vom Grill",
+    "description": "Lokum gibi yumuşacık tavuk göğsü parçalarının yoğurt, sarımsak ve zeytinyağında marine edilip közde pişirilmesi.",
+    "description_en": "Juicy, flame-kissed chicken skewers marinated in yogurt and Mediterranean herbs, served alongside buttery bulgur.",
+    "description_de": "Klassische Hähnchenspieße, zart mariniert und perfekt saftig gegrillt.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 390,
+    "tags": [
+      "Et",
+      "Kebap",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 93,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Küp Tavuk Göğsü/But",
+        "amount": 450,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Süzme Yoğurt & Zeytinyağı",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Biber Salçası & Sarımsak",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Çeri Domates & Yeşil Biber",
+        "amount": 4,
+        "unit": "adet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Tavukları Sosla",
+        "description": "Tavuk etlerini yoğurt, salça, sarımsak ve baharatlarla ovup 15 dakika bekletin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Şişlere Diz",
+        "description": "Tavukları domates ve biber dilimleriyle sırayla şişlere geçirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Izgarada Mühürle",
+        "description": "Çok sıcak ızgara tavasında her yüzünü 3-4 dakika çevirerek sulu şekilde pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 8
+      }
+    ]
+  },
+  {
+    "id": "dish-51",
+    "title": "Fırında Bütün Tavuk & İç Pilav",
+    "title_en": "Roast Whole Chicken with Spiced Rice",
+    "title_de": "Ganzes Brathähnchen mit gewürztem Reis",
+    "subtitle": "Tereyağlı nar gibi kızarmış bütün tavuk ve kuş üzümlü iç pilav",
+    "subtitle_en": "Golden crispy whole roast chicken with currant and pine nut rice",
+    "subtitle_de": "Knuspriges Brathähnchen mit orientalischem Pinienkern-Reis",
+    "description": "Pazar sofralarının kutlama yemeği: İçi fıstıklı üzümlü pilavla doldurulmuş veya yanında servis edilen nar gibi kızarmış köy tavuğu.",
+    "description_en": "Show-stopping centerpiece: whole roast chicken with crisp mahogany skin served over aromatic spiced pilaf.",
+    "description_de": "Festliches Brathuhn mit goldbrauner Kruste auf orientalischem Reis.",
+    "image": "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "55 dk",
+    "prepTimeMinutes": 55,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 460,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [
+      "Çam Fıstığı",
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 96,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Köy Tavuğu (Bütün)",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Meat"
+      },
+      {
+        "name": "Baldo Pirinç",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Çam Fıstığı & Kuş Üzümü",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Tereyağı & Baharat Karışımı",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Tavuğu Baharatla",
+        "description": "Tavuğun derisinin altına ve dışına tereyağı, tatlı toz biber ve tuz sürün.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "İç Pilavı Pişir",
+        "description": "Pirinç, çam fıstığı, kuş üzümü ve tarçını tereyağında kavurup demleyin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 15
+      },
+      {
+        "id": 3,
+        "title": "Tavuğu Nar Gibi Fırınla",
+        "description": "Tavuğu 190°C fırında 50 dakika nar gibi kızarana dek pişirin. Pilavla sıcak servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 50
+      }
+    ]
+  },
+  {
+    "id": "dish-52",
+    "title": "Antakya Tepsi Kebabı",
+    "title_en": "Antakya Tray Kebab (Tepsi Kebabi)",
+    "title_de": "Antakya Blech-Kebab (Tepsi Kebabı)",
+    "subtitle": "Zırhtan geçmiş baharatlı dana kıyması, tepsiye basılmış ve domates soslu",
+    "subtitle_en": "Spiced minced meat pressed into a baking tray with tomatoes and peppers",
+    "subtitle_de": "Fein gewürztes Hackfleisch auf dem Blech gebacken mit Tomaten",
+    "description": "Hatay mutfağının başyapıtı: Zırhla çekilen etin sarımsak ve maydanozla yoğrulup yuvarlak tepsiye basılarak fırınlanması.",
+    "description_en": "Hatay province specialty: minced beef and lamb seasoned with garlic and parsley, flattened into a baking pan and roasted.",
+    "description_de": "Spezialität aus Hatay: Würziges Hackfleisch im Blech im Steinofen gegart.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 dk",
+    "prepTimeMinutes": 30,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 510,
+    "tags": [
+      "Kebap",
+      "Et",
+      "Acılı"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu & Dana Kıyma",
+        "amount": 450,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kapya Biber & Sarımsak",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Taze Maydanoz",
+        "amount": 0.5,
+        "unit": "demet",
+        "category": "Produce"
+      },
+      {
+        "name": "Domates Salçası Sosu",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Domates & Sivri Biber Dilimleri",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Harcı Zırhla Kıy ve Yoğur",
+        "description": "Kıyma, sarımsak, kapya biber ve maydanozu zırhla kıyıp baharatlarla yoğurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Tepsiye Bas ve Dilimle",
+        "description": "Harcı yuvarlak tepsiye eşit kalınlıkta elinizle yayın, üçgen dilimler halinde kesin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Süsle ve Fırınla",
+        "description": "Üzerine domates, biber dilimleri ve salçalı sosu koyup 200°C fırında 20 dakika pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 20
+      }
+    ]
+  },
+  {
+    "id": "dish-53",
+    "title": "Hatay Kağıt Kebabı",
+    "title_en": "Hatay Parchment Paper Kebab",
+    "title_de": "Hatay Pergament-Kebab",
+    "subtitle": "Yağlı kağıtta fırınlanmış zırh kıyması ve köz sebzeler",
+    "subtitle_en": "Spiced minced lamb baked in parchment paper to lock in juices",
+    "subtitle_de": "Saftiges Hackfleisch im Backpapier schonend gegart",
+    "description": "Etin suyunu ve kokusunu tamamen içine hapseden nefis pişirme tekniği: Yağlı kağıt üzerinde fırınlanan Hatay kebabı.",
+    "description_en": "Delicately spiced ground lamb flattened onto parchment paper and baked so that every drop of savory juice is preserved.",
+    "description_de": "Schonend im Papier gegarter Kebab, wunderbar aromatisch und saftig.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 380,
+    "tags": [
+      "Kebap",
+      "Et"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 95,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Zırhtan Kuzu & Dana Kıyma",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Sarımsak & Kırmızı Biber",
+        "amount": 3,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Kaya Tuzu & Tane Karabiber",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Yağlı Fırın Kağıdı",
+        "amount": 2,
+        "unit": "yaprak",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Kıymayı Baharatla",
+        "description": "Kıymayı sarımsak ve biberle yoğurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 2,
+        "title": "Kağıda Bas",
+        "description": "Harcı yağlı kağıdın üzerine ince yuvarlak disk şeklinde yayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Fırınla",
+        "description": "220°C fırında 15 dakika suyunu salıp çekene kadar pişirin. Sıcak lavaşla servis yapın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 15
+      }
+    ]
+  },
+  {
+    "id": "dish-54",
+    "title": "Geleneksel Tekirdağ Köftesi",
+    "title_en": "Tekirdag Meatballs",
+    "title_de": "Tekirdağ Köfte",
+    "subtitle": "Özel dinlendirilmiş dana kıyması, irmik ve acı biber salçası mezesi",
+    "subtitle_en": "Springy, succulent grilled meatballs served with spicy pepper sauce",
+    "subtitle_de": "Würzige Rinderhack-Würstchen mit pikanter Paprikapaste",
+    "description": "Trakya’nın tescilli lezzeti: İrmik ve özel baharatlarla yoğrulup dinlendirilen, ızgarada puf puf kabaran köfteler.",
+    "description_en": "Thracian signature: elastic, juicy grilled cylindrical meatballs accompanied by fiery pepper relish.",
+    "description_de": "Traditionelle Spezialität aus Tekirdağ mit unverwechselbarer Textur.",
+    "image": "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 440,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [
+      "Glüten"
+    ],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Dana Döş Kıyma",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "İnce İrmik",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kuru Soğan & Sarımsak",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Karbonat & Maden Suyu",
+        "amount": 0.5,
+        "unit": "çay kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Acı Biber Salçası Sosu",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Harcı Sakız Gibi Yoğur",
+        "description": "Kıyma, irmik, soğan ve sodayı en az 10 dakika sakız kıvamına gelene kadar yoğurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Parmak Şekli Ver",
+        "description": "Köftelere uzun silindirik parmak şekli verin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Döküm Izgarada Pişir",
+        "description": "Çok sıcak ızgarada dışı karamelize içi sulu kalacak şekilde 6 dakika çevirerek pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 6
+      }
+    ]
+  },
+  {
+    "id": "dish-55",
+    "title": "Hakiki İnegöl Köftesi",
+    "title_en": "Inegol Meatballs",
+    "title_de": "Inegöl Köfte",
+    "subtitle": "Baharat katılmadan etin saf tadıyla yoğrulmuş pürüzsüz ızgara köfte",
+    "subtitle_en": "Mild and springy grilled beef sausages made with pure meat flavor",
+    "subtitle_de": "Milde und saftige Fleischbällchen nach Inegöl-Tradition",
+    "description": "Bursa İnegöl’ün 110 yıllık reçetesi: Baharatsız, sadece kaya tuzu ve karbonatla yoğrulup dinlenen elastik lokum köfteler.",
+    "description_en": "Century-old recipe letting high-quality beef shine, with an unmistakably tender yet bouncy texture.",
+    "description_de": "Über 100 Jahre alte Rezeptur für herrlich saftige und milde Köfte.",
+    "image": "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 460,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 93,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Dana Döş & Kuzu Boşluk Kıyma",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuru Soğan Suyu",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Produce"
+      },
+      {
+        "name": "Karbonat & Kaya Tuzu",
+        "amount": 1,
+        "unit": "çay kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Piyaz & Köz Biber",
+        "amount": 1,
+        "unit": "porsiyon",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Harcı Yoğur ve Dinlendir",
+        "description": "Kıymayı tuz, karbonat ve soğan suyuyla yoğurup buzdolabında dinlendirin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Silindir Şekil Ver",
+        "description": "Harcı silindir şeklinde kesip porsiyonlayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Izgarada Çevir",
+        "description": "Sıcak ızgarada sık sık çevirerek 6-7 dakika pişirin. Piyazla sıcak servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 7
+      }
+    ]
+  },
+  {
+    "id": "dish-56",
+    "title": "Geleneksel Kasap Köfte",
+    "title_en": "Butcher’s Style Home Meatballs",
+    "title_de": "Metzger-Köfte nach Hausfrauenart",
+    "subtitle": "Kekik, pul biber, çıtır patates kızartması ve köz domates ile",
+    "subtitle_en": "Homestyle seasoned beef patties grilled to juicy perfection",
+    "subtitle_de": "Klassische saftige Frikadellen mit Pommes frites und Grilltomaten",
+    "description": "Evlerimizin vazgeçilmezi: Sarımsak, kimyon ve kekikle yoğrulup tavada nar gibi kızaran klasik anne köftesi.",
+    "description_en": "Beloved everyday dinner: well-seasoned beef patties paired with crisp French fries and grilled peppers.",
+    "description_de": "Der Liebling am Familientisch: Kräftig gewürzte Frikadellen mit knusprigen Beilagen.",
+    "image": "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 520,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [
+      "Glüten",
+      "Yumurta"
+    ],
+    "basePortions": 2,
+    "matchScore": 96,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Orta Yağlı Dana Kıyma",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuru Soğan & Sarımsak",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Ekmek İçi / Galeta Unu",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kimyon, Kekik & Pul Biber",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Patates Kızartması",
+        "amount": 1,
+        "unit": "porsiyon",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Köfte Harcını Yoğur",
+        "description": "Kıyma, rendelenmiş soğan, sarımsak, ıslatılmış ekmek içi ve baharatları yoğurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Yassı Yuvarlak Şekil Ver",
+        "description": "Avuç içinde yassı yuvarlak köfteler yapın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Tavada Kızart",
+        "description": "Döküm tavada arkalı önlü 3er dakika kızartıp çıtır patateslerle sunun.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 6
+      }
+    ]
+  },
+  {
+    "id": "dish-57",
+    "title": "Taze Kekikli Kuzu Pirzola Izgara",
+    "title_en": "Grilled Lamb Chops with Thyme",
+    "title_de": "Gegrillte Lammkoteletts mit Thymian",
+    "subtitle": "Sızma zeytinyağı ve taze kekikle marine edilmiş kemikli pirzola",
+    "subtitle_en": "Tender bone-in lamb chops charred over high heat with garden thyme",
+    "subtitle_de": "Zarte Lammkoteletts mit Kräutermarinade saftig gegrillt",
+    "description": "Et severlerin favorisi: Yumuşacık kuzu pirzolaların taze kekik, sarımsak ve zeytinyağında dinlendirilip döküm tavada mühürlenmesi.",
+    "description_en": "Premium lamb cutlets marinated in olive oil and wild thyme, seared until crusty on the outside and rosy within.",
+    "description_de": "Feinste Lammkoteletts mit frischem Thymian auf den Punkt gegrillt.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 5,
+    "reviewCount": 610,
+    "tags": [
+      "Et",
+      "Kebap"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 98,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu Pirzola",
+        "amount": 6,
+        "unit": "adet",
+        "category": "Meat"
+      },
+      {
+        "name": "Taze Dağ Kekiği",
+        "amount": 3,
+        "unit": "dal",
+        "category": "Spices"
+      },
+      {
+        "name": "Sızma Zeytinyağı",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Sarımsak & Tane Karabiber",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Pirzolaları Marine Et",
+        "description": "Pirzolaları zeytinyağı, taze kekik ve ezilmiş sarımsakla ovun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Tavayı Kızdır",
+        "description": "Döküm tavayı dumanı çıkana dek iyice ısıtın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Her İki Yüzünü Mühürle",
+        "description": "Her iki yüzünü tam 3er dakika pişirip sıcak dinlendirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 6
+      }
+    ]
+  },
+  {
+    "id": "dish-58",
+    "title": "Geleneksel Kuzu Sac Tava",
+    "title_en": "Turkish Wok Lamb Sauté (Sac Tava)",
+    "title_de": "Sac Tava (Lammfleisch aus der Eisenpfanne)",
+    "subtitle": "Kuşbaşı kuzu eti, domates, sivri biber, sarımsak ve tereyağı",
+    "subtitle_en": "Fast-sautéed diced lamb with peppers and tomatoes in a convex wok",
+    "subtitle_de": "Fein gewürfeltes Lammfleisch mit Tomaten und Peperoni aus der Wok-Pfanne",
+    "description": "İnce demir sac üzerinde yüksek harlı ateşte etlerin domates ve biberle cızırdayarak kısa sürede sulu sulu pişmesi.",
+    "description_en": "Diced lamb flash-fried with garlic, peppers, and juicy tomatoes in a traditional concave iron skillet.",
+    "description_de": "Schnell und heiß gebratenes Lammfleisch mit viel Knoblauch und Tomaten.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 470,
+    "tags": [
+      "Et",
+      "Ev Yemeği"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu Kuşbaşı Et (Küçük Doğranmış)",
+        "amount": 400,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Sivri Biber & Domates",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 4,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Kuyruk Yağı / Tereyağı",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Pul Biber & Kekik",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Sacda Eti Kavur",
+        "description": "Sac tavada eti yüksek ateşte suyunu çekene dek kavurun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Biber ve Sarımsağı Kat",
+        "description": "Doğranmış sivri biber ve sarımsakları ekleyip 3 dakika soteleyin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Domatesle Pişir",
+        "description": "Küp domatesleri ve tereyağını ekleyin, domatesler eriyene kadar 5 dakika harlı ateşte pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 5
+      }
+    ]
+  },
+  {
+    "id": "dish-59",
+    "title": "Közde Kuzu Şiş Kebap",
+    "title_en": "Char-Grilled Lamb Shish Kebab",
+    "title_de": "Lammspieße vom Holzkohlegrill",
+    "subtitle": "Marine kuzu but küpleri, kuyruk yağı, köz sebzeler ve sumaklı pide",
+    "subtitle_en": "Tender cubes of leg of lamb skewered with tail fat over embers",
+    "subtitle_de": "Zarte marinierte Lammfleischwürfel am Spieß gegrillt",
+    "description": "Kuzu etinin en asil hali: Lokum gibi kuzu but parçalarının şişe dizilip köz ateşinde duman aromasıyla pişirilmesi.",
+    "description_en": "Succulent lamb leg cubes alternated with savory tail fat, roasted to perfection over smoky embers.",
+    "description_de": "Saftige Lammspieße mit rauchigem Holzkohlearoma und frischem Zwiebelsalat.",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 510,
+    "tags": [
+      "Et",
+      "Kebap"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuzu But (Küp Doğranmış)",
+        "amount": 450,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Kuyruk Yağı Küpleri",
+        "amount": 80,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Zeytinyağı, Kekik & Pul Biber",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Spices"
+      },
+      {
+        "name": "Tırnak Pide & Köz Sebzeler",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Bakery"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Etleri Marine Et",
+        "description": "Kuzu küplerini zeytinyağı, kekik ve soğan suyuyla harmanlayıp dinlendirin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Şişe Diz",
+        "description": "İki et bir kuyruk yağı şeklinde şişlere saplayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Közde Çevirerek Pişir",
+        "description": "Közde veya döküm tavada her yüzünü 2şer dakika nar gibi kızarana dek pişirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 6
+      }
+    ]
+  },
+  {
+    "id": "dish-60",
+    "title": "Döküm Tavada Dana Antrikot",
+    "title_en": "Cast-Iron Ribeye Steak with Herb Butter",
+    "title_de": "Ribeye-Steak mit Kräuterbutter",
+    "subtitle": "Taze biberiyeli sarımsaklı tereyağı ile mühürlenmiş antrikot",
+    "subtitle_en": "Dry-aged beef ribeye steak seared with foaming rosemary butter",
+    "subtitle_de": "Auf den Punkt gebratenes Ribeye-Steak mit Rosmarin und Knoblauch",
+    "description": "Et lokantası konforu evinizde: Mermersi dokulu dana antrikotun döküm tavada tereyağı banyosu yaptırılarak mühürlenmesi.",
+    "description_en": "Prime marbled ribeye steak seared crisp in smoking cast iron, basted with frothing garlic and rosemary butter.",
+    "description_de": "Saftiges Steak perfekt in der Gusseisenpfanne angebraten mit aromatischer Butter.",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 5,
+    "reviewCount": 780,
+    "tags": [
+      "Et"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 99,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Dana Antrikot (250g)",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Meat"
+      },
+      {
+        "name": "Köy Tereyağı",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Taze Biberiye & Kekik",
+        "amount": 2,
+        "unit": "dal",
+        "category": "Produce"
+      },
+      {
+        "name": "Ezilmiş Sarımsak Dişi",
+        "amount": 3,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Deniz Tuzu & Çekme Karabiber",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Eti Oda Sıcaklığına Getir",
+        "description": "Antrikotları tuz ve karabiberle ovup 15 dakika oda sıcaklığında bekletin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Döküm Tavayı Isıt ve Mühürle",
+        "description": "Döküm tavayı çok kızdırın, etleri her iki yüzünü 2şer dakika mühürleyin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Tereyağı Banyosu Yaptır",
+        "description": "Tereyağı, sarımsak ve biberiyeyi tavaya atıp köpüren yağı kaşıkla etlerin üzerine gezdirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-61",
+    "title": "Geleneksel Süzme Haydari",
+    "title_en": "Authentic Haydari Dip",
+    "title_de": "Klassisches Haydari",
+    "subtitle": "Koyu süzme yoğurt, taze nane, sarımsak ve tereyağında kızdırılmış nane",
+    "subtitle_en": "Thick strained garlic yogurt whipped with fresh and dried mint",
+    "subtitle_de": "Cremiger Knoblauchjoghurt mit Minze und Olivenöl",
+    "description": "Meze masalarının vazgeçilmez kraliçesi: Yoğun koyu süzme yoğurdun ezilmiş sarımsak, taze nane ve tereyağlı naneyle çırpılması.",
+    "description_en": "Iconic Turkish meze: rich strained yogurt seasoned with crushed garlic, olive oil, and sizzled mint.",
+    "description_de": "Der beliebteste Meze-Klassiker aus cremigem Joghurt, Knoblauch und Minze.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 450,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 96,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Koyu Süzme Yoğurt",
+        "amount": 2,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Beyaz Peynir (Ezilmiş)",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Taze Sarımsak",
+        "amount": 3,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Tereyağı & Kuru Nane",
+        "amount": 1.5,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Taze Dereotu & Zeytinyağı",
+        "amount": 1,
+        "unit": "tutam",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Yoğurt ve Peyniri Ez",
+        "description": "Süzme yoğurdu ezilmiş beyaz peynir ve dövülmüş sarımsakla pürüzsüz çırpın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Tereyağlı Naneyi Kızdır",
+        "description": "Küçük tavada tereyağını eritip kuru naneyi hafifçe yakıp ılıtın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Birleştir ve Süsle",
+        "description": "Naneli yağı yoğurda yedirin, üzerine sızma zeytinyağı gezdirip servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-62",
+    "title": "Fırında Pastırmalı Sıcak Humus",
+    "title_en": "Warm Hummus with Pastirma",
+    "title_de": "Warmer Hummus mit Pastırma",
+    "subtitle": "İpeksi tahinli nohut püresi üzerinde tereyağında çıtırlaşmış pastırma",
+    "subtitle_en": "Creamy warm tahini hummus crowned with crispy cured beef slices",
+    "subtitle_de": "Cremiger warmer Kichererbsen-Dip mit knusprigem Rinderschinken",
+    "description": "Antakya lezzet şöleni: İpeksi kıvamda ezilen nohut ve tahinin fırında ısıtılıp tereyağında cızırdayan pastırmayla buluşması.",
+    "description_en": "Decadent warm meze: velvety tahini-rich chickpea dip crowned with sizzling butter and spiced cured beef.",
+    "description_de": "Warme Delikatesse aus feinem Kichererbsenpüree und knusprig gebratenem Pastırma.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 5,
+    "reviewCount": 590,
+    "tags": [
+      "Meze",
+      "Et"
+    ],
+    "allergens": [
+      "Susam",
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 99,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Haşlanmış Kabuksuz Nohut",
+        "amount": 2,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Çifte Kavrulmuş Tahin",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Çemeni Sıyrılmış Pastırma",
+        "amount": 80,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "Tereyağı & Kimyon",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Taze Limon Suyu & Sarımsak",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Humusu İpeksi Çek",
+        "description": "Nohut, tahin, limon suyu, sarımsak ve kimyonu buzlu su ilavesiyle pürüzsüz çekin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Pastırmayı Tereyağında Çıtırdat",
+        "description": "Pastırma dilimlerini tereyağında 1-2 dakika kokusu çıkana dek çevirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Toprak Güveçte Fırınla ve Sun",
+        "description": "Humusu güvece yayıp 5 dk fırınlayın, üzerine cızırdayan pastırmayı ve tereyağını dökün.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 5
+      }
+    ]
+  },
+  {
+    "id": "dish-63",
+    "title": "Ege Usulü Acılı Atom Mezesi",
+    "title_en": "Spicy Atom Yogurt Meze",
+    "title_de": "Scharfer Atom-Dip",
+    "subtitle": "Koyu süzme yoğurt yatağında tereyağında yakılmış kuru Arnavut biberi",
+    "subtitle_en": "Smoky roasted dried red peppers sizzling in butter over chilled yogurt",
+    "subtitle_de": "Feurige getrocknete Paprika in Butter auf kühlem Joghurt",
+    "description": "Meyhane klasiği: Buz gibi sarımsaklı süzme yoğurdun üzerine tereyağında kavrulup alevlenen kıpkırmızı çıtır Arnavut biberleri.",
+    "description_en": "Exciting contrast of cool garlic-strained yogurt topped with crispy dried red chilies sizzling in butter.",
+    "description_de": "Klassiker aus der Taverne: Eiskalter Knoblauchjoghurt trifft auf feurige Chilies in schäumender Butter.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 510,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Acılı"
+    ],
+    "allergens": [
+      "Süt & Laktoz",
+      "Aşırı Acı"
+    ],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Koyu Süzme Yoğurt",
+        "amount": 2,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Kuru Acı Arnavut Biberi",
+        "amount": 6,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Köy Tereyağı",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Sarımsak & Kaya Tuzu",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Sarımsaklı Yoğurdu Yay",
+        "description": "Süzme yoğurdu ezilmiş sarımsak ve tuzla çırpıp yayvan servis tabağına yayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Biberleri Tereyağında Yak",
+        "description": "Doğranmış kuru acı biberleri tereyağında rengi hafif koyulaşana kadar kızdırın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Yoğurdun Üzerine Cızırdat",
+        "description": "Kızgın acı tereyağını soğuk yoğurdun üzerine cızırdayarak döküp hemen servis yapın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 2
+      }
+    ]
+  },
+  {
+    "id": "dish-64",
+    "title": "Geleneksel Zeytinyağlı Fava",
+    "title_en": "Aegean Broad Bean Fava Puree",
+    "title_de": "Ägäisches Fava (Ackerbohnen-Püree)",
+    "subtitle": "Kuru bakla ezmesi, karamelize kırmızı soğan, dereotu ve sızma zeytinyağı",
+    "subtitle_en": "Velvety broad bean puree topped with caramelized red onions and dill",
+    "subtitle_de": "Feines Saubohnenpüree mit roten Zwiebeln und Dill",
+    "description": "Ege sofralarının asırlık mezesi: Kuru iç baklanın soğan ve zeytinyağı ile haşlanıp pürüzsüz dilimlenebilir kıvama gelmesi.",
+    "description_en": "Traditional Aegean puree of dried fava beans whipped with olive oil, garnished with sweet red onions and capers.",
+    "description_de": "Traditionelle ägäische Vorspeise aus zartem Bohnenpüree und bestem Olivenöl.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 dk",
+    "prepTimeMinutes": 30,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 330,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı",
+      "Zeytinyağlı"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 92,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kuru İç Bakla",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kuru Soğan",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Toz Şeker & Limon Suyu",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kırmızı Soğan & Taze Dereotu",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Baklaları Haşla",
+        "description": "Bakla ve soğanı zeytinyağı, şeker ve su ile baklalar eriyene kadar haşlayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 20
+      },
+      {
+        "id": 2,
+        "title": "Pürüzsüz Çek ve Kalıba Dök",
+        "description": "Blenderdan geçirip kalıba dökün ve buzdolabında kıvam alması için soğutun.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Dilimle ve Süsle",
+        "description": "Kare dilimleyip üzerine bol sızma zeytinyağı, küp kırmızı soğan ve dereotu serpin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-65",
+    "title": "Geleneksel Şakşuka",
+    "title_en": "Traditional Shakshuka Meze",
+    "title_de": "Traditionelles Shakshuka Meze",
+    "subtitle": "Kızarmış küp patlıcan, kabak ve biberlerin sarımsaklı domates sosuyla dansı",
+    "subtitle_en": "Fried eggplant, zucchini, and peppers in chunky garlic tomato sauce",
+    "subtitle_de": "Gebratenes Gemüse in stückiger Knoblauch-Tomatensauce",
+    "description": "Yaz akşamlarının neşesi: Küp patlıcan, kabak ve sivri biberlerin hafifçe kızartılıp zeytinyağlı sarımsaklı domates sosuyla harmanlanması.",
+    "description_en": "Vibrant Turkish meze of golden pan-fried summer squash and eggplants smothered in tangy roasted garlic tomato sauce.",
+    "description_de": "Beliebte Vorspeise aus gebratenem Sommergemüse in aromatischer Tomatensauce.",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 410,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Zeytinyağlı"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kemer Patlıcan & Kabak",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Yeşil Sivri Biber & Kapya",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Olgun Domates",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 4,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı & Elma Sirkesi",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Sebzeleri Küp Doğra ve Kızart",
+        "description": "Patlıcan, kabak ve biberleri küp doğrayıp hafifçe kızartarak süzdürün.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 12
+      },
+      {
+        "id": 2,
+        "title": "Sarımsaklı Domates Sosunu Pişir",
+        "description": "Rendelenmiş domates, sarımsak, zeytinyağı ve sirkeyi koyulaşana kadar pişirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 3,
+        "title": "Birleştir ve Dinlendir",
+        "description": "Kızaran sebzeleri domates sosuyla ezmeden nazikçe karıştırıp ılık veya soğuk servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-66",
+    "title": "Gaziantep Usulü Zırh Acılı Ezme",
+    "title_en": "Spicy Antep Ezme Salad",
+    "title_de": "Feurige Antep-Gemüsepastete",
+    "subtitle": "Zırhla incecik kıyılmış domates, biber, ceviz, nar ekşisi ve taze nane",
+    "subtitle_en": "Finely hand-minced spicy salad with pomegranate molasses and walnuts",
+    "subtitle_de": "Fein gehackter pikanter Gemüsesalat mit Granatapfelsirup",
+    "description": "Kebap sofralarının iştah açıcısı: Domates, kapya biber, maydanoz ve cevizin zırhla incecik kıyılıp nar ekşisiyle sulandırılmadan sunulması.",
+    "description_en": "Hand-chopped spicy relish of fresh tomatoes, peppers, and walnuts laced with tart pomegranate molasses.",
+    "description_de": "Würziger Salat aus fein gehackten Tomaten, Paprika und Walnüssen.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 470,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Acılı"
+    ],
+    "allergens": [
+      "Ceviz",
+      "Aşırı Acı"
+    ],
+    "basePortions": 2,
+    "matchScore": 95,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Sert Tarla Domatesi",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Kırmızı Kapya & Yeşil Acı Biber",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Kuru Soğan & Maydanoz",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "İnce Çekilmiş Ceviz İçi",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Hakiki Nar Ekşisi & İsot",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Sebzeleri Zırhla Kıy",
+        "description": "Domateslerin çekirdeklerini çıkarın, biberler ve soğanla birlikte zırhla incecik kıyın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Suyunu Süzdür",
+        "description": "Kıyılan sebzeleri tel süzgece alıp fazla suyunu nazikçe süzdürün.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 3
+      },
+      {
+        "id": 3,
+        "title": "Sosla ve Ceviz Ekle",
+        "description": "Ceviz içi, nar ekşisi, zeytinyağı ve isotla harmanlayıp servis tabağına yayın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-67",
+    "title": "Hatay Usulü Muhammara (Cevizli Biber Ezmesi)",
+    "title_en": "Muhammara (Roasted Pepper & Walnut Dip)",
+    "title_de": "Muhammara (Paprika-Walnuss-Dip)",
+    "subtitle": "Köz kırmızı biber, ceviz içi, tahin, nar ekşisi ve kimyon",
+    "subtitle_en": "Sweet and savory roasted red pepper dip crushed with walnuts and tahini",
+    "subtitle_de": "Aromatischer Dip aus gerösteter Paprika, Walnüssen und Tahin",
+    "description": "Doğu Akdeniz’in zengin lezzeti: Közlenmiş kırmızı biberlerin ceviz, bayat ekmek içi, tahin ve nar ekşisiyle ezilmesi.",
+    "description_en": "Rich and savory Levantine dip made of smoky roasted red peppers, toasted walnuts, and sweet pomegranate glaze.",
+    "description_de": "Feine orientalische Paste aus gerösteten Paprikaschoten und knackigen Walnüssen.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 380,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Ceviz",
+      "Susam",
+      "Glüten"
+    ],
+    "basePortions": 2,
+    "matchScore": 96,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Közlenmiş Kırmızı Biber",
+        "amount": 4,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Ceviz İçi",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Tahin & Nar Ekşisi",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Bayat Ekmek İçi",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Bakery"
+      },
+      {
+        "name": "Kimyon, Sarımsak & Zeytinyağı",
+        "amount": 1,
+        "unit": "tatlı kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Ceviz ve Ekmeği Çek",
+        "description": "Ceviz içi ve bayat ekmek içini mutfak robotunda hafif iri taneli çekin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 2,
+        "title": "Köz Biberleri Kat",
+        "description": "Közlenmiş kırmızı biber, sarımsak, tahin ve nar ekşisini ekleyip kıvam alana dek çekin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Zeytinyağı ile Süsle",
+        "description": "Tabağa kaşıkla şekil vererek yayın, üzerine ceviz ve sızma zeytinyağı dökün.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-68",
+    "title": "Köz Patlıcanlı Babagannuş",
+    "title_en": "Smoky Babaganoush",
+    "title_de": "Rauchiges Babaganoush",
+    "subtitle": "Odun ateşinde közlenmiş patlıcan, köz biber, sarımsak ve sızma zeytinyağı",
+    "subtitle_en": "Flame-roasted smoky eggplant dip with crushed garlic and lemon",
+    "subtitle_de": "Über offener Flamme geröstete Auberginen mit Knoblauch",
+    "description": "İs kokusuyla büyüleyen hafif meze: Ateşte közlenen patlıcan ve kapya biberlerin sarımsak ve nar ekşisiyle zırhta kıyılması.",
+    "description_en": "Earthy and smoky grilled eggplant salad laced with crushed garlic, extra virgin olive oil, and lemon.",
+    "description_de": "Rauchiger Auberginensalat verfeinert mit Knoblauch und fruchtiger Zitrone.",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 340,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 93,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Közlenmiş Patlıcan",
+        "amount": 3,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Közlenmiş Kapya Biber",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Taze Sarımsak",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı & Nar Ekşisi",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Taze Maydanoz",
+        "amount": 1,
+        "unit": "avuç",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Patlıcan ve Biberi Közle",
+        "description": "Patlıcan ve biberleri ocak ateşinde közleyip kabuklarını soyun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Bıçakla İncecik Kıy",
+        "description": "Köz sebzeleri tahtada bıçakla incecik kıyın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 3,
+        "title": "Sosla",
+        "description": "Sarımsak, nar ekşisi, tuz ve zeytinyağı ile harmanlayıp servis yapın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-69",
+    "title": "Pembe Sultan (Pancar Mezesi)",
+    "title_en": "Pink Sultan Beetroot Meze",
+    "title_de": "Pink Sultan Rote-Bete-Dip",
+    "subtitle": "Haşlanmış tatlı kırmızı pancar, sarımsaklı süzme yoğurt ve ceviz",
+    "subtitle_en": "Vibrant roasted beet puree swirled with thick garlic yogurt and walnuts",
+    "subtitle_de": "Leuchtender Dip aus Roter Bete mit cremigem Knoblauchjoghurt",
+    "description": "Masaların en fotojenik lezzeti: Tatlı pancarın rendelenip sarımsaklı süzme yoğurtla buluştuğunda aldığı büyüleyici pembe renk.",
+    "description_en": "Stunning jewel-toned dip of tender roasted beets folded into creamy strained yogurt, crowned with crunchy walnuts.",
+    "description_de": "Farbenfrohe Vorspeise mit gesunder Roter Bete und knackigen Nüssen.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 290,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Süt & Laktoz",
+      "Ceviz"
+    ],
+    "basePortions": 2,
+    "matchScore": 92,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Haşlanmış Kırmızı Pancar",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Koyu Süzme Yoğurt",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Kavrulmuş Ceviz İçi",
+        "amount": 0.5,
+        "unit": "çay bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Sızma Zeytinyağı",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Pancarları Rendele",
+        "description": "Haşlanmış pancarları rendenin ince tarafıyla rendeleyip suyunu hafifçe sıkın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Yoğurtla Karıştır",
+        "description": "Süzme yoğurt, dövülmüş sarımsak ve zeytinyağını pancarla karıştırıp pembe kremaya dönüştürün.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Cevizle Süsle",
+        "description": "Servis tabağına alıp üzerine iri ceviz parçaları ve zeytinyağı gezdirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 2
+      }
+    ]
+  },
+  {
+    "id": "dish-70",
+    "title": "Ege Usulü Taze Deniz Börülcesi",
+    "title_en": "Aegean Sea Samphire",
+    "title_de": "Ägäischer Meerfenchel (Deniz Börülcesi)",
+    "subtitle": "Haşlanmış taze börülce, ezilmiş sarımsak, taze limon suyu ve sızma zeytinyağı",
+    "subtitle_en": "Blanched sea beans tossed in pungent garlic and citrus olive oil",
+    "subtitle_de": "Meeresbohnen mit feinem Knoblauch-Zitronen-Dressing",
+    "description": "Balık sofralarının baş tacı: Deniz suyunun doğal tuzunu taşıyan taze börülcelerin sarımsaklı zeytinyağı sosuyla buluşması.",
+    "description_en": "Coastal treasure: crisp sea samphire blanched and stripped from stems, bathed in zesty garlic-citrus emulsion.",
+    "description_de": "Frische Meerespflanzen mit natürlicher Meersalznote und Olivenöl.",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 dk",
+    "prepTimeMinutes": 20,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 310,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı",
+      "Zeytinyağlı"
+    ],
+    "allergens": [],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Taze Deniz Börülcesi",
+        "amount": 2,
+        "unit": "demet",
+        "category": "Produce"
+      },
+      {
+        "name": "Taze Sarımsak",
+        "amount": 3,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Taze Limon Suyu",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı",
+        "amount": 4,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Börülceleri Haşla",
+        "description": "Deniz börülcelerini kaynar suda 10 dakika haşlayıp hemen buzlu suya atın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Saplarından Ayıkla",
+        "description": "Sap kısmından tutup yeşil etli kısımlarını tek hamlede sıyırın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Sarımsaklı Sosla Harmanla",
+        "description": "Ezilmiş sarımsak, bol limon suyu ve zeytinyağını börülcelerle karıştırıp servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-71",
+    "title": "Közlenmiş Havuç Tarator",
+    "title_en": "Carrot Tarator Yogurt Dip",
+    "title_de": "Möhren-Tarator mit Joghurt",
+    "subtitle": "Zeytinyağında sotelenmiş tatlı havuç, sarımsaklı süzme yoğurt ve ceviz",
+    "subtitle_en": "Sautéed sweet grated carrots swirled into thick garlic yogurt",
+    "subtitle_de": "Karamellisierte Möhren in samtigem Joghurt mit Walnüssen",
+    "description": "Her lokması damak çatlatan pratik lezzet: Havuçların zeytinyağında tatlanana dek sotelenip süzme yoğurt ve cevizle harmanlanması.",
+    "description_en": "Irresistible creamy meze of caramelized shredded carrots folded into garlic yogurt and toasted walnuts.",
+    "description_de": "Cremiger Vorspeisenklassiker aus schonend gebratenen Möhren und Joghurt.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 dk",
+    "prepTimeMinutes": 15,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 360,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Süt & Laktoz",
+      "Ceviz"
+    ],
+    "basePortions": 2,
+    "matchScore": 92,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Havuç (Rendelenmiş)",
+        "amount": 4,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Koyu Süzme Yoğurt",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı",
+        "amount": 3,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "İri Kırılmış Ceviz",
+        "amount": 0.5,
+        "unit": "çay bardağı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Havuçları Sotele",
+        "description": "Rendelenmiş havuçları zeytinyağında yumuşayıp tatlanana dek 7-8 dakika soteleyin ve soğutun.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Sarımsaklı Yoğurdu Çırp",
+        "description": "Süzme yoğurdu ezilmiş sarımsak ve tuzla çırpın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 3
+      },
+      {
+        "id": 3,
+        "title": "Birleştir ve Cevizle",
+        "description": "Havuçları yoğurda katın, ceviz parçalarıyla süsleyip servis yapın.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-72",
+    "title": "Geleneksel Köpoğlu Mancası",
+    "title_en": "Kopoglu Eggplant Dip",
+    "title_de": "Köpoğlu Auberginen-Meze",
+    "subtitle": "Kızarmış patlıcan ve biberler, sarımsaklı süzme yoğurt ve tereyağlı domates sos",
+    "subtitle_en": "Fried eggplant topped with chilled yogurt and warm tomato confit",
+    "subtitle_de": "Gebratene Auberginen mit Joghurt und warmer Tomatensauce",
+    "description": "Meyhanelerin en sevilen üç katlı lezzeti: Kızarmış patlıcan, sarımsaklı yoğurt ve üzerinde cızırdayan domates sosunun muhteşem uyumu.",
+    "description_en": "Three-tiered classic meze: crisp fried eggplant cubes crowned with garlic yogurt and hot tomato relish.",
+    "description_de": "Herrliche Schichtung aus gebratenen Auberginen, Knoblauchjoghurt und Tomatensauce.",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 420,
+    "tags": [
+      "Meze",
+      "Vejetaryen"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 95,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kemer Patlıcan",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Yeşil Köy Biberi",
+        "amount": 2,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Sarımsaklı Süzme Yoğurt",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Tereyağlı Domates Sosu",
+        "amount": 0.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Patlıcanları Küp Kızart",
+        "description": "Patlıcan ve biberleri küp doğrayıp zeytinyağında altın sarısı kızartın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 10
+      },
+      {
+        "id": 2,
+        "title": "Yoğurtla Harmanla",
+        "description": "Kızaran sebzeleri sarımsaklı yoğurtla buluşturup tabağa yayın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 4
+      },
+      {
+        "id": 3,
+        "title": "Domates Sosunu Gezdir",
+        "description": "Tavada pişirilen sıcak domates sosunu yoğurdun üzerine döküp sunun.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 3
+      }
+    ]
+  },
+  {
+    "id": "dish-73",
+    "title": "Geleneksel Çerkez Tavuğu",
+    "title_en": "Circassian Walnut Chicken",
+    "title_de": "Tscherkessisches Hähnchen (Çerkez Tavuğu)",
+    "subtitle": "Didiklenmiş tavuk göğsü, ceviz içi, bayat ekmek, sarımsak ve pul biberli yağ",
+    "subtitle_en": "Poached chicken shredded into rich garlic and walnut paste",
+    "subtitle_de": "Zartes Hähnchenfleisch in cremiger Walnusspaste",
+    "description": "Kafkas mutfağından saraylara giren başyapıt: Tiftiklenmiş tavuk etlerinin ceviz, sarımsak ve tavuk suyunda ezilmiş ekmek harcıyla yoğrulması.",
+    "description_en": "Silky, aromatic cold meze of poached shredded chicken folded into crushed walnut sauce seasoned with coriander.",
+    "description_de": "Elegante kalte Vorspeise aus zartem Hühnerfleisch und nussiger Sauce.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 dk",
+    "prepTimeMinutes": 25,
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "reviewCount": 390,
+    "tags": [
+      "Meze",
+      "Et"
+    ],
+    "allergens": [
+      "Ceviz",
+      "Glüten"
+    ],
+    "basePortions": 2,
+    "matchScore": 94,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Haşlanmış Tavuk Göğsü (Didiklenmiş)",
+        "amount": 300,
+        "unit": "g",
+        "category": "Meat"
+      },
+      {
+        "name": "İnce Çekilmiş Ceviz İçi",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Tavuk Suyunda Islatılmış Ekmek İçi",
+        "amount": 2,
+        "unit": "dilim",
+        "category": "Bakery"
+      },
+      {
+        "name": "Sarımsak & Kişniş",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Ceviz Yağı & Kırmızı Toz Biber",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Spices"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Tavukları İncecik Tiftikleyin",
+        "description": "Haşlanmış tavuk göğsünü tel tel olacak şekilde elinizle tiftikleyin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 8
+      },
+      {
+        "id": 2,
+        "title": "Cevizli Ezmeyi Hazırla",
+        "description": "Ceviz, sarımsak ve ıslatılmış ekmek içini tavuk suyuyla macun haline getirin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Harmanla ve Yağını Gezdir",
+        "description": "Tavukla cevizli harcı yoğurup tabağa yayın. Üzerine kırmızı biberli ceviz yağını gezdirin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 4
+      }
+    ]
+  },
+  {
+    "id": "dish-74",
+    "title": "Yoğurtlu Taze Semizotu Salatası",
+    "title_en": "Purslane with Garlic Yogurt",
+    "title_de": "Portulak mit Knoblauchjoghurt",
+    "subtitle": "Taze körpe semizotu yaprakları, süzme yoğurt, sarımsak ve sızma zeytinyağı",
+    "subtitle_en": "Crisp fresh purslane leaves folded in garlic yogurt and olive oil",
+    "subtitle_de": "Knackiger Portulak mit cremigem Knoblauchjoghurt",
+    "description": "Doğal omega-3 şöleni: Taptaze çıtır semizotlarının soğuk sarımsaklı süzme yoğurt ve sızma zeytinyağı ile ferahlatıcı buluşması.",
+    "description_en": "Nutrient-rich summer staple: crisp purslane leaves tossed with chilled garlic-spiked strained yogurt and olive oil.",
+    "description_de": "Erfrischender Sommersalat aus saftigem Portulak und kaltem Joghurt.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "10 dk",
+    "prepTimeMinutes": 10,
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "reviewCount": 310,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Süt & Laktoz"
+    ],
+    "basePortions": 2,
+    "matchScore": 91,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Taze Körpe Semizotu",
+        "amount": 1,
+        "unit": "demet",
+        "category": "Produce"
+      },
+      {
+        "name": "Süzme Yoğurt",
+        "amount": 1.5,
+        "unit": "su bardağı",
+        "category": "Dairy"
+      },
+      {
+        "name": "Sarımsak",
+        "amount": 2,
+        "unit": "diş",
+        "category": "Produce"
+      },
+      {
+        "name": "Sızma Zeytinyağı & Pul Biber",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Semizotunu Ayıkla",
+        "description": "Semizotunu bol suda yıkayıp yapraklarını saplarıyla birlikte kurulayın.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 5
+      },
+      {
+        "id": 2,
+        "title": "Sarımsaklı Yoğurdu Çırp",
+        "description": "Süzme yoğurdu sarımsak ve tuzla çırpın.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 3
+      },
+      {
+        "id": 3,
+        "title": "Birleştir",
+        "description": "Semizotunu yoğurda katıp ezmeden karıştırın, üzerine zeytinyağı gezdirip servis edin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 2
+      }
+    ]
+  },
+  {
+    "id": "dish-75",
+    "title": "Geleneksel Mercimek Köftesi",
+    "title_en": "Lentil Kofte Patties",
+    "title_de": "Linsen-Köfte",
+    "subtitle": "Kırmızı mercimek, ince bulgur, bol taze yeşillik ve nar ekşisi",
+    "subtitle_en": "Savory vegan red lentil and bulgur fingers wrapped in crisp lettuce",
+    "subtitle_de": "Vegane Linsen-Bulgur-Frikadellen im Salatblatt serviert",
+    "description": "Türk altın günlerinin vazgeçilmez kraliçesi: Pişen kırmızı mercimeğin ince bulgurla demlenmesi, salçalı soğan ve bol yeşillikle yoğrulup sıkılması.",
+    "description_en": "Beloved vegan finger food: seasoned red lentils and cracked wheat kneaded with scallions, parsley, and sumac.",
+    "description_de": "Traditionelle vegane Spezialität aus roten Linsen, feinem Bulgur und frischen Kräutern.",
+    "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 dk",
+    "prepTimeMinutes": 30,
+    "difficulty": "Easy",
+    "rating": 4.9,
+    "reviewCount": 580,
+    "tags": [
+      "Meze",
+      "Vejetaryen",
+      "Sağlıklı"
+    ],
+    "allergens": [
+      "Glüten"
+    ],
+    "basePortions": 2,
+    "matchScore": 97,
+    "partnerLiked": false,
+    "userLiked": false,
+    "ingredients": [
+      {
+        "name": "Kırmızı Mercimek",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Köftelik İnce Bulgur",
+        "amount": 1,
+        "unit": "su bardağı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Kuru Soğan & Zeytinyağı",
+        "amount": 1,
+        "unit": "adet",
+        "category": "Produce"
+      },
+      {
+        "name": "Biber & Domates Salçası",
+        "amount": 2,
+        "unit": "yemek kaşığı",
+        "category": "Pantry"
+      },
+      {
+        "name": "Taze Soğan, Maydanoz & Marul",
+        "amount": 1,
+        "unit": "demet",
+        "category": "Produce"
+      }
+    ],
+    "steps": [
+      {
+        "id": 1,
+        "title": "Mercimeği Haşla ve Bulguru Demle",
+        "description": "Mercimeği 3 bardak suda haşlayın, ocaktan alıp ince bulguru ekleyin ve kapağı kapalı 15 dk demleyin.",
+        "chef": "chef1",
+        "chefName": "1. Şef",
+        "durationMins": 15
+      },
+      {
+        "id": 2,
+        "title": "Salçalı Soğanı Kavur",
+        "description": "Doğranmış kuru soğanı zeytinyağında salçalar ve baharatlarla kavurup mercimeğe ilave edin.",
+        "chef": "chef2",
+        "chefName": "2. Şef",
+        "durationMins": 6
+      },
+      {
+        "id": 3,
+        "title": "Yeşillikleri Kat ve Parmakla Sık",
+        "description": "İnce kıyılmış taze soğan ve maydanozu ekleyip yoğurun, avuç içinde sıkarak marul yaprakları üzerine dizin.",
+        "chef": "both",
+        "chefName": "İki Şef Birlikte",
+        "durationMins": 8
+      }
+    ]
+  }
+]
