@@ -2,7 +2,9 @@
 // Ensures mobile cameras scanning the QR code NEVER get directed to an unreachable http://localhost:3000
 // Instead, points to the live public shared URL or detected live domain.
 
-export const PUBLIC_APP_URL = 'https://ais-pre-ky6cp5q7dfunxjqj7ax66w-952999318419.europe-west2.run.app';
+export const PUBLIC_APP_URL =
+  (import.meta.env.VITE_PUBLIC_APP_URL as string) ||
+  'https://ais-pre-ky6cp5q7dfunxjqj7ax66w-952999318419.europe-west2.run.app';
 
 export interface PairingUrlOptions {
   mode?: 'cloud' | 'local' | 'custom';

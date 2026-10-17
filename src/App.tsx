@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ScreenTab, Dish, GroceryItem, TasteDuel, UserProfile, Language, ChatMessage } from './types';
 import {
@@ -163,6 +163,18 @@ export default function App() {
     }
   }, []);
 
+  const currentTabRef = useRef<ScreenTab>(currentTab);
+  useEffect(() => {
+    currentTabRef.current = currentTab;
+  }, [currentTab]);
+
+  // Cleanup pairingSync on component unmount
+  useEffect(() => {
+    return () => {
+      pairingSync.destroy();
+    };
+  }, []);
+
   // Real-time synchronization listener (cross-device & cross-tab)
   useEffect(() => {
     pairingSync.setPairCode(user.partner.pairCode || 'CRAVE-9821');
@@ -170,7 +182,7 @@ export default function App() {
 
     const unsub = pairingSync.subscribe((payload) => {
       if (payload.type === 'PARTNER_CONNECTED') {
-        const incomingName = payload.data?.name || payload.sender;
+        const incomingName = (payload.data as any)?.name || payload.sender;
         const otherPersonName = incomingName && incomingName !== user.name
           ? incomingName
           : (user.name === 'Cihat' ? 'Müge' : 'Cihat');
@@ -191,7 +203,7 @@ export default function App() {
           // ignore
         }
       } else if (payload.type === 'CHAT_MESSAGE') {
-        const incoming = payload.data;
+        const incoming = payload.data as any;
         if (incoming && incoming.id) {
           const isFromMe = (incoming.author || payload.sender) === user.name;
           const normalizedMsg: ChatMessage = {
@@ -203,7 +215,7 @@ export default function App() {
             return [...prev, normalizedMsg];
           });
           if (!isFromMe) {
-            if (currentTab !== 'chat') {
+            if (currentTabRef.current !== 'chat') {
               setUnreadChatCount((c) => c + 1);
             }
             sound.playNotification();
@@ -213,7 +225,7 @@ export default function App() {
     });
 
     return unsub;
-  }, [user.name, user.partner.pairCode, currentTab]);
+  }, [user.name, user.partner.pairCode]);
 
   // Save changes to localStorage
   useEffect(() => {
@@ -226,45 +238,51 @@ export default function App() {
 
   // Robust Allergen & Category Filter
   // When user has allergies or dislikes selected, dishes containing matching allergens or ingredients are genuinely HIDDEN!
-  const userAllergiesLower = (user.allergies || []).map((a) => a.toLowerCase().trim()).filter(Boolean);
+  const userAllergiesLower = useMemo(() => {
+    return (user.allergies || []).map((a) => a.toLowerCase().trim()).filter(Boolean);
+  }, [user.allergies]);
 
-  const dishesWithoutAllergens = dishes.filter((dish) => {
-    if (userAllergiesLower.length === 0) return true;
+  const dishesWithoutAllergens = useMemo(() => {
+    if (userAllergiesLower.length === 0) return dishes;
 
-    // Check allergen tags
-    const hasAllergen = (dish.allergens || []).some((alg) =>
-      userAllergiesLower.some((ua) =>
-        alg.toLowerCase().includes(ua) || ua.includes(alg.toLowerCase())
-      )
-    );
+    return dishes.filter((dish) => {
+      // Check allergen tags
+      const hasAllergen = (dish.allergens || []).some((alg) =>
+        userAllergiesLower.some((ua) =>
+          alg.toLowerCase().includes(ua) || ua.includes(alg.toLowerCase())
+        )
+      );
 
-    // Check ingredients
-    const hasDislikedIngredient = (dish.ingredients || []).some((ing) =>
-      userAllergiesLower.some((ua) =>
-        ing.name.toLowerCase().includes(ua) || ua.includes(ing.name.toLowerCase())
-      )
-    );
+      // Check ingredients
+      const hasDislikedIngredient = (dish.ingredients || []).some((ing) =>
+        userAllergiesLower.some((ua) =>
+          ing.name.toLowerCase().includes(ua) || ua.includes(ing.name.toLowerCase())
+        )
+      );
 
-    // Check title keywords
-    const hasDislikedTitle = userAllergiesLower.some((ua) =>
-      dish.title.toLowerCase().includes(ua) ||
-      (dish.title_en && dish.title_en.toLowerCase().includes(ua))
-    );
+      // Check title keywords
+      const hasDislikedTitle = userAllergiesLower.some((ua) =>
+        dish.title.toLowerCase().includes(ua) ||
+        (dish.title_en && dish.title_en.toLowerCase().includes(ua))
+      );
 
-    return !hasAllergen && !hasDislikedIngredient && !hasDislikedTitle;
-  });
+      return !hasAllergen && !hasDislikedIngredient && !hasDislikedTitle;
+    });
+  }, [dishes, userAllergiesLower]);
 
   const hiddenDueToAllergiesCount = dishes.length - dishesWithoutAllergens.length;
 
-  const filteredDishes = dishesWithoutAllergens.filter((dish) => {
-    if (activeCategory === 'All') return true;
-    const catLower = activeCategory.toLowerCase();
-    return (
-      dish.tags.some((t) => t.toLowerCase() === catLower) ||
-      dish.tags.some((t) => t.toLowerCase().includes(catLower)) ||
-      dish.title.toLowerCase().includes(catLower)
-    );
-  });
+  const filteredDishes = useMemo(() => {
+    return dishesWithoutAllergens.filter((dish) => {
+      if (activeCategory === 'All') return true;
+      const catLower = activeCategory.toLowerCase();
+      return (
+        dish.tags.some((t) => t.toLowerCase() === catLower) ||
+        dish.tags.some((t) => t.toLowerCase().includes(catLower)) ||
+        dish.title.toLowerCase().includes(catLower)
+      );
+    });
+  }, [dishesWithoutAllergens, activeCategory]);
 
   // Handle adding custom dish (Pro feature)
   const handleAddCustomDish = (newDish: Dish) => {
@@ -276,19 +294,27 @@ export default function App() {
     setDishes((prev) => [...imported, ...prev]);
   };
 
-  // Handle adding recipe ingredients to grocery cart automatically
+  // Handle adding recipe ingredients to grocery cart automatically without duplication
   const handleAddIngredientsToGrocery = (dish: Dish, portions: number = 2) => {
     const ratio = portions / (dish.basePortions || 2);
-    const newItems: GroceryItem[] = dish.ingredients.map((ing, idx) => ({
-      id: `recipe-item-${Date.now()}-${idx}`,
-      name: `${Math.round(ing.amount * ratio * 10) / 10} ${ing.unit} ${ing.name}`,
-      fromRecipe: dish.title,
-      checked: false,
-      addedBy: user.name,
-      category: ing.category || 'Pantry'
-    }));
+    setGroceries((prev) => {
+      const existingNames = new Set(prev.map((item) => item.name.toLowerCase().trim()));
+      const newItems: GroceryItem[] = dish.ingredients
+        .map((ing, idx) => ({
+          id: `recipe-item-${Date.now()}-${idx}`,
+          name: `${Math.round(ing.amount * ratio * 10) / 10} ${ing.unit} ${ing.name}`,
+          fromRecipe: dish.title,
+          checked: false,
+          addedBy: user.name,
+          category: ing.category || 'Pantry'
+        }))
+        .filter((item) => !existingNames.has(item.name.toLowerCase().trim()));
 
-    setGroceries((prev) => [...newItems, ...prev]);
+      if (newItems.length === 0) {
+        return prev;
+      }
+      return [...newItems, ...prev];
+    });
     setSelectedRecipeDish(dish);
     sound.playSuccess();
   };

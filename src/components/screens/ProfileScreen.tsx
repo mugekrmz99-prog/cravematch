@@ -287,7 +287,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   ) : (
                     <span className="text-[8px] font-bold text-stone-500 mt-1 flex items-center gap-0.5">
                       <Lock className="w-2.5 h-2.5" />
-                      <span>{badge.progress}%</span>
+                      <span>{badge.progress}/{badge.maxProgress}</span>
                     </span>
                   )}
                 </button>
@@ -746,18 +746,24 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </div>
 
               {/* Progress Bar */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-bold text-stone-600">
-                  <span>İlerleme</span>
-                  <span>{selectedBadgeModal.progress}%</span>
-                </div>
-                <div className="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-amber-500 to-[#E05A3D] rounded-full transition-all duration-500"
-                    style={{ width: `${selectedBadgeModal.progress}%` }}
-                  />
-                </div>
-              </div>
+              {(() => {
+                const max = selectedBadgeModal.maxProgress || 1;
+                const percent = Math.min(100, Math.round((selectedBadgeModal.progress / max) * 100));
+                return (
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[11px] font-bold text-stone-600">
+                      <span>İlerleme</span>
+                      <span>{selectedBadgeModal.progress} / {max} ({percent}%)</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-amber-500 to-[#E05A3D] rounded-full transition-all duration-500"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
 
               {selectedBadgeModal.unlocked ? (
                 <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5">

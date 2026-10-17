@@ -6,7 +6,7 @@ import { defineConfig, Plugin } from 'vite';
 
 // In-memory cross-device pairing & real-time sync middleware
 function pairingApiPlugin(): Plugin {
-  const syncStore = new Map<string, any[]>();
+  const syncStore = new Map<string, unknown[]>();
 
   return {
     name: 'pairing-api-plugin',
@@ -14,7 +14,7 @@ function pairingApiPlugin(): Plugin {
       server.middlewares.use((req, res, next) => {
         // Direct ZIP download endpoint
         if (req.url?.startsWith('/api/download-zip') || req.url === '/crave-couples-app.zip') {
-          const zipFile = path.resolve(__dirname, 'public/crave-couples-app.zip');
+          const zipFile = path.resolve(import.meta.dirname, 'public/crave-couples-app.zip');
           if (fs.existsSync(zipFile)) {
             res.setHeader('Content-Type', 'application/zip');
             res.setHeader('Content-Disposition', 'attachment; filename="crave-couples-app.zip"');
@@ -81,7 +81,7 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss(), pairingApiPlugin()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     server: {

@@ -137,12 +137,16 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) return;
       sound.playTap();
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
           setSelectedAvatar(event.target.result as string);
         }
+      };
+      reader.onerror = () => {
+        console.error('Error reading avatar file');
       };
       reader.readAsDataURL(file);
     }
@@ -478,7 +482,12 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                       <button
                         onClick={() => {
                           sound.playTap();
-                          if (customPhotoUrl.trim()) setSelectedAvatar(customPhotoUrl.trim());
+                          const trimmed = customPhotoUrl.trim();
+                          if (trimmed) {
+                            if (/^(https?:\/\/|data:image\/)/i.test(trimmed)) {
+                              setSelectedAvatar(trimmed);
+                            }
+                          }
                         }}
                         className="px-2 py-1 bg-[#2B6777] text-white text-[11px] font-bold rounded-lg cursor-pointer"
                       >

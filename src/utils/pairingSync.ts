@@ -2,26 +2,25 @@
 // Uses BroadcastChannel for instant local multi-tab/multi-window synchronization,
 // localStorage event listeners, and HTTP polling for cross-device synchronization over the internet.
 
-import { ChatMessage, Dish } from '../types';
-
-export interface SyncPayload {
+export interface SyncPayload<T = unknown> {
   id?: string;
   type: 'PARTNER_CONNECTED' | 'CHAT_MESSAGE' | 'DISH_MATCH' | 'ROLL_DICE' | 'GROCERY_UPDATE';
   pairCode: string;
   sender: string;
   timestamp: number;
-  data: any;
+  data: T;
 }
 
-type SyncListener = (payload: SyncPayload) => void;
+type SyncListener = (payload: SyncPayload<any>) => void;
 
 class PairingSyncService {
   private channel: BroadcastChannel | null = null;
   private listeners: Set<SyncListener> = new Set();
   private activePairCode: string = 'CRAVE-9821';
   private activeUser: string = 'Müge';
-  private pollingInterval: any = null;
+  private pollingInterval: ReturnType<typeof setInterval> | null = null;
   private seenEventIds: Set<string> = new Set();
+  private storageHandler: ((e: StorageEvent) => void) | null = null;
 
   constructor() {
     if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
@@ -37,7 +36,7 @@ class PairingSyncService {
 
     // Also listen to storage events across tabs
     if (typeof window !== 'undefined') {
-      window.addEventListener('storage', (e) => {
+      this.storageHandler = (e: StorageEvent) => {
         if (e.key === 'cravematch_last_sync_event' && e.newValue) {
           try {
             const payload: SyncPayload = JSON.parse(e.newValue);
@@ -46,7 +45,8 @@ class PairingSyncService {
             // ignore
           }
         }
-      });
+      };
+      window.addEventListener('storage', this.storageHandler);
     }
 
     // Start HTTP polling right away so any device immediately listens for cross-device events
@@ -179,9 +179,17 @@ class PairingSyncService {
   }
 
   public destroy() {
-    if (this.pollingInterval) clearInterval(this.pollingInterval);
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
+    if (typeof window !== 'undefined' && this.storageHandler) {
+      window.removeEventListener('storage', this.storageHandler);
+      this.storageHandler = null;
+    }
     try {
       this.channel?.close();
+      this.channel = null;
     } catch {
       // ignore
     }

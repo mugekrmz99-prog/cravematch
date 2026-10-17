@@ -77,6 +77,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
 
   const [isRolling, setIsRolling] = useState(false);
   const [winner, setWinner] = useState<ContenderItem | null>(null);
+  const [cartAdded, setCartAdded] = useState(false);
   const [diceFace, setDiceFace] = useState<number>(5);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newDishName, setNewDishName] = useState('');
@@ -123,6 +124,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
 
     setIsRolling(true);
     setWinner(null);
+    setCartAdded(false);
     sound.playDiceRoll();
 
     // Pick random winner
@@ -138,6 +140,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       // Automatically add winner ingredients to cart as requested by user
       if (picked.dishRef) {
         onAddToCart(picked.dishRef);
+        setCartAdded(true);
       }
 
       try {
@@ -414,14 +417,19 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
                 {winner.dishRef && (
                   <button
                     onClick={() => {
-                      sound.playTap();
-                      onAddToCart(winner.dishRef!);
+                      if (!cartAdded) {
+                        sound.playTap();
+                        onAddToCart(winner.dishRef!);
+                        setCartAdded(true);
+                      }
                       setWinner(null);
                     }}
-                    className="w-full py-2 rounded-xl bg-[#2B6777] text-white font-semibold text-xs hover:bg-[#235866] transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    className={`w-full py-2 rounded-xl text-white font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                      cartAdded ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#2B6777] hover:bg-[#235866]'
+                    }`}
                   >
                     <ShoppingBag className="w-4 h-4" />
-                    <span>{t.sendIngredientsToCart}</span>
+                    <span>{cartAdded ? (lang === 'tr' ? '✓ Malzemeler Sepete Eklendi' : lang === 'de' ? '✓ Zutaten im Warenkorb' : '✓ Ingredients in Cart') : t.sendIngredientsToCart}</span>
                   </button>
                 )}
 
