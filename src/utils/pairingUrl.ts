@@ -6,7 +6,7 @@ import { pairingSync } from './pairingSync';
 
 export const PUBLIC_APP_URL =
   (import.meta.env.VITE_PUBLIC_APP_URL as string) ||
-  'https://eighty-otters-roll.loca.lt';
+  'https://mugekrmz99-prog.github.io/cravematch';
 
 export function getBestPairingUrl(
   pairCode: string = 'CRAVE-9821',
@@ -29,9 +29,10 @@ export function getBestPairingUrl(
       hostname === '127.0.0.1' ||
       hostname === '0.0.0.0';
 
-    // If currently running on a real public domain or tunnel
+    // If currently running on a real public domain, GitHub Pages or tunnel
     if (!isLocal && (origin.startsWith('https://') || origin.includes(':3000'))) {
-      return `${origin}/?${queryString}`;
+      const pathname = window.location.pathname.replace(/\/$/, '');
+      return `${origin}${pathname}/?${queryString}`;
     }
   }
 

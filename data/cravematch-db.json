@@ -356,6 +356,62 @@
         }
       ],
       "diceWinner": null
+    },
+    "CRAVE-TEST-879": {
+      "pairCode": "CRAVE-TEST-879",
+      "hostName": "Deniz",
+      "createdAt": 1792246697819,
+      "users": {
+        "Deniz": {
+          "id": "usr-1",
+          "name": "Deniz",
+          "title": "Gurme Şef",
+          "level": 1,
+          "matchesCount": 0,
+          "badgesCount": 0,
+          "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+          "allergies": [
+            "Glüten"
+          ],
+          "isSurveyCompleted": true,
+          "joinedAt": 1792246697830
+        }
+      },
+      "messages": [
+        {
+          "id": "msg-1792246697832",
+          "sender": "usr-1",
+          "author": "Deniz",
+          "text": "Bu akşam ne yiyoruz? 🍕",
+          "timestamp": "19:30"
+        }
+      ],
+      "swipes": {
+        "dish-1": {
+          "Deniz": true,
+          "Baran": true
+        }
+      },
+      "matches": [
+        "dish-1"
+      ],
+      "cart": [
+        {
+          "id": "item-1",
+          "name": "Domates",
+          "amount": 500,
+          "unit": "g",
+          "checked": false
+        },
+        {
+          "id": "item-2",
+          "name": "Fettuccine",
+          "amount": 1,
+          "unit": "paket",
+          "checked": true
+        }
+      ],
+      "diceWinner": null
     }
   }
 }
