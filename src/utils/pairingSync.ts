@@ -35,7 +35,7 @@ class PairingSyncService {
   private channel: BroadcastChannel | null = null;
   private listeners: Set<SyncListener> = new Set();
   private activePairCode: string = 'CRAVE-9821';
-  private activeUser: string = 'Müge';
+  private activeUser: string = '';
   private eventSource: EventSource | null = null;
   private pollingInterval: ReturnType<typeof setInterval> | null = null;
   private seenEventIds: Set<string> = new Set();

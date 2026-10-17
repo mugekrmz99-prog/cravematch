@@ -33,7 +33,23 @@ export default function App() {
     return 'tr'; // Default Turkish
   });
 
-  const [currentTab, setCurrentTab] = useState<ScreenTab>('onboarding');
+  const [currentTab, setCurrentTab] = useState<ScreenTab>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('pair')) {
+        // If arriving via pairing link, route to survey so partner can set their name/allergies
+        return 'survey';
+      }
+      const savedUser = localStorage.getItem('cravematch_user');
+      if (savedUser) {
+        try {
+          const u = JSON.parse(savedUser);
+          if (u.isSurveyCompleted && u.name) return 'swipes';
+        } catch {}
+      }
+    }
+    return 'onboarding';
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Persistent User Profile
@@ -42,7 +58,8 @@ export default function App() {
       const saved = localStorage.getItem('cravematch_user');
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') return parsed;
         } catch {
           // fallback
         }
@@ -50,17 +67,17 @@ export default function App() {
     }
     return {
       ...INITIAL_USER,
-      id: 'usr-1',
-      name: 'Müge',
+      id: `usr-${Date.now()}`,
+      name: '',
       birthDate: '1998-05-14',
       isSurveyCompleted: false,
       badges: INITIAL_BADGES,
       partner: {
-        id: 'usr-2',
-        name: 'Cihat',
+        id: `partner-${Date.now()}`,
+        name: '',
         avatarUrl: INITIAL_USER.partner.avatarUrl,
-        status: 'Choosing Together!',
-        isConnected: true,
+        status: 'Partner Bekleniyor',
+        isConnected: false,
         pairCode: 'CRAVE-9821'
       }
     };
@@ -99,65 +116,67 @@ export default function App() {
   const [partnerWelcomeBanner, setPartnerWelcomeBanner] = useState<{
     partnerName: string;
     pairCode: string;
-    persona: string;
   } | null>(null);
 
-  // Auto-detect QR pair code in URL parameters
+  // Auto-detect QR pair code and inviter in URL parameters
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const pairCode = params.get('pair');
-      const partnerParam = params.get('partner') || 'Müge';
-      const asParam = params.get('as') || 'Cihat';
+      const inviterParam = params.get('inviter') || params.get('partner');
 
       if (pairCode) {
         pairingSync.setPairCode(pairCode);
 
-        // If opened as Cihat (e.g. spouse opened via QR link)
-        if (asParam.toLowerCase() === 'cihat') {
-          setUser((prev) => ({
-            ...prev,
-            id: 'usr-2',
-            name: 'Cihat',
-            avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-            isSurveyCompleted: true,
-            partner: {
-              ...prev.partner,
-              id: 'usr-1',
-              name: partnerParam,
-              isConnected: true,
-              status: 'Choosing Together!',
-              pairCode
-            }
-          }));
-        } else {
-          setUser((prev) => ({
+        // Update partner info dynamically based on inviter in the link
+        setUser((prev) => {
+          const updatedPartnerName = inviterParam && inviterParam.trim() ? inviterParam.trim() : prev.partner.name;
+          const updated: UserProfile = {
             ...prev,
             partner: {
               ...prev.partner,
-              name: partnerParam,
-              isConnected: true,
-              status: 'Choosing Together!',
+              name: updatedPartnerName,
+              isConnected: Boolean(updatedPartnerName),
+              status: updatedPartnerName ? 'Masa Kuruldu!' : 'Partner Bekleniyor',
               pairCode
             }
-          }));
+          };
+          return updated;
+        });
+
+        // Check if local user already has a saved name
+        const savedUserStr = localStorage.getItem('cravematch_user');
+        let mySavedName = '';
+        if (savedUserStr) {
+          try {
+            const parsed = JSON.parse(savedUserStr);
+            if (parsed.name) mySavedName = parsed.name;
+          } catch {}
         }
 
-        // Notify other devices / tabs that partner connected!
-        pairingSync.broadcast('PARTNER_CONNECTED', asParam, { name: asParam, pairCode });
+        if (mySavedName) {
+          pairingSync.setActiveUser(mySavedName);
+          pairingSync.broadcast('PARTNER_CONNECTED', mySavedName, {
+            name: mySavedName,
+            pairCode
+          });
+          setCurrentTab('swipes');
+        } else {
+          // If local user has no name yet, prompt them to complete their survey
+          setCurrentTab('survey');
+        }
 
-        // Show welcome banner and go directly to swipes!
-        setPartnerWelcomeBanner({
-          partnerName: partnerParam,
-          pairCode,
-          persona: asParam
-        });
-        setCurrentTab('swipes');
-        sound.playSuccess();
-        try {
-          confetti({ particleCount: 70, spread: 80, origin: { y: 0.5 } });
-        } catch {
-          // ignore
+        if (inviterParam) {
+          setPartnerWelcomeBanner({
+            partnerName: inviterParam,
+            pairCode
+          });
+          sound.playSuccess();
+          try {
+            confetti({ particleCount: 70, spread: 80, origin: { y: 0.5 } });
+          } catch {
+            // ignore
+          }
         }
       }
     }
@@ -232,27 +251,26 @@ export default function App() {
         }
       } else if (payload.type === 'PARTNER_CONNECTED') {
         const incomingName = (payload.data as any)?.name || (payload.data as any)?.user || payload.sender;
-        const otherPersonName =
-          incomingName && incomingName !== user.name
-            ? incomingName
-            : user.name === 'Cihat'
-            ? 'Müge'
-            : 'Cihat';
-
-        setUser((prev) => ({
-          ...prev,
-          partner: {
-            ...prev.partner,
-            name: otherPersonName,
-            isConnected: true,
-            status: 'Choosing Together!'
+        if (incomingName && incomingName !== user.name) {
+          setUser((prev) => ({
+            ...prev,
+            partner: {
+              ...prev.partner,
+              name: incomingName,
+              isConnected: true,
+              status: 'Choosing Together!'
+            }
+          }));
+          setPartnerWelcomeBanner({
+            partnerName: incomingName,
+            pairCode: user.partner.pairCode
+          });
+          sound.playSuccess();
+          try {
+            confetti({ particleCount: 60, spread: 75, origin: { y: 0.5 } });
+          } catch {
+            // ignore
           }
-        }));
-        sound.playSuccess();
-        try {
-          confetti({ particleCount: 60, spread: 75, origin: { y: 0.5 } });
-        } catch {
-          // ignore
         }
       } else if (payload.type === 'CHAT_MESSAGE') {
         const incoming = payload.data as any;
@@ -422,16 +440,16 @@ export default function App() {
     }
     setUser({
       ...INITIAL_USER,
-      id: 'usr-1',
+      id: `usr-${Date.now()}`,
       name: '',
       isSurveyCompleted: false,
       allergies: [],
       badges: INITIAL_BADGES,
       partner: {
-        id: 'usr-2',
-        name: 'Cihat',
+        id: `partner-${Date.now()}`,
+        name: '',
         avatarUrl: INITIAL_USER.partner.avatarUrl,
-        status: 'Waiting',
+        status: 'Partner Bekleniyor',
         isConnected: false,
         pairCode: 'CRAVE-9821'
       }
@@ -447,57 +465,41 @@ export default function App() {
   const handleSendMessage = (msg: ChatMessage) => {
     const outboundMsg: ChatMessage = {
       ...msg,
-      author: user.name
+      author: user.name || (lang === 'tr' ? 'Ben' : 'Me')
     };
     setMessages((prev) => [...prev, outboundMsg]);
-    pairingSync.broadcast('CHAT_MESSAGE', user.name, outboundMsg);
+    pairingSync.broadcast('CHAT_MESSAGE', user.name || 'User', outboundMsg);
   };
 
-  // Pair with PIN / Code handler (instant sync for spouse's phone)
+  // Pair with PIN / Code handler (universal code join for any couple)
   const handlePairWithCode = (code: string, myName: string, partnerName: string) => {
-    pairingSync.setPairCode(code);
-    pairingSync.setActiveUser(myName);
+    const cleanCode = code.trim().toUpperCase();
+    const cleanName = myName.trim();
+    pairingSync.setPairCode(cleanCode);
+    pairingSync.setActiveUser(cleanName);
 
-    if (myName.toLowerCase() === 'cihat') {
-      setUser((prev) => ({
-        ...prev,
-        id: 'usr-2',
-        name: 'Cihat',
-        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-        isSurveyCompleted: true,
-        partner: {
-          ...prev.partner,
-          id: 'usr-1',
-          name: partnerName || 'Müge',
-          isConnected: true,
-          status: 'Choosing Together!',
-          pairCode: code
-        }
-      }));
-    } else {
-      setUser((prev) => ({
-        ...prev,
-        id: 'usr-1',
-        name: 'Müge',
-        avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
-        isSurveyCompleted: true,
-        partner: {
-          ...prev.partner,
-          id: 'usr-2',
-          name: partnerName || 'Cihat',
-          isConnected: true,
-          status: 'Choosing Together!',
-          pairCode: code
-        }
-      }));
+    setUser((prev) => ({
+      ...prev,
+      name: cleanName || prev.name,
+      isSurveyCompleted: true,
+      partner: {
+        ...prev.partner,
+        name: partnerName || prev.partner.name,
+        isConnected: Boolean(partnerName || prev.partner.name),
+        status: 'Choosing Together!',
+        pairCode: cleanCode
+      }
+    }));
+
+    pairingSync.broadcast('PARTNER_CONNECTED', cleanName, { name: cleanName, pairCode: cleanCode });
+
+    if (partnerName) {
+      setPartnerWelcomeBanner({
+        partnerName,
+        pairCode: cleanCode
+      });
     }
 
-    pairingSync.broadcast('PARTNER_CONNECTED', myName, { name: myName, pairCode: code });
-    setPartnerWelcomeBanner({
-      partnerName: partnerName || (myName === 'Cihat' ? 'Müge' : 'Cihat'),
-      pairCode: code,
-      persona: myName
-    });
     setCurrentTab('swipes');
     sound.playSuccess();
     try {
@@ -507,52 +509,30 @@ export default function App() {
     }
   };
 
-  // Toggle Persona (switch between viewing phone as Müge or Cihat)
-  const handleSwitchPersona = () => {
-    sound.playTap();
-    const isCurrentlyMuge = user.name === 'Müge';
-    const nextName = isCurrentlyMuge ? 'Cihat' : 'Müge';
-    const nextPartner = isCurrentlyMuge ? 'Müge' : 'Cihat';
-
-    setUser((prev) => ({
-      ...prev,
-      id: isCurrentlyMuge ? 'usr-2' : 'usr-1',
-      name: nextName,
-      avatarUrl: isCurrentlyMuge
-        ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
-        : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
-      partner: {
-        ...prev.partner,
-        id: isCurrentlyMuge ? 'usr-1' : 'usr-2',
-        name: nextPartner,
-        isConnected: true
-      }
-    }));
-    pairingSync.setActiveUser(nextName);
-  };
-
   // Cart total badge
   const uncompletedGroceryCount = groceries.filter((g) => !g.checked).length;
 
   return (
     <DeviceFrame activeTabTitle={currentTab}>
       <div className="relative w-full h-full flex flex-col justify-between overflow-hidden bg-[#F7F5F2]">
-        {/* Device Persona Indicator & Quick Switch */}
+        {/* Device Status Bar */}
         <div className="bg-[#2B6777] text-white px-3 py-1 flex items-center justify-between text-[10px] font-bold shadow-2xs select-none z-30">
           <div className="flex items-center gap-1.5 truncate">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span className="truncate">Cihaz: <strong className="text-[#F2A900]">{user.name}</strong></span>
-            {user.partner.isConnected && (
-              <span className="text-emerald-200 ml-1 truncate">💑 {user.partner.name} ile Bağlı</span>
+            <span className={`w-2 h-2 rounded-full shrink-0 ${user.partner.isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+            <span className="truncate">
+              👤 <strong>{user.name || (lang === 'tr' ? 'Profilinizi Oluşturun' : 'Create Profile')}</strong>
+            </span>
+            {user.partner.isConnected && user.partner.name ? (
+              <span className="text-emerald-200 ml-1 truncate">💑 {user.partner.name} ile Masadasınız</span>
+            ) : (
+              <span className="text-amber-200 ml-1 truncate">({user.partner.pairCode || 'Masa Kodu'})</span>
             )}
           </div>
-          <button
-            onClick={handleSwitchPersona}
-            className="px-2 py-0.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-[9px] font-extrabold cursor-pointer transition-all shrink-0 ml-1"
-            title="Telefon kimliğini değiştir"
-          >
-            {user.name === 'Müge' ? '👨 Cihat Ol' : '👩 Müge Ol'}
-          </button>
+          {user.partner.pairCode && (
+            <span className="px-2 py-0.5 rounded-full bg-white/15 text-white/90 text-[9px] font-mono shrink-0 ml-1">
+              {user.partner.pairCode}
+            </span>
+          )}
         </div>
 
         {/* Partner Connection Welcome Banner */}
@@ -565,7 +545,7 @@ export default function App() {
                   {partnerWelcomeBanner.partnerName} ile Eşleşildi!
                 </div>
                 <div className="text-[10px] text-emerald-200">
-                  {partnerWelcomeBanner.persona} olarak ortak yemek havuzuna bağlandınız!
+                  {user.name ? `${user.name} olarak ortak yemek havuzuna bağlandınız.` : 'Akşam yemeği seçimini birlikte yapabilirsiniz!'}
                 </div>
               </div>
             </div>

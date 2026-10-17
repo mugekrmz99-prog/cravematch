@@ -10,11 +10,16 @@ export const PUBLIC_APP_URL =
 
 export function getBestPairingUrl(
   pairCode: string = 'CRAVE-9821',
-  partnerName: string = 'Müge',
-  targetPersona: string = 'Cihat',
-  preferWifi: boolean = true
+  inviterName: string = '',
+  preferWifi: boolean = false
 ): string {
   const netInfo = pairingSync.getCachedNetworkInfo();
+  const queryParams = new URLSearchParams();
+  queryParams.set('pair', pairCode);
+  if (inviterName && inviterName.trim()) {
+    queryParams.set('inviter', inviterName.trim());
+  }
+  const queryString = queryParams.toString();
 
   if (typeof window !== 'undefined') {
     const origin = window.location.origin;
@@ -24,38 +29,42 @@ export function getBestPairingUrl(
       hostname === '127.0.0.1' ||
       hostname === '0.0.0.0';
 
-    // If currently running on a real public or tunnel domain
+    // If currently running on a real public domain or tunnel
     if (!isLocal && (origin.startsWith('https://') || origin.includes(':3000'))) {
-      return `${origin}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+      return `${origin}/?${queryString}`;
     }
   }
 
-  // If Wi-Fi preferred and local IP known:
+  // If Wi-Fi preferred and local IP known
   if (preferWifi && netInfo?.localUrl) {
-    return `${netInfo.localUrl}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+    return `${netInfo.localUrl}/?${queryString}`;
   }
 
-  // Fallback to detected local network IP or tunnel
-  const baseUrl = netInfo?.localUrl || (netInfo?.tunnelUrl || PUBLIC_APP_URL);
-  return `${baseUrl}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+  // Fallback to detected tunnel or public app URL or local IP
+  const baseUrl = netInfo?.tunnelUrl || PUBLIC_APP_URL || netInfo?.localUrl || 'http://localhost:3000';
+  return `${baseUrl}/?${queryString}`;
 }
 
 export function getPublicPairingUrl(
   pairCode: string = 'CRAVE-9821',
-  partnerName: string = 'Müge',
-  targetPersona: string = 'Cihat'
+  inviterName: string = ''
 ): string {
-  return getBestPairingUrl(pairCode, partnerName, targetPersona, false);
+  return getBestPairingUrl(pairCode, inviterName, false);
 }
 
 export function getLocalWifiPairingUrl(
   ip: string = '192.168.145.231',
   pairCode: string = 'CRAVE-9821',
-  partnerName: string = 'Müge',
-  targetPersona: string = 'Cihat'
+  inviterName: string = ''
 ): string {
   const netInfo = pairingSync.getCachedNetworkInfo();
   const cleanIp = (netInfo?.localIp || ip).replace(/^https?:\/\//, '').replace(/\/.*$/, '');
   const host = cleanIp.includes(':') ? cleanIp : `${cleanIp}:3000`;
-  return `http://${host}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+  const queryParams = new URLSearchParams();
+  queryParams.set('pair', pairCode);
+  if (inviterName && inviterName.trim()) {
+    queryParams.set('inviter', inviterName.trim());
+  }
+  return `http://${host}/?${queryParams.toString()}`;
 }
+

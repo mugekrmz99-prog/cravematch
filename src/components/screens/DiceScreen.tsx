@@ -15,7 +15,7 @@ interface ContenderItem {
   selected: boolean;
   dishRef?: Dish;
   image: string;
-  partners: ('Müge' | 'Cihat')[];
+  partners: string[];
 }
 
 interface DiceScreenProps {
@@ -36,6 +36,9 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   onAddToCart
 }) => {
   const t = translations[lang];
+  const myName = user.name || (lang === 'tr' ? 'Ben' : 'Me');
+  const partnerName = user.partner.name || (lang === 'tr' ? 'Partnerim' : 'Partner');
+
   const [contenders, setContenders] = useState<ContenderItem[]>([
     {
       id: 'taco',
@@ -44,7 +47,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       selected: true,
       dishRef: dishes.find(d => d.id === 'dish-3'),
       image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=200&q=80',
-      partners: ['Müge', 'Cihat']
+      partners: [myName, partnerName]
     },
     {
       id: 'ramen',
@@ -53,7 +56,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       selected: true,
       dishRef: dishes.find(d => d.id === 'dish-4'),
       image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=200&q=80',
-      partners: ['Cihat']
+      partners: [partnerName]
     },
     {
       id: 'burger',
@@ -62,7 +65,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       selected: true,
       dishRef: dishes.find(d => d.id === 'dish-2'),
       image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=200&q=80',
-      partners: ['Müge']
+      partners: [myName]
     },
     {
       id: 'pasta',
@@ -71,7 +74,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       selected: true,
       dishRef: dishes.find(d => d.id === 'dish-1'),
       image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=200&q=80',
-      partners: ['Müge', 'Cihat']
+      partners: [myName, partnerName]
     }
   ]);
 
@@ -99,7 +102,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
             selected: true,
             dishRef: initialSelectedDish,
             image: initialSelectedDish.image,
-            partners: ['Müge', 'Cihat']
+            partners: [myName, partnerName]
           },
           ...prev
         ];
@@ -165,7 +168,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       matchScore: 100,
       selected: true,
       image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=80',
-      partners: ['Müge', 'Cihat']
+      partners: [myName, partnerName]
     };
     setContenders(prev => [newContender, ...prev]);
     setNewDishName('');
@@ -178,7 +181,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       <div className="flex flex-col items-center gap-1.5 pb-2">
         <CraveLogo size="sm" layout="horizontal" />
 
-        {/* Partner avatars: Müge ❤️ Cihat */}
+        {/* Couple avatars & sync indicator */}
         <div className="flex flex-col items-center gap-0.5">
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-stone-200 shadow-xs">
             <div className="relative">
@@ -312,20 +315,20 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
               {/* Match tag & avatars */}
               <div className="flex items-center gap-1.5 shrink-0">
                 <div className="flex -space-x-1.5 items-center">
-                  {item.partners.includes('Müge') && (
+                  {(item.partners.includes(myName) || item.partners.length >= 1) && (
                     <img
                       src={user.avatarUrl}
-                      alt="Müge"
+                      alt={myName}
                       className="w-5 h-5 rounded-full object-cover border border-white"
-                      title="Müge"
+                      title={myName}
                     />
                   )}
-                  {item.partners.includes('Cihat') && (
+                  {(item.partners.includes(partnerName) || item.partners.length >= 2) && (
                     <img
                       src={user.partner.avatarUrl}
-                      alt="Cihat"
+                      alt={partnerName}
                       className="w-5 h-5 rounded-full object-cover border border-white"
-                      title="Cihat"
+                      title={partnerName}
                     />
                   )}
                 </div>

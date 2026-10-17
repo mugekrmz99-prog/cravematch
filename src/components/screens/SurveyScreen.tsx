@@ -47,7 +47,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
   // Form states
-  const [name, setName] = useState(initialUser.name || 'Müge');
+  const [name, setName] = useState(initialUser.name || '');
   const [birthDate, setBirthDate] = useState(initialUser.birthDate || '1998-05-14');
   const [selectedAvatar, setSelectedAvatar] = useState(initialUser.avatarUrl);
   const [avatarTab, setAvatarTab] = useState<'animals' | 'games' | 'photos'>('animals');
@@ -56,39 +56,45 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
   const [customAllergy, setCustomAllergy] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
   const [partnerConnected, setPartnerConnected] = useState(initialUser.partner.isConnected);
-  const [partnerName, setPartnerName] = useState(initialUser.partner.name || 'Cihat');
+  const [partnerName, setPartnerName] = useState(initialUser.partner.name || '');
+
+  // Is this user joining via an invite from someone else?
+  const isInvitedPartner = Boolean(initialUser.partner.name && initialUser.partner.name.trim());
 
   // Manual PIN code pairing
   const pairCode = initialUser.partner.pairCode || 'CRAVE-9821';
   const [inputPairCode, setInputPairCode] = useState('');
   const [pairError, setPairError] = useState<string | null>(null);
 
-  // Live public URL that works anywhere when scanned with mobile camera
-  const liveCloudUrl = getPublicPairingUrl(pairCode, name || 'Müge', 'Cihat');
+  // Live public URL that encodes host's real name and pairCode
+  const liveCloudUrl = getPublicPairingUrl(pairCode, name || initialUser.name || '');
 
-  // Listen for real-time pairing events from spouse's phone or new tab
+  // Listen for real-time pairing events
   useEffect(() => {
     pairingSync.setPairCode(pairCode);
     const unsubscribe = pairingSync.subscribe((payload) => {
       if (payload.type === 'PARTNER_CONNECTED') {
-        sound.playSuccess();
-        try {
-          confetti({
-            particleCount: 70,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#E05A3D', '#2B6777', '#F2A900']
-          });
-        } catch {
-          // ignore
+        const incoming = (payload.data as any)?.name || payload.sender;
+        if (incoming && incoming !== name) {
+          sound.playSuccess();
+          try {
+            confetti({
+              particleCount: 70,
+              spread: 80,
+              origin: { y: 0.6 },
+              colors: ['#E05A3D', '#2B6777', '#F2A900']
+            });
+          } catch {
+            // ignore
+          }
+          setPartnerConnected(true);
+          setPartnerName(incoming);
         }
-        setPartnerConnected(true);
-        if (payload.sender) setPartnerName(payload.sender);
       }
     });
 
     return unsubscribe;
-  }, [pairCode]);
+  }, [pairCode, name]);
 
   // Fantasy / Game Character Avatars
   const gameAvatars = [
@@ -197,10 +203,11 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
     } catch {
       // fallback
     }
+    const simulated = partnerName || (lang === 'tr' ? 'Partnerim' : 'Partner');
     setPartnerConnected(true);
-    setPartnerName('Cihat');
+    setPartnerName(simulated);
     setPairError(null);
-    pairingSync.broadcast('PARTNER_CONNECTED', 'Cihat', { name: 'Cihat', pairCode });
+    pairingSync.broadcast('PARTNER_CONNECTED', simulated, { name: simulated, pairCode });
   };
 
   const handleManualPairCodeSubmit = () => {
@@ -218,10 +225,11 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
       } catch {
         // fallback
       }
+      pairingSync.setPairCode(cleanCode);
       setPartnerConnected(true);
-      setPartnerName('Cihat');
       setPairError(null);
-      pairingSync.broadcast('PARTNER_CONNECTED', 'Cihat', { name: 'Cihat', pairCode: cleanCode });
+      const myDisplayName = name || initialUser.name || (lang === 'tr' ? 'Partner' : 'Partner');
+      pairingSync.broadcast('PARTNER_CONNECTED', myDisplayName, { name: myDisplayName, pairCode: cleanCode });
     } else {
       sound.playTap();
       setPairError(lang === 'tr' ? 'Lütfen geçerli bir kod girin (Örn: CRAVE-9821)' : 'Please enter a valid code');
@@ -230,21 +238,49 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
 
   const handleFinish = () => {
     sound.playSuccess();
+    const resolvedName = name.trim() || initialUser.name || (lang === 'tr' ? 'Gurme' : 'Foodie');
     const updatedUser: UserProfile = {
       ...initialUser,
-      name: name || 'Müge',
+      name: resolvedName,
       birthDate,
       avatarUrl: selectedAvatar,
       allergies,
       isSurveyCompleted: true,
       partner: {
         ...initialUser.partner,
-        name: partnerName || 'Cihat',
-        isConnected: partnerConnected,
-        status: partnerConnected ? 'Choosing Together!' : 'Waiting',
+        name: partnerName || '',
+        isConnected: partnerConnected || isInvitedPartner,
+        status: (partnerConnected || isInvitedPartner) ? 'Choosing Together!' : 'Waiting',
         pairCode
       }
     };
+
+    // Broadcast connected event to partner and sync profile with DB
+    pairingSync.broadcast('PARTNER_CONNECTED', resolvedName, {
+      name: resolvedName,
+      pairCode
+    });
+
+    fetch('/api/db/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pairCode,
+        profile: {
+          id: updatedUser.id,
+          name: updatedUser.name,
+          birthDate: updatedUser.birthDate,
+          title: updatedUser.title,
+          level: updatedUser.level,
+          matchesCount: updatedUser.matchesCount,
+          badgesCount: updatedUser.badgesCount,
+          avatarUrl: updatedUser.avatarUrl,
+          allergies: updatedUser.allergies,
+          isSurveyCompleted: true
+        }
+      })
+    }).catch(() => {});
+
     onComplete(updatedUser);
   };
 
@@ -313,18 +349,35 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   {t.surveySubtitle}
                 </p>
 
-                {/* Direct Partner Join Skip */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    sound.playTap();
-                    setStep(3);
-                  }}
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2B6777]/10 hover:bg-[#2B6777]/20 text-[#2B6777] text-[11px] font-bold transition-all cursor-pointer border border-[#2B6777]/30"
-                >
-                  <KeyRound className="w-3 h-3 text-[#E05A3D]" />
-                  <span>Eşinizin kodunu girmek veya QR okutmak için tıkla →</span>
-                </button>
+                {/* Partner Invitation Welcome Banner (If opened via QR code or invite link) */}
+                {partnerName && (
+                  <div className="mt-2.5 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl text-left shadow-xs flex items-start gap-2.5">
+                    <span className="text-2xl shrink-0">👋</span>
+                    <div className="space-y-0.5">
+                      <div className="text-xs font-black text-[#2B6777]">
+                        <strong>{partnerName}</strong> seni CraveMatch'e davet etti!
+                      </div>
+                      <p className="text-[11px] font-medium text-emerald-950 leading-snug">
+                        Birlikte bu akşam ne yiyeceğinize karar vereceksiniz. Adını ve tercihlerini girerek masaya katıl:
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Direct Partner Join Skip for host */}
+                {!isInvitedPartner && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setStep(3);
+                    }}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2B6777]/10 hover:bg-[#2B6777]/20 text-[#2B6777] text-[11px] font-bold transition-all cursor-pointer border border-[#2B6777]/30"
+                  >
+                    <KeyRound className="w-3 h-3 text-[#E05A3D]" />
+                    <span>Partnerin koduna katılmak veya QR okutmak için tıkla →</span>
+                  </button>
+                )}
               </div>
 
               {/* Avatar Selector Container */}
@@ -390,7 +443,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                       Seçili Karakter
                     </span>
                     <span className="text-xs font-black text-[#1A3B44]">
-                      {name || 'Müge'}
+                      {name || (lang === 'tr' ? 'Adınız' : 'Your Name')}
                     </span>
                     <p className="text-[10px] text-stone-500">
                       Partnerin seçim yaparken seni bu resimle görecek.
@@ -707,7 +760,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   className="w-full py-2.5 px-4 rounded-xl bg-[#2B6777] hover:bg-[#225360] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <Sparkles className="w-4 h-4 text-[#F2A900]" />
-                  <span>Eşim Okuttu (Bağlantıyı Onayla & Başlat)</span>
+                  <span>Partnerim Okuttu (Bağlantıyı Onayla)</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-1.5">
@@ -726,7 +779,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     className="py-2 px-3 rounded-xl bg-stone-800 hover:bg-stone-900 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer transition-all active:scale-95"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Cihat Olarak Aç</span>
+                    <span>Linki Yeni Sekmede Aç</span>
                   </button>
                 </div>
 
@@ -736,7 +789,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     type="text"
                     value={inputPairCode}
                     onChange={(e) => setInputPairCode(e.target.value)}
-                    placeholder="Eşinizin kodunu yazın (örn: CRAVE-9821)..."
+                    placeholder="Partnerinin kodunu yaz (örn: CRAVE-9821)..."
                     className="flex-1 px-2.5 py-1.5 bg-white border border-stone-300 rounded-xl text-[11px] font-mono uppercase text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
                   />
                   <button

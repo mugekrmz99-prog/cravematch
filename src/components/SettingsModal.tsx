@@ -105,7 +105,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const pairCode = user.partner.pairCode || 'CRAVE-9821';
-  const inviteUrl = getPublicPairingUrl(pairCode, user.name || 'Müge', 'Cihat');
+  const inviteUrl = getPublicPairingUrl(pairCode, user.name);
 
   const handleShareWhatsApp = () => {
     sound.playTap();
@@ -133,8 +133,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     } catch {
       // fallback
     }
+    const simulatedName = user.partner.name || (lang === 'tr' ? 'Partner' : 'Partner');
     setPartnerConnectedInModal(true);
-    pairingSync.broadcast('PARTNER_CONNECTED', 'Cihat', { name: 'Cihat', pairCode });
+    pairingSync.broadcast('PARTNER_CONNECTED', simulatedName, { name: simulatedName, pairCode });
   };
 
   if (!isOpen) return null;
@@ -299,7 +300,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="w-full py-2.5 rounded-xl bg-[#2B6777] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer hover:bg-[#235866]"
                 >
                   <Sparkles className="w-4 h-4 text-[#F2A900]" />
-                  <span>Eşim Okuttu (Bağlantıyı Onayla)</span>
+                  <span>{lang === 'tr' ? 'Partner Bağlantısını Onayla (Simüle)' : 'Confirm Partner Connection (Simulate)'}</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-1.5">
@@ -315,7 +316,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onClick={handleOpenAsPartnerInNewTab}
                     className="py-2 px-2.5 rounded-xl bg-stone-800 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer hover:bg-stone-900"
                   >
-                    <span>Cihat Olarak Aç</span>
+                    <span>{lang === 'tr' ? 'Linki Yeni Sekmede Aç' : 'Open Link in Tab'}</span>
                   </button>
                 </div>
               </div>

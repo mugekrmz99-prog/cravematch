@@ -106,23 +106,23 @@ export const INITIAL_BADGES: BadgeItem[] = [
 ];
 
 export const INITIAL_USER: UserProfile = {
-  id: 'usr-1',
-  name: 'Müge',
+  id: 'usr-me',
+  name: '',
   birthDate: '1998-05-14',
-  title: 'Master Chef',
-  level: 12,
-  matchesCount: 42,
-  badgesCount: 15,
+  title: 'Gurme Şef',
+  level: 1,
+  matchesCount: 0,
+  badgesCount: 0,
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
   avatarType: 'photo',
-  allergies: ['Fındık/Fıstık', 'Glüten'],
+  allergies: [],
   partner: {
-    id: 'usr-2',
-    name: 'Cihat',
+    id: 'usr-partner',
+    name: '',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    status: 'Choosing Together!',
-    isConnected: true,
-    pairCode: 'CRAVE-9821'
+    status: 'Partner Bekleniyor',
+    isConnected: false,
+    pairCode: ''
   },
   isSurveyCompleted: false,
   badges: INITIAL_BADGES
@@ -162,8 +162,8 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Pul Biber & Deniz Tuzu', amount: 1, unit: 'tatlı kaşığı', category: 'Spices' }
     ],
     steps: [
-      { id: 1, title: 'Makarnayı Haşla', description: 'Geniş bir tencereye bol tuzlu su koyup kaynatın, fettuccine makarnayı al dente kıvamda 8-9 dakika haşlayın.', chef: 'chef2', chefName: 'Cihat', durationMins: 9 },
-      { id: 2, title: 'Sarımsak & Karidesleri Sotele', description: 'Büyük tavada zeytinyağı ve tereyağını eritin. Ezilmiş sarımsakları 1 dakika kokusu çıkana kadar çevirip karidesleri ekleyin. Her iki yüzünü 2-3 dakika pişirin.', chef: 'chef1', chefName: 'Müge', durationMins: 6 },
+      { id: 1, title: 'Makarnayı Haşla', description: 'Geniş bir tencereye bol tuzlu su koyup kaynatın, fettuccine makarnayı al dente kıvamda 8-9 dakika haşlayın.', chef: 'chef2', chefName: '2. Şef', durationMins: 9 },
+      { id: 2, title: 'Sarımsak & Karidesleri Sotele', description: 'Büyük tavada zeytinyağı ve tereyağını eritin. Ezilmiş sarımsakları 1 dakika kokusu çıkana kadar çevirip karidesleri ekleyin. Her iki yüzünü 2-3 dakika pişirin.', chef: 'chef1', chefName: '1. Şef', durationMins: 6 },
       { id: 3, title: 'Sosla Makarnayı Birleştir', description: 'Haşlanan makarnayı süzüp karides tavasına dökün. 3 kaşık makarna haşlama suyu, kıyılmış maydanoz ve pul biber ekleyip hızlıca harmanlayın.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 3 }
     ]
   },
@@ -199,8 +199,8 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Taze Çıtır Marul', amount: 4, unit: 'yaprak', category: 'Produce' }
     ],
     steps: [
-      { id: 1, title: 'Soğanları Karamelize Et', description: 'İnce dilimlenmiş soğanları kısık ateşte esmer şeker ve zeytinyağı ile karamelize kıvama getirin.', chef: 'chef1', chefName: 'Müge', durationMins: 10 },
-      { id: 2, title: 'Köfteleri Döküm Tavada Mühürle', description: 'Çok sıcak döküm tavada burger köftelerini 3er dakika pişirin, son dakikada üzerine cheddar peynirini koyup eritin.', chef: 'chef2', chefName: 'Cihat', durationMins: 6 },
+      { id: 1, title: 'Soğanları Karamelize Et', description: 'İnce dilimlenmiş soğanları kısık ateşte esmer şeker ve zeytinyağı ile karamelize kıvama getirin.', chef: 'chef1', chefName: '1. Şef', durationMins: 10 },
+      { id: 2, title: 'Köfteleri Döküm Tavada Mühürle', description: 'Çok sıcak döküm tavada burger köftelerini 3er dakika pişirin, son dakikada üzerine cheddar peynirini koyup eritin.', chef: 'chef2', chefName: '2. Şef', durationMins: 6 },
       { id: 3, title: 'Burgerleri Birleştir', description: 'Isıtılmış brioche ekmeklerine trüf sosu sürün, köfte, karamelize soğan ve çıtır marulları yerleştirip sıcak servis yapın.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 2 }
     ]
   },
@@ -236,8 +236,8 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Taze Kişniş', amount: 1, unit: 'avuç', category: 'Produce' }
     ],
     steps: [
-      { id: 1, title: 'Tavukları Baharatla ve Pişir', description: 'Tavukları kimyon, kırmızı biber ve tuzla ovup tavada yüksek ateşte kızartın.', chef: 'chef2', chefName: 'Cihat', durationMins: 8 },
-      { id: 2, title: 'Guacamole & Salsa Hazırla', description: 'Avokadoyu çatalla ezin, misket limonu suyu, küp domates ve kişnişle harmanlayın.', chef: 'chef1', chefName: 'Müge', durationMins: 6 },
+      { id: 1, title: 'Tavukları Baharatla ve Pişir', description: 'Tavukları kimyon, kırmızı biber ve tuzla ovup tavada yüksek ateşte kızartın.', chef: 'chef2', chefName: '2. Şef', durationMins: 8 },
+      { id: 2, title: 'Guacamole & Salsa Hazırla', description: 'Avokadoyu çatalla ezin, misket limonu suyu, küp domates ve kişnişle harmanlayın.', chef: 'chef1', chefName: '1. Şef', durationMins: 6 },
       { id: 3, title: 'Tacoları Doldur', description: 'Isıtılmış mısır kabuklarına tavuk, guacamole ve taze salsa paylaştırın.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 4 }
     ]
   },
@@ -272,8 +272,8 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Taze Yeşil Soğan', amount: 3, unit: 'sap', category: 'Produce' }
     ],
     steps: [
-      { id: 1, title: 'Et Suyunu Kaynat ve Baharatla', description: 'Et suyuna soya sosu, zencefil ve acı susam yağını ekleyip 10 dakika kaynatın.', chef: 'chef1', chefName: 'Müge', durationMins: 10 },
-      { id: 2, title: 'Erişteleri Haşla', description: 'Ayrı tencerede ramen eriştelerini 3 dakika haşlayıp derin kaselere alın.', chef: 'chef2', chefName: 'Cihat', durationMins: 4 },
+      { id: 1, title: 'Et Suyunu Kaynat ve Baharatla', description: 'Et suyuna soya sosu, zencefil ve acı susam yağını ekleyip 10 dakika kaynatın.', chef: 'chef1', chefName: '1. Şef', durationMins: 10 },
+      { id: 2, title: 'Erişteleri Haşla', description: 'Ayrı tencerede ramen eriştelerini 3 dakika haşlayıp derin kaselere alın.', chef: 'chef2', chefName: '2. Şef', durationMins: 4 },
       { id: 3, title: 'Kaseleri Birleştir', description: 'Sıcak aromatik suyu eriştelerin üzerine kepçeyle dökün, yumurta ve taze soğanla süsleyin.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 3 }
     ]
   },
@@ -308,8 +308,8 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Sızma Zeytinyağı', amount: 2, unit: 'yemek kaşığı', category: 'Pantry' }
     ],
     steps: [
-      { id: 1, title: 'Hamuru Elle Aç', description: 'Pizza hamurlarını unlanmış tezgâhta kenarları kalın kalacak biçimde incelterek açın.', chef: 'chef2', chefName: 'Cihat', durationMins: 6 },
-      { id: 2, title: 'Sos ve Peynirleri Ekle', description: 'Domates sosunu yayın, elle parçalanmış mozzarellaları üzerine serpiştirin.', chef: 'chef1', chefName: 'Müge', durationMins: 4 },
+      { id: 1, title: 'Hamuru Elle Aç', description: 'Pizza hamurlarını unlanmış tezgâhta kenarları kalın kalacak biçimde incelterek açın.', chef: 'chef2', chefName: '2. Şef', durationMins: 6 },
+      { id: 2, title: 'Sos ve Peynirleri Ekle', description: 'Domates sosunu yayın, elle parçalanmış mozzarellaları üzerine serpiştirin.', chef: 'chef1', chefName: '1. Şef', durationMins: 4 },
       { id: 3, title: 'Yüksek Isıda Pişir', description: 'En yüksek derecede önceden ısıtılmış fırında 7-9 dakika çıtırlaşana dek pişirin. Çıkınca taze fesleğen ekleyin.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 8 }
     ]
   },
@@ -345,19 +345,19 @@ export const INITIAL_DISHES: Dish[] = [
       { name: 'Vanilyalı Maraş Dondurması', amount: 2, unit: 'top', category: 'Dairy' }
     ],
     steps: [
-      { id: 1, title: 'Çikolata ve Tereyağını Erit', description: 'Bitter çikolata ve tereyağını benmari usulü pürüzsüz kıvama gelene dek eritin.', chef: 'chef1', chefName: 'Müge', durationMins: 5 },
-      { id: 2, title: 'Yumurta ve Şekeri Çırp', description: 'Yumurtaları şekerle beyaz köpük olana kadar çırpıp ılık çikolataya ve una yedirin.', chef: 'chef2', chefName: 'Cihat', durationMins: 5 },
+      { id: 1, title: 'Çikolata ve Tereyağını Erit', description: 'Bitter çikolata ve tereyağını benmari usulü pürüzsüz kıvama gelene dek eritin.', chef: 'chef1', chefName: '1. Şef', durationMins: 5 },
+      { id: 2, title: 'Yumurta ve Şekeri Çırp', description: 'Yumurtaları şekerle beyaz köpük olana kadar çırpıp ılık çikolataya ve una yedirin.', chef: 'chef2', chefName: '2. Şef', durationMins: 5 },
       { id: 3, title: 'Fırınla ve Sıcak Servis Et', description: 'Yağlanmış sufle kaplarında 200°C fırında tam 8 dakika pişirin. Kalbi akışkan kalmalıdır.', chef: 'both', chefName: 'İki Şef Birlikte', durationMins: 8 }
     ]
   }
 ];
 
 export const INITIAL_GROCERY_ITEMS: GroceryItem[] = [
-  { id: 'g-1', name: '300g Fettuccine Makarna', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: false, addedBy: 'Müge', category: 'Pantry' },
-  { id: 'g-2', name: '350g Ayıklanmış Jumbo Karides', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: false, addedBy: 'Cihat', category: 'Meat' },
-  { id: 'g-3', name: '1 Baş Taze Sarımsak', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: true, addedBy: 'Müge', category: 'Produce' },
-  { id: 'g-4', name: '1 Demet Taze Fesleğen', fromRecipe: 'Margherita Pizza', checked: false, addedBy: 'Cihat', category: 'Produce' },
-  { id: 'g-5', name: '250g Manda Mozzarella', fromRecipe: 'Margherita Pizza', checked: false, addedBy: 'Müge', category: 'Dairy' }
+  { id: 'g-1', name: '300g Fettuccine Makarna', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: false, addedBy: '1. Şef', category: 'Pantry' },
+  { id: 'g-2', name: '350g Ayıklanmış Jumbo Karides', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: false, addedBy: '2. Şef', category: 'Meat' },
+  { id: 'g-3', name: '1 Baş Taze Sarımsak', fromRecipe: 'Sarımsaklı Karidesli Makarna', checked: true, addedBy: '1. Şef', category: 'Produce' },
+  { id: 'g-4', name: '1 Demet Taze Fesleğen', fromRecipe: 'Margherita Pizza', checked: false, addedBy: '2. Şef', category: 'Produce' },
+  { id: 'g-5', name: '250g Manda Mozzarella', fromRecipe: 'Margherita Pizza', checked: false, addedBy: '1. Şef', category: 'Dairy' }
 ];
 
 export const INITIAL_TASTE_DUELS: TasteDuel[] = [

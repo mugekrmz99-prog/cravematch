@@ -42,9 +42,9 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   const [showPairModal, setShowPairModal] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
   const [inputCode, setInputCode] = useState('CRAVE-9821');
-  const [selectedPersona, setSelectedPersona] = useState<'Cihat' | 'Müge'>('Cihat');
+  const [inputName, setInputName] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
-  const [preferWifi, setPreferWifi] = useState(true);
+  const [preferWifi, setPreferWifi] = useState(false);
 
   const [networkInfo, setNetworkInfo] = useState<{ localUrl: string; tunnelUrl?: string } | null>(
     null
@@ -61,19 +61,19 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
     onStart();
   };
 
-  const handleQuickConnect = (persona: 'Cihat' | 'Müge', code: string = 'CRAVE-9821') => {
+  const handleJoinWithCode = () => {
     sound.playSuccess();
-    const partner = persona === 'Cihat' ? 'Müge' : 'Cihat';
+    const cleanCode = inputCode.trim().toUpperCase() || 'CRAVE-9821';
+    const cleanName = inputName.trim() || (lang === 'tr' ? 'Misafir' : 'Guest');
     if (onPairWithCode) {
-      onPairWithCode(code, persona, partner);
+      onPairWithCode(cleanCode, cleanName, '');
     } else {
       onSignIn();
     }
+    setShowPairModal(false);
   };
 
-  const partnerTarget = selectedPersona === 'Cihat' ? 'Cihat' : 'Müge';
-  const partnerHost = selectedPersona === 'Cihat' ? 'Müge' : 'Cihat';
-  const livePairUrl = getBestPairingUrl('CRAVE-9821', partnerHost, partnerTarget, preferWifi);
+  const livePairUrl = getBestPairingUrl(inputCode || 'CRAVE-9821', inputName, preferWifi);
 
   const handleCopyLink = () => {
     sound.playTap();
@@ -87,7 +87,9 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   const handleShareWhatsApp = () => {
     sound.playTap();
     const text = encodeURIComponent(
-      `Aşkım CraveMatch üzerinden bu akşam ne yiyeceğimizi seçelim! Linke tıkla ve bana bağlan: ${livePairUrl}`
+      lang === 'tr'
+        ? `CraveMatch üzerinden bu akşam ne yiyeceğimizi seçelim! Bağlantıya tıkla: ${livePairUrl}`
+        : `Let's decide dinner together on CraveMatch! Connect here: ${livePairUrl}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
@@ -212,68 +214,43 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="w-full space-y-2"
         >
-          {/* 1-Tap Dual Persona Selector */}
-          <div className="w-full bg-white/90 p-2 rounded-2xl border border-stone-200 shadow-2xs space-y-1.5">
-            <span className="text-[10px] font-black text-[#2B6777] uppercase tracking-wider block text-center">
-              👤 Bu Cihazda Kim Giriş Yapıyor?
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickConnect('Müge')}
-                className="py-2.5 px-3 rounded-xl bg-gradient-to-b from-orange-50 to-orange-100/60 border-2 border-[#E05A3D] text-[#E05A3D] text-xs font-black hover:opacity-90 active:scale-95 transition-all shadow-xs flex flex-col items-center justify-center gap-0.5 cursor-pointer"
-              >
-                <span className="text-lg">👩</span>
-                <span>Ben Müge'yim</span>
-                <span className="text-[9px] font-semibold text-stone-500">Cihat ile Eşleş</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickConnect('Cihat')}
-                className="py-2.5 px-3 rounded-xl bg-gradient-to-b from-teal-50 to-teal-100/60 border-2 border-[#2B6777] text-[#2B6777] text-xs font-black hover:opacity-90 active:scale-95 transition-all shadow-xs flex flex-col items-center justify-center gap-0.5 cursor-pointer"
-              >
-                <span className="text-lg">👨</span>
-                <span>Ben Cihat'ım</span>
-                <span className="text-[9px] font-semibold text-stone-500">Müge ile Eşleş</span>
-              </button>
-            </div>
-          </div>
-
-          {/* QR Code Connect Button */}
+          {/* Main Primary CTA */}
           <button
             type="button"
-            onClick={() => {
-              sound.playTap();
-              setShowQrModal(true);
-            }}
-            className="w-full py-2.5 px-4 rounded-2xl bg-[#2B6777] hover:bg-[#204e5a] active:scale-[0.98] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            onClick={handleStart}
+            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#E05A3D] to-[#e86c52] hover:opacity-95 active:scale-[0.98] text-white font-black text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <QrCode className="w-4 h-4 text-[#F2A900]" />
-            <span>📲 Telefonla QR Tara & Canlı Eşleş</span>
+            <span>🍽️</span>
+            <span>{lang === 'tr' ? 'Akşam Yemeği Masasını Başlat' : 'Start Dinner Table'}</span>
+            <span>→</span>
           </button>
 
-          {/* Manual PIN / Code Option */}
-          <div className="flex items-center justify-between gap-2 px-1">
+          {/* Secondary Action Grid */}
+          <div className="grid grid-cols-2 gap-2">
+            {/* QR Code Connect Button */}
+            <button
+              type="button"
+              onClick={() => {
+                sound.playTap();
+                setShowQrModal(true);
+              }}
+              className="py-2.5 px-3 rounded-xl bg-white border border-stone-200 hover:border-[#2B6777] active:scale-[0.98] text-[#2B6777] font-extrabold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <QrCode className="w-3.5 h-3.5 text-[#E05A3D]" />
+              <span>{lang === 'tr' ? 'QR Kod ile Bağlan' : 'Connect via QR'}</span>
+            </button>
+
+            {/* Manual PIN / Code Option */}
             <button
               type="button"
               onClick={() => {
                 sound.playTap();
                 setShowPairModal(true);
               }}
-              className="text-[11px] font-bold text-stone-600 hover:text-[#2B6777] flex items-center gap-1 cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-white border border-stone-200 hover:border-[#2B6777] active:scale-[0.98] text-[#2B6777] font-extrabold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <KeyRound className="w-3.5 h-3.5" />
-              <span>PIN ile Bağlan (CRAVE-9821)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleStart}
-              className="text-[11px] font-bold text-[#E05A3D] hover:underline flex items-center gap-0.5 cursor-pointer"
-            >
-              <span>Ön Anket Yap</span>
-              <span>→</span>
+              <KeyRound className="w-3.5 h-3.5 text-[#E05A3D]" />
+              <span>{lang === 'tr' ? 'Masa Kodu Gir' : 'Enter Table PIN'}</span>
             </button>
           </div>
         </motion.div>
@@ -409,7 +386,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                 <div className="flex items-center gap-2">
                   <KeyRound className="w-5 h-5 text-[#E05A3D]" />
                   <h3 className="font-extrabold text-sm text-[#2B6777]">
-                    Eşleşme Kodu ile Bağlan
+                    {lang === 'tr' ? 'Masa Koduna Katıl' : 'Join Table by Code'}
                   </h3>
                 </div>
                 <button
@@ -422,46 +399,29 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
 
               <div className="space-y-3">
                 <p className="text-xs text-stone-600 leading-relaxed">
-                  Eşinizin ekranında görünen kodu buraya girerek iki telefonu anında bağlayabilirsiniz.
+                  {lang === 'tr'
+                    ? 'Partnerinizin ekranında görünen masa kodunu ve kendi adınızı girerek masaya anında bağlanın.'
+                    : "Enter your name and the table code shown on your partner's screen to connect."}
                 </p>
 
-                {/* Who am I? */}
+                {/* Name input */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-bold text-stone-700 block">
-                    Bu Telefon Kimin?
+                    {lang === 'tr' ? 'Senin Adın' : 'Your Name'}
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPersona('Cihat')}
-                      className={`p-2 rounded-xl border-2 flex items-center justify-center gap-2 cursor-pointer font-bold text-xs transition-all ${
-                        selectedPersona === 'Cihat'
-                          ? 'border-[#2B6777] bg-[#2B6777]/10 text-[#2B6777]'
-                          : 'border-stone-200 text-stone-600 hover:bg-stone-50'
-                      }`}
-                    >
-                      <span>👨</span>
-                      <span>Ben Cihat'ım</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPersona('Müge')}
-                      className={`p-2 rounded-xl border-2 flex items-center justify-center gap-2 cursor-pointer font-bold text-xs transition-all ${
-                        selectedPersona === 'Müge'
-                          ? 'border-[#E05A3D] bg-[#E05A3D]/10 text-[#E05A3D]'
-                          : 'border-stone-200 text-stone-600 hover:bg-stone-50'
-                      }`}
-                    >
-                      <span>👩</span>
-                      <span>Ben Müge'yim</span>
-                    </button>
-                  </div>
+                  <input
+                    type="text"
+                    value={inputName}
+                    onChange={(e) => setInputName(e.target.value)}
+                    placeholder={lang === 'tr' ? 'Örn: Deniz' : 'e.g. Alex'}
+                    className="w-full px-3 py-2 text-sm font-bold rounded-xl border border-stone-300 bg-white text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
+                  />
                 </div>
 
                 {/* Code input */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-bold text-stone-700 block">
-                    Eşleşme Kodu (PIN)
+                    {lang === 'tr' ? 'Masa Kodu (PIN)' : 'Table Code (PIN)'}
                   </label>
                   <input
                     type="text"
@@ -476,21 +436,18 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
               <div className="space-y-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowPairModal(false);
-                    handleQuickConnect(selectedPersona, inputCode || 'CRAVE-9821');
-                  }}
+                  onClick={handleJoinWithCode}
                   className="w-full py-3 rounded-2xl bg-[#2B6777] hover:bg-[#204e5a] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Check className="w-4 h-4" />
-                  <span>{selectedPersona === 'Cihat' ? 'Müge ile Eşleş ve Başla' : 'Cihat ile Eşleş ve Başla'}</span>
+                  <span>{lang === 'tr' ? 'Masaya Katıl & Başla' : 'Join Table & Start'}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowPairModal(false)}
                   className="w-full py-2 text-stone-500 font-bold text-xs hover:text-stone-800 cursor-pointer"
                 >
-                  İptal
+                  {lang === 'tr' ? 'İptal' : 'Cancel'}
                 </button>
               </div>
             </motion.div>

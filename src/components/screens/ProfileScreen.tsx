@@ -355,7 +355,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         </div>
       )}
 
-      {/* VIEW 2: PARTNER PROFILE (Cihat) & CHAT CTA */}
+      {/* VIEW 2: PARTNER PROFILE & CHAT CTA */}
       {profileView === 'partner' && (
         <div className="space-y-3">
           {/* Partner Identity Card */}
@@ -398,7 +398,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </div>
           </div>
 
-          {/* Quick Chat Shortcut with Cihat */}
+          {/* Quick Chat Shortcut with Partner */}
           <div className="w-full max-w-[340px] mx-auto">
             <button
               onClick={() => {
