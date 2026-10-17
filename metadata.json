@@ -1,0 +1,6 @@
+{
+  "name": "CraveMatch - Playful Couple Dining & Flavor Matcher",
+  "description": "Gamified flavor matchmaking and decision assistant for couples. Swipe favorite dishes, roll the 3D decision dice, co-cook with split tasks, and roll for snacks in the pleasure pool.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
