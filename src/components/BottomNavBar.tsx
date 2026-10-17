@@ -91,7 +91,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="w-full bg-[#F7F5F2] border-t border-stone-200/90 px-3 py-1.5 flex items-center justify-between select-none z-30"
+      className="w-full bg-[#F7F5F2] border-t border-stone-200/90 px-3 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom,8px))] flex items-center justify-between select-none z-30 shrink-0"
     >
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;

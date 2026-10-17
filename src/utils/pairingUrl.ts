@@ -1,49 +1,61 @@
 // Pairing URL helper
 // Ensures mobile cameras scanning the QR code NEVER get directed to an unreachable http://localhost:3000
-// Instead, points to the live public shared URL or detected live domain.
+// Instead, points to the reachable local Wi-Fi IP or live public tunnel URL.
+
+import { pairingSync } from './pairingSync';
 
 export const PUBLIC_APP_URL =
   (import.meta.env.VITE_PUBLIC_APP_URL as string) ||
-  'https://ais-pre-ky6cp5q7dfunxjqj7ax66w-952999318419.europe-west2.run.app';
+  'https://eighty-otters-roll.loca.lt';
 
-export interface PairingUrlOptions {
-  mode?: 'cloud' | 'local' | 'custom';
-  customIp?: string;
-}
-
-export function getPublicPairingUrl(
-  pairCode: string,
+export function getBestPairingUrl(
+  pairCode: string = 'CRAVE-9821',
   partnerName: string = 'Müge',
-  targetPersona: string = 'Cihat'
+  targetPersona: string = 'Cihat',
+  preferWifi: boolean = true
 ): string {
-  // If the browser is currently running on a real public URL (like .run.app or a custom domain), use that.
+  const netInfo = pairingSync.getCachedNetworkInfo();
+
   if (typeof window !== 'undefined') {
     const origin = window.location.origin;
     const hostname = window.location.hostname;
-    const isLocalhost =
+    const isLocal =
       hostname === 'localhost' ||
       hostname === '127.0.0.1' ||
-      hostname === '0.0.0.0' ||
-      hostname.endsWith('.local');
+      hostname === '0.0.0.0';
 
-    if (!isLocalhost && origin.startsWith('https://')) {
+    // If currently running on a real public or tunnel domain
+    if (!isLocal && (origin.startsWith('https://') || origin.includes(':3000'))) {
       return `${origin}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
     }
   }
 
-  // When running inside AI Studio development environment or localhost,
-  // mobile phone cameras MUST be directed to the live public shared application URL,
-  // otherwise mobile browsers will attempt to open localhost:3000 on the phone itself and fail with "Sunucuya bağlanılamıyor".
-  return `${PUBLIC_APP_URL}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+  // If Wi-Fi preferred and local IP known:
+  if (preferWifi && netInfo?.localUrl) {
+    return `${netInfo.localUrl}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
+  }
+
+  // Fallback to detected local network IP or tunnel
+  const baseUrl = netInfo?.localUrl || (netInfo?.tunnelUrl || PUBLIC_APP_URL);
+  return `${baseUrl}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
 }
 
-export function getLocalWifiPairingUrl(
-  ip: string,
-  pairCode: string,
+export function getPublicPairingUrl(
+  pairCode: string = 'CRAVE-9821',
   partnerName: string = 'Müge',
   targetPersona: string = 'Cihat'
 ): string {
-  const cleanIp = ip.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  return getBestPairingUrl(pairCode, partnerName, targetPersona, false);
+}
+
+export function getLocalWifiPairingUrl(
+  ip: string = '192.168.145.231',
+  pairCode: string = 'CRAVE-9821',
+  partnerName: string = 'Müge',
+  targetPersona: string = 'Cihat'
+): string {
+  const netInfo = pairingSync.getCachedNetworkInfo();
+  const cleanIp = (netInfo?.localIp || ip).replace(/^https?:\/\//, '').replace(/\/.*$/, '');
   const host = cleanIp.includes(':') ? cleanIp : `${cleanIp}:3000`;
   return `http://${host}/?pair=${encodeURIComponent(pairCode)}&partner=${encodeURIComponent(partnerName)}&as=${encodeURIComponent(targetPersona)}`;
 }

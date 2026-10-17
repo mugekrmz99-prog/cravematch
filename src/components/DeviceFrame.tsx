@@ -32,18 +32,18 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTit
   };
 
   return (
-    <div className={`w-full min-h-[100dvh] flex flex-col items-center justify-start select-none ${
-      isFrameMode ? 'bg-[#EAE7E1] py-3 px-2' : 'bg-[#F7F5F2] p-0'
+    <div className={`w-full min-h-[100dvh] h-[100dvh] flex flex-col items-center justify-start select-none overflow-hidden ${
+      isFrameMode && !isMobileScreen ? 'bg-[#EAE7E1] py-3 px-2' : 'bg-[#F7F5F2] p-0'
     }`}>
       {/* Top Controls Bar (shown on desktop or frame mode for easy testing) */}
       {!isMobileScreen && (
-        <header className="w-full max-w-sm mb-2 flex items-center justify-between px-3 py-1.5 bg-white/80 backdrop-blur-md rounded-2xl border border-stone-300 shadow-2xs text-xs">
+        <header className="w-full max-w-sm mb-2 flex items-center justify-between px-3 py-1.5 bg-white/80 backdrop-blur-md rounded-2xl border border-stone-300 shadow-2xs text-xs shrink-0">
           <div className="flex items-center gap-1.5">
             <span className="font-extrabold text-[#2B6777] font-['Outfit',sans-serif]">
               CraveMatch
             </span>
             <span className="text-[10px] bg-[#E05A3D]/10 text-[#E05A3D] font-bold px-2 py-0.5 rounded-full">
-              iOS Ready
+              Mobile App
             </span>
           </div>
 
@@ -88,7 +88,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTit
         className={`transition-all duration-300 relative flex flex-col overflow-hidden ${
           isFrameMode && !isMobileScreen
             ? 'w-full max-w-[390px] h-[844px] max-h-[92vh] rounded-[48px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] border-[10px] border-[#252528] ring-1 ring-black/40 bg-[#F7F5F2]'
-            : 'w-full max-w-[440px] h-[100dvh] bg-[#F7F5F2]'
+            : 'w-full max-w-md md:max-w-none h-[100dvh] min-h-[100dvh] bg-[#F7F5F2]'
         }`}
       >
         {/* Dynamic Island & Status Bar (in Frame mode) */}

@@ -188,7 +188,7 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   ];
 
   return (
-    <div className="relative w-full h-full min-h-[680px] flex flex-col justify-between bg-[#F7F5F2] px-4 pt-3 pb-2 select-none overflow-hidden">
+    <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] px-3 sm:px-4 pt-2 pb-1 select-none overflow-hidden">
       {/* Top Bar */}
       <header className="flex items-center justify-between pb-1 px-1">
         <button

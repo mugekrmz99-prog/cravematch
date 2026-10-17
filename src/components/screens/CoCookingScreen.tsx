@@ -97,7 +97,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
   const portionRatio = portions / (dish.basePortions || 2);
 
   return (
-    <div className="relative w-full h-full min-h-[680px] flex flex-col justify-between bg-[#F7F5F2] select-none overflow-y-auto no-scrollbar">
+    <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] select-none overflow-y-auto no-scrollbar">
       {/* Top Hero Image with Navigation Overlay */}
       <div className="relative w-full h-64 shrink-0 overflow-hidden bg-black">
         <img

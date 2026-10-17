@@ -173,7 +173,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[680px] flex flex-col justify-between bg-[#F7F5F2] px-4 pt-3 pb-2 select-none overflow-y-auto no-scrollbar">
+    <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] px-4 pt-3 pb-2 select-none overflow-y-auto no-scrollbar">
       {/* Top Header with CraveMatch Logo & Couple Sync Indicator */}
       <div className="flex flex-col items-center gap-1.5 pb-2">
         <CraveLogo size="sm" layout="horizontal" />

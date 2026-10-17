@@ -140,7 +140,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const unlockedBadges = user.badges.filter((b) => b.unlocked);
 
   return (
-    <div className="relative w-full h-full min-h-[680px] flex flex-col justify-between bg-[#F7F5F2] px-4 pt-3 pb-2 select-none overflow-y-auto no-scrollbar">
+    <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] px-4 pt-3 pb-2 select-none overflow-y-auto no-scrollbar">
       {/* Top Header Logo with Settings Shortcut */}
       <div className="flex items-center justify-between pb-2 px-1">
         <div className="w-8" />

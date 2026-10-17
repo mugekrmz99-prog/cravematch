@@ -175,17 +175,69 @@ export default function App() {
     };
   }, []);
 
-  // Real-time synchronization listener (cross-device & cross-tab)
+  // Fetch initial room state from persistent DB
+  useEffect(() => {
+    const code = user.partner.pairCode || 'CRAVE-9821';
+    fetch(`/api/db/state?code=${encodeURIComponent(code)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((room) => {
+        if (!room) return;
+        if (Array.isArray(room.messages) && room.messages.length > 0) {
+          setMessages(
+            room.messages.map((m: any) => ({
+              ...m,
+              sender: (m.author || m.sender) === user.name ? 'me' : 'partner'
+            }))
+          );
+        }
+        if (Array.isArray(room.cart) && room.cart.length > 0) {
+          setGroceries(room.cart);
+        }
+        const partnerProfile = room.users?.[user.partner.name];
+        if (partnerProfile) {
+          setUser((prev) => ({
+            ...prev,
+            partner: {
+              ...prev.partner,
+              avatarUrl: partnerProfile.avatarUrl || prev.partner.avatarUrl,
+              isConnected: true,
+              status: 'Choosing Together!'
+            }
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [user.name, user.partner.pairCode]);
+
+  // Real-time synchronization listener (SSE, cross-device & cross-tab)
   useEffect(() => {
     pairingSync.setPairCode(user.partner.pairCode || 'CRAVE-9821');
     pairingSync.setActiveUser(user.name);
 
     const unsub = pairingSync.subscribe((payload) => {
-      if (payload.type === 'PARTNER_CONNECTED') {
-        const incomingName = (payload.data as any)?.name || payload.sender;
-        const otherPersonName = incomingName && incomingName !== user.name
-          ? incomingName
-          : (user.name === 'Cihat' ? 'Müge' : 'Cihat');
+      if (payload.type === 'INITIAL_STATE') {
+        const room = payload.data as any;
+        if (room) {
+          if (Array.isArray(room.messages) && room.messages.length > 0) {
+            setMessages(
+              room.messages.map((m: any) => ({
+                ...m,
+                sender: (m.author || m.sender) === user.name ? 'me' : 'partner'
+              }))
+            );
+          }
+          if (Array.isArray(room.cart) && room.cart.length > 0) {
+            setGroceries(room.cart);
+          }
+        }
+      } else if (payload.type === 'PARTNER_CONNECTED') {
+        const incomingName = (payload.data as any)?.name || (payload.data as any)?.user || payload.sender;
+        const otherPersonName =
+          incomingName && incomingName !== user.name
+            ? incomingName
+            : user.name === 'Cihat'
+            ? 'Müge'
+            : 'Cihat';
 
         setUser((prev) => ({
           ...prev,
@@ -220,6 +272,29 @@ export default function App() {
             }
             sound.playNotification();
           }
+        }
+      } else if (payload.type === 'CART_UPDATE' || payload.type === 'GROCERY_UPDATE') {
+        const items = payload.data as any;
+        if (Array.isArray(items)) {
+          setGroceries(items);
+        }
+      } else if (payload.type === 'DISH_MATCH') {
+        sound.playSuccess();
+        try {
+          confetti({ particleCount: 100, spread: 90, origin: { y: 0.5 } });
+        } catch {
+          // ignore
+        }
+      } else if (payload.type === 'PROFILE_UPDATE') {
+        const profile = payload.data as any;
+        if (profile && profile.name === user.partner.name) {
+          setUser((prev) => ({
+            ...prev,
+            partner: {
+              ...prev.partner,
+              avatarUrl: profile.avatarUrl || prev.partner.avatarUrl
+            }
+          }));
         }
       }
     });

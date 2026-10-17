@@ -134,7 +134,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[680px] flex flex-col justify-between bg-[#F7F5F2] px-3 pt-2.5 pb-2 select-none overflow-hidden">
+    <div className="relative w-full h-full flex-1 flex flex-col justify-between bg-[#F7F5F2] px-3 pt-2 pb-2 select-none overflow-hidden">
       {/* Top Header with Partner Profile & Online Indicator */}
       <div className="flex items-center justify-between pb-2 px-1 border-b border-stone-200/80 bg-white/60 -mx-3 px-4 pt-1 backdrop-blur-xs">
         <div

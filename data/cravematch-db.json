@@ -1,0 +1,102 @@
+{
+  "rooms": {
+    "CRAVE-9821": {
+      "pairCode": "CRAVE-9821",
+      "createdAt": 1792242568831,
+      "users": {
+        "Müge": {
+          "id": "usr-1",
+          "name": "Müge",
+          "birthDate": "1998-05-14",
+          "title": "Master Chef",
+          "level": 12,
+          "matchesCount": 42,
+          "badgesCount": 15,
+          "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+          "avatarType": "photo",
+          "allergies": [
+            "Kişniş"
+          ],
+          "isSurveyCompleted": true
+        },
+        "Cihat": {
+          "id": "usr-2",
+          "name": "Cihat",
+          "birthDate": "1996-08-22",
+          "title": "Sous Chef & BBQ Master",
+          "level": 10,
+          "matchesCount": 42,
+          "badgesCount": 12,
+          "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+          "avatarType": "photo",
+          "allergies": [
+            "Aşırı Acı"
+          ],
+          "isSurveyCompleted": true
+        }
+      },
+      "messages": [
+        {
+          "id": "msg-1",
+          "sender": "partner",
+          "author": "Cihat",
+          "text": "Aşkım menüye baktın mı? Bu akşam için harika seçenekler beğendim! 🍽️",
+          "timestamp": "18:15",
+          "type": "text"
+        },
+        {
+          "id": "msg-2",
+          "sender": "me",
+          "author": "Müge",
+          "text": "Ben de baktım, özellikle sarımsaklı karidesli makarna harika görünüyor! 😍",
+          "timestamp": "18:18",
+          "type": "text"
+        },
+        {
+          "id": "msg-3",
+          "sender": "system",
+          "author": "System",
+          "text": "⏰ Günün Menüsü Uyarısı: Akşam yemeği karar zarını atmak için son 15 dakika!",
+          "timestamp": "18:30",
+          "type": "timer_alert"
+        }
+      ],
+      "swipes": {
+        "dish-1": {
+          "Müge": true,
+          "Cihat": true
+        }
+      },
+      "matches": [
+        "dish-1"
+      ],
+      "cart": [
+        {
+          "id": "g-1",
+          "name": "300g Fettuccine Makarna",
+          "fromRecipe": "Sarımsaklı Karidesli Makarna",
+          "checked": false,
+          "addedBy": "Müge",
+          "category": "Pantry"
+        },
+        {
+          "id": "g-2",
+          "name": "350g Ayıklanmış Jumbo Karides",
+          "fromRecipe": "Sarımsaklı Karidesli Makarna",
+          "checked": false,
+          "addedBy": "Cihat",
+          "category": "Meat"
+        },
+        {
+          "id": "g-3",
+          "name": "1 Baş Taze Sarımsak",
+          "fromRecipe": "Sarımsaklı Karidesli Makarna",
+          "checked": true,
+          "addedBy": "Müge",
+          "category": "Produce"
+        }
+      ],
+      "diceWinner": null
+    }
+  }
+}
