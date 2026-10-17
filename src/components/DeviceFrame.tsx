@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, Smartphone, Monitor } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { Language } from '../types';
+import { translations } from '../utils/i18n';
 
 interface DeviceFrameProps {
   children: React.ReactNode;
   activeTabTitle?: string;
+  lang?: Language;
 }
 
-export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTitle }) => {
+export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTitle, lang = 'tr' }) => {
+  const t = translations[lang];
   // Check if we are on a mobile device or screen width < 500
   const [isMobileScreen, setIsMobileScreen] = useState(false);
   const [isFrameMode, setIsFrameMode] = useState(true);
@@ -56,7 +60,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTit
                   ? 'bg-rose-50 border-rose-200 text-rose-500'
                   : 'bg-white border-stone-200 text-[#2B6777]'
               }`}
-              title={isMuted ? 'Sesi Aç' : 'Sesi Kapat'}
+              title={isMuted ? t.soundOn : t.soundOff}
             >
               {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
             </button>
@@ -65,17 +69,17 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({ children, activeTabTit
             <button
               onClick={() => setIsFrameMode(!isFrameMode)}
               className="flex items-center gap-1 px-2 py-1 rounded-xl bg-white border border-stone-200 text-[#2B6777] font-bold hover:bg-stone-50 transition-all cursor-pointer text-[10px]"
-              title="Görünüm Değiştir"
+              title={t.toggleView}
             >
               {isFrameMode ? (
                 <>
                   <Monitor className="w-3 h-3" />
-                  <span>Tam Ekran</span>
+                  <span>{t.fullScreen}</span>
                 </>
               ) : (
                 <>
                   <Smartphone className="w-3 h-3" />
-                  <span>iPhone Çerçevesi</span>
+                  <span>{t.deviceFrame}</span>
                 </>
               )}
             </button>

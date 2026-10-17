@@ -180,7 +180,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             }`}
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
-            <span>CSV / Menü</span>
+            <span>{lang === 'tr' ? 'CSV / Menü' : 'CSV / Menu'}</span>
           </button>
           <button
             onClick={() => {
@@ -191,7 +191,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               activeTab === 'qr' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
             }`}
           >
-            QR & Eşleşme
+            {lang === 'tr' ? 'QR & Eşleşme' : lang === 'de' ? 'QR & Paarung' : 'QR & Pairing'}
           </button>
           <button
             onClick={() => {
@@ -202,7 +202,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               activeTab === 'addDish' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
             }`}
           >
-            + Tek Yemek
+            {lang === 'tr' ? '+ Tek Yemek' : lang === 'de' ? '+ Einzelgericht' : '+ Single Dish'}
           </button>
           <button
             onClick={() => {
@@ -213,7 +213,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               activeTab === 'general' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
             }`}
           >
-            {lang === 'tr' ? 'Genel' : 'General'}
+            {lang === 'tr' ? 'Genel' : lang === 'de' ? 'Allgemein' : 'General'}
           </button>
         </div>
 
@@ -235,10 +235,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="space-y-3 text-center">
               <div>
                 <h4 className="font-extrabold text-[#2B6777] text-sm">
-                  Partner QR & Eşleşme
+                  {lang === 'tr' ? 'Partner QR & Eşleşme' : lang === 'de' ? 'Partner QR & Kopplung' : 'Partner QR & Pairing'}
                 </h4>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  Eşinizle aynı hesapta bağlanmak için QR veya kodu kullanın
+                  {lang === 'tr' ? 'Eşinizle aynı masada bağlanmak için QR veya kodu kullanın' : lang === 'de' ? 'Verwende QR oder Code, um dich zu verbinden' : 'Scan QR or use code to join table'}
                 </p>
               </div>
 
@@ -253,7 +253,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   includeMargin={true}
                 />
                 <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-[#2B6777] text-[8px] font-black text-white flex items-center gap-1 shadow-2xs">
-                  <span>Bulut Canlı</span>
+                  <span>{lang === 'tr' ? 'Bulut Canlı' : 'Cloud Live'}</span>
                 </div>
               </div>
 
@@ -272,12 +272,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 {partnerConnectedInModal ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold shadow-2xs">
                     <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
-                    <span>{user.partner.name} Bağlandı! ✓</span>
+                    <span>{lang === 'tr' ? `${user.partner.name} Bağlandı! ✓` : lang === 'de' ? `${user.partner.name} Verbunden! ✓` : `${user.partner.name} Connected! ✓`}</span>
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                    <span>Bağlantı Bekleniyor</span>
+                    <span>{lang === 'tr' ? 'Bağlantı Bekleniyor' : lang === 'de' ? 'Warten auf Verbindung' : 'Waiting for connection'}</span>
                   </span>
                 )}
               </div>
@@ -286,10 +286,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[10px] text-emerald-950 text-left leading-tight space-y-1">
                 <div className="font-extrabold text-[#2B6777] flex items-center gap-1">
                   <span>✨</span>
-                  <span>Canlı Bağlantı Hazır:</span>
+                  <span>{lang === 'tr' ? 'Canlı Bağlantı Hazır:' : lang === 'de' ? 'Live-Verbindung bereit:' : 'Live Connection Ready:'}</span>
                 </div>
                 <p>
-                  QR kod artık doğrudan internet bulut bağlantısını taşır. Eşiniz iPhone veya Android kamerasıyla okuttuğunda telefon hata vermeden anında açılır!
+                  {lang === 'tr' ? 'QR kod doğrudan internet bulut bağlantısını taşır. Eşiniz kamera ile okuttuğunda sayfa anında açılır!' : lang === 'de' ? 'Der QR-Code öffnet die Web-App direkt auf jedem Smartphone.' : 'QR code contains live cloud URL. Open with iPhone or Android camera to connect instantly!'}
                 </p>
               </div>
 
@@ -309,7 +309,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     className="py-2 px-2.5 rounded-xl bg-[#25D366] text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer hover:bg-[#20ba59]"
                   >
                     <Share2 className="w-3.5 h-3.5" />
-                    <span>WhatsApp Linki</span>
+                    <span>WhatsApp</span>
                   </button>
 
                   <button
@@ -331,39 +331,39 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   {t.addCustomDish}
                 </h4>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">
-                  Pro Sürüm
+                  Pro
                 </span>
               </div>
 
               {dishAddedNotification && (
                 <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5">
                   <Check className="w-4 h-4 stroke-[3]" />
-                  <span>Yeni yemek başarıyla menüye eklendi!</span>
+                  <span>{lang === 'tr' ? 'Yeni yemek başarıyla menüye eklendi!' : lang === 'de' ? 'Gericht erfolgreich hinzugefügt!' : 'Dish added to menu successfully!'}</span>
                 </div>
               )}
 
               <div>
                 <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  Yemek Adı
+                  {lang === 'tr' ? 'Yemek Adı' : lang === 'de' ? 'Gerichtsname' : 'Dish Title'}
                 </label>
                 <input
                   type="text"
                   value={dishTitle}
                   onChange={(e) => setDishTitle(e.target.value)}
-                  placeholder="Örn: Ev Yapımı Fırın Lazanya..."
+                  placeholder={lang === 'tr' ? 'Örn: Ev Yapımı Fırın Lazanya...' : 'e.g. Homemade Lasagna...'}
                   className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
                 />
               </div>
 
               <div>
                 <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  Kısa Açıklama / İştah Açıcı Not
+                  {lang === 'tr' ? 'Kısa Açıklama' : lang === 'de' ? 'Kurzbeschreibung' : 'Short Description'}
                 </label>
                 <input
                   type="text"
                   value={dishSubtitle}
                   onChange={(e) => setDishSubtitle(e.target.value)}
-                  placeholder="Örn: Bolonez sos ve fırınlanmış beşamel..."
+                  placeholder={lang === 'tr' ? 'Örn: Bolonez sos ve fırınlanmış beşamel...' : 'e.g. Rich Bolognese sauce with bechamel...'}
                   className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
                 />
               </div>
@@ -371,7 +371,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                    Hazırlık Süresi
+                    {lang === 'tr' ? 'Hazırlık Süresi' : lang === 'de' ? 'Zubereitungszeit' : 'Prep Time'}
                   </label>
                   <input
                     type="text"
@@ -383,26 +383,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
                 <div>
                   <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                    Kategori
+                    {lang === 'tr' ? 'Kategori' : lang === 'de' ? 'Kategorie' : 'Category'}
                   </label>
                   <select
                     value={dishCategory}
                     onChange={(e) => setDishCategory(e.target.value)}
                     className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
                   >
-                    <option value="Italian">İtalyan</option>
-                    <option value="Vegetarian">Vejetaryen</option>
-                    <option value="Spicy">Acı</option>
+                    <option value="Italian">{lang === 'tr' ? 'İtalyan' : 'Italian'}</option>
+                    <option value="Vegetarian">{lang === 'tr' ? 'Vejetaryen' : 'Vegetarian'}</option>
+                    <option value="Spicy">{lang === 'tr' ? 'Acı' : 'Spicy'}</option>
                     <option value="Fast Food">Fast Food</option>
-                    <option value="Healthy">Sağlıklı</option>
-                    <option value="Sweet">Tatlı</option>
+                    <option value="Healthy">{lang === 'tr' ? 'Sağlıklı' : 'Healthy'}</option>
+                    <option value="Sweet">{lang === 'tr' ? 'Tatlı' : 'Sweet'}</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  Malzemeler (Virgülle ayırın)
+                  {lang === 'tr' ? 'Malzemeler (Virgülle ayırın)' : lang === 'de' ? 'Zutaten (mit Komma trennen)' : 'Ingredients (comma separated)'}
                 </label>
                 <input
                   type="text"
@@ -418,7 +418,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 className="w-full py-2.5 rounded-xl bg-[#2B6777] text-white font-bold text-xs hover:bg-[#235866] transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <PlusCircle className="w-4 h-4" />
-                <span>Yemeği Desteye Ekle</span>
+                <span>{lang === 'tr' ? 'Yemeği Desteye Ekle' : lang === 'de' ? 'Gericht hinzufügen' : 'Add Dish to Deck'}</span>
               </button>
             </div>
           )}
@@ -461,10 +461,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {/* Reset App Data Danger Zone */}
               <div className="pt-2 border-t border-stone-200">
                 <label className="text-xs font-bold text-rose-700 block mb-1.5">
-                  {lang === 'tr' ? 'Verileri Sıfırlama (Test Modu)' : 'Reset App (Testing)'}
+                  {lang === 'tr' ? 'Verileri Sıfırlama (Test Modu)' : lang === 'de' ? 'Daten zurücksetzen (Test)' : 'Reset Data (Test Mode)'}
                 </label>
                 <p className="text-[11px] text-stone-500 mb-2 leading-tight">
-                  Tüm eşleşmeleri, seçilen yemekleri ve anket tercihlerini sıfırlayarak baştan test edin.
+                  {lang === 'tr' ? 'Tüm eşleşmeleri, seçilen yemekleri ve anket tercihlerini sıfırlayarak baştan test edin.' : lang === 'de' ? 'Setzt alle Einstellungen und Matches zurück.' : 'Reset all matches, selections and survey answers to test from scratch.'}
                 </p>
 
                 <button
@@ -475,7 +475,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="w-full py-2.5 px-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 font-extrabold text-xs flex items-center justify-center gap-2 hover:bg-rose-100 transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4 text-rose-600" />
-                  <span>Tüm Uygulamayı Sıfırla (Reset Data)</span>
+                  <span>{t.resetAllData || (lang === 'tr' ? 'Tüm Uygulamayı Sıfırla' : lang === 'de' ? 'App zurücksetzen' : 'Reset All App Data')}</span>
                 </button>
               </div>
             </div>
@@ -498,10 +498,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
                 <div>
                   <h4 className="text-base font-black text-rose-950 font-['Outfit',sans-serif]">
-                    Uygulama Sıfırlansın mı?
+                    {t.resetConfirmTitle || (lang === 'tr' ? 'Uygulama Sıfırlansın mı?' : lang === 'de' ? 'App zurücksetzen?' : 'Reset Entire Application?')}
                   </h4>
                   <p className="text-xs text-stone-600 mt-1 leading-snug">
-                    Tüm anket cevapları, tercihler ve eşleşmeler temizlenip giriş ekranına dönülecektir.
+                    {t.resetConfirmDesc || (lang === 'tr' ? 'Tüm anket cevapları, tercihler ve eşleşmeler temizlenip giriş ekranına dönülecektir.' : 'All responses, preferences and pairs will be cleared.')}
                   </p>
                 </div>
 
@@ -510,7 +510,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onClick={() => setShowResetConfirmDialog(false)}
                     className="flex-1 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs cursor-pointer"
                   >
-                    İptal
+                    {t.cancel || (lang === 'tr' ? 'İptal' : lang === 'de' ? 'Abbrechen' : 'Cancel')}
                   </button>
                   <button
                     onClick={() => {
@@ -521,7 +521,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     }}
                     className="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs cursor-pointer shadow-xs"
                   >
-                    Evet, Sıfırla
+                    {t.confirmResetBtn || (lang === 'tr' ? 'Evet, Sıfırla' : lang === 'de' ? 'Ja, zurücksetzen' : 'Yes, Reset All')}
                   </button>
                 </div>
               </motion.div>

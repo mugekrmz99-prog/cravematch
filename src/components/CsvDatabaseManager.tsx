@@ -362,7 +362,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
           className="py-2 px-2.5 rounded-xl bg-white border border-stone-300 text-stone-700 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-stone-50 cursor-pointer shadow-2xs"
         >
           <Download className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Şablon İndir (.csv)</span>
+          <span>{lang === 'tr' ? 'Şablon İndir (.csv)' : lang === 'de' ? 'Vorlage laden (.csv)' : 'Template (.csv)'}</span>
         </button>
 
         <button
@@ -370,7 +370,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
           className="py-2 px-2.5 rounded-xl bg-[#2B6777] text-white font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-[#225360] cursor-pointer shadow-xs active:scale-95 transition-all"
         >
           <Upload className="w-3.5 h-3.5" />
-          <span>Bilgisayardan CSV Yükle</span>
+          <span>{lang === 'tr' ? 'Bilgisayardan CSV Yükle' : lang === 'de' ? 'CSV hochladen' : 'Upload CSV'}</span>
         </button>
 
         <input
@@ -393,14 +393,14 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-emerald-700" />
               <span className="font-extrabold text-emerald-900 text-xs">
-                {parsedPreviewDishes.length} Yeni Yemek Bulundu
+                {parsedPreviewDishes.length} {lang === 'tr' ? 'Yeni Yemek Bulundu' : lang === 'de' ? 'Neue Gerichte gefunden' : 'New Dishes Found'}
               </span>
             </div>
             <button
               onClick={() => setParsedPreviewDishes(null)}
               className="text-[10px] text-stone-500 hover:text-stone-700 font-bold"
             >
-              İptal
+              {lang === 'tr' ? 'İptal' : 'Cancel'}
             </button>
           </div>
 
@@ -413,7 +413,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
             ))}
             {parsedPreviewDishes.length > 4 && (
               <div className="text-[10px] text-center text-stone-500 font-semibold italic">
-                ve {parsedPreviewDishes.length - 4} yemek daha...
+                {lang === 'tr' ? `ve ${parsedPreviewDishes.length - 4} yemek daha...` : `and ${parsedPreviewDishes.length - 4} more dishes...`}
               </div>
             )}
           </div>
@@ -423,13 +423,13 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
               onClick={handleConfirmMerge}
               className="flex-1 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 cursor-pointer shadow-xs"
             >
-              Mevcut Menüye Ekle
+              {lang === 'tr' ? 'Mevcut Menüye Ekle' : 'Add to Existing Menu'}
             </button>
             <button
               onClick={handleConfirmReplace}
               className="flex-1 py-1.5 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 cursor-pointer shadow-xs"
             >
-              Tüm Menüyü Değiştir
+              {lang === 'tr' ? 'Tüm Menüyü Değiştir' : 'Replace All Dishes'}
             </button>
           </div>
         </motion.div>
@@ -440,7 +440,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
         <div className="flex items-center justify-between mb-1.5">
           <label className="text-xs font-bold text-[#2B6777] flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5" />
-            <span>Kategori Klasörleri ({dishes.length} Toplam Yemek)</span>
+            <span>{lang === 'tr' ? `Kategori Klasörleri (${dishes.length} Toplam Yemek)` : lang === 'de' ? `Kategorien (${dishes.length} Gerichte)` : `Categories (${dishes.length} Dishes)`}</span>
           </label>
 
           <button
@@ -448,7 +448,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
             className="text-[11px] font-bold text-[#E05A3D] hover:underline flex items-center gap-1 cursor-pointer"
           >
             <Download className="w-3 h-3" />
-            <span>Dışa Aktar</span>
+            <span>{lang === 'tr' ? 'Dışa Aktar' : lang === 'de' ? 'Exportieren' : 'Export'}</span>
           </button>
         </div>
 
@@ -488,7 +488,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Yemek veya malzeme ara..."
+          placeholder={lang === 'tr' ? 'Yemek veya malzeme ara...' : lang === 'de' ? 'Gericht oder Zutat suchen...' : 'Search dish or ingredient...'}
           className="w-full pl-8 pr-3 py-1.5 bg-white rounded-xl border border-stone-200 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
         />
       </div>
@@ -497,7 +497,7 @@ export const CsvDatabaseManager: React.FC<CsvDatabaseManagerProps> = ({
       <div className="space-y-1.5 max-h-48 overflow-y-auto no-scrollbar pr-0.5">
         {displayedDishes.length === 0 ? (
           <div className="p-4 text-center text-xs text-stone-400 italic">
-            Bu klasörde yemek bulunamadı.
+            {lang === 'tr' ? 'Bu klasörde yemek bulunamadı.' : lang === 'de' ? 'Keine Gerichte in diesem Ordner gefunden.' : 'No dishes found in this folder.'}
           </div>
         ) : (
           displayedDishes.map((dish) => (

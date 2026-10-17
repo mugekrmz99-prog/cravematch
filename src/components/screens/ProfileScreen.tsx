@@ -27,7 +27,7 @@ import confetti from 'canvas-confetti';
 import { UserProfile, TasteDuel, BadgeItem, Language, Dish } from '../../types';
 import { CraveLogo } from '../CraveLogo';
 import { sound } from '../../utils/sound';
-import { translations } from '../../utils/i18n';
+import { translations, getLocalizedBadge } from '../../utils/i18n';
 
 interface ProfileScreenProps {
   user: UserProfile;
@@ -176,7 +176,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             }`}
           >
             <User className="w-3.5 h-3.5" />
-            <span>Benim Profilim ({user.name})</span>
+            <span>{lang === 'tr' ? `Benim Profilim (${user.name})` : lang === 'de' ? `Mein Profil (${user.name})` : `My Profile (${user.name})`}</span>
           </button>
           <button
             onClick={() => {
@@ -190,7 +190,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             }`}
           >
             <Heart className="w-3.5 h-3.5 fill-current" />
-            <span>Partnerim ({user.partner.name})</span>
+            <span>{lang === 'tr' ? `Partnerim (${user.partner.name})` : lang === 'de' ? `Mein Partner (${user.partner.name})` : `Partner (${user.partner.name})`}</span>
           </button>
         </div>
       </div>
@@ -219,15 +219,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             {/* User Stats & Title */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1 text-[10px] text-stone-500 font-semibold">
-                <span>{user.matchesCount} eşleşme</span>
+                <span>{user.matchesCount} {lang === 'tr' ? 'eşleşme' : lang === 'de' ? 'Matches' : 'matches'}</span>
                 <span>•</span>
-                <span>{user.badgesCount} madalya</span>
+                <span>{user.badgesCount} {lang === 'tr' ? 'madalya' : lang === 'de' ? 'Medaillen' : 'badges'}</span>
               </div>
               <h2 className="text-xl font-black text-[#2B6777] tracking-tight font-['Outfit',sans-serif] mt-0.5 truncate">
                 {user.name}
               </h2>
               <p className="text-xs font-bold text-stone-600 mt-0.5">
-                {user.title} • Seviye {user.level}
+                {user.title} • {lang === 'tr' ? 'Seviye' : 'Level'} {user.level}
               </p>
 
               <button
@@ -238,7 +238,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 className="flex items-center gap-1 text-[11px] font-bold text-[#E05A3D] mt-1 hover:underline cursor-pointer"
               >
                 <Heart className="w-3.5 h-3.5 fill-[#E05A3D]" />
-                <span>Partner: {user.partner.name} (Görüntüle)</span>
+                <span>Partner: {user.partner.name} ({lang === 'tr' ? 'Görüntüle' : lang === 'de' ? 'Ansehen' : 'View'})</span>
               </button>
             </div>
           </div>
@@ -249,7 +249,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="flex items-center gap-1.5">
                 <Award className="w-4 h-4 text-amber-500" />
                 <h3 className="text-sm font-extrabold text-[#2B6777] font-['Outfit',sans-serif]">
-                  Madalyalar & Başarılar
+                  {t.badgesAndAchievements}
                 </h3>
               </div>
               <button
@@ -259,39 +259,42 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 }}
                 className="text-[11px] font-bold text-[#E05A3D] hover:underline cursor-pointer"
               >
-                Tümünü Gör ({unlockedBadges.length}/{user.badges.length})
+                {t.seeAll} ({unlockedBadges.length}/{user.badges.length})
               </button>
             </div>
 
             {/* Horizontal Scrollable Medals Row */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-              {user.badges.map((badge) => (
-                <button
-                  key={badge.id}
-                  onClick={() => {
-                    sound.playTap();
-                    setSelectedBadgeModal(badge);
-                  }}
-                  className={`p-2.5 rounded-2xl border flex flex-col items-center justify-center min-w-[85px] max-w-[95px] transition-all cursor-pointer shadow-2xs relative ${
-                    badge.unlocked
-                      ? 'bg-gradient-to-b from-amber-50 to-orange-50/50 border-amber-300 text-amber-950'
-                      : 'bg-stone-100 border-stone-200 text-stone-400 opacity-75'
-                  }`}
-                >
-                  <span className="text-2xl mb-1">{badge.icon}</span>
-                  <span className="text-[10px] font-black leading-tight text-center truncate max-w-full">
-                    {lang === 'tr' ? badge.title : lang === 'de' ? badge.title_de : badge.title_en}
-                  </span>
-                  {badge.unlocked ? (
-                    <span className="text-[9px] font-bold text-emerald-700 mt-1">Kazanıldı ✓</span>
-                  ) : (
-                    <span className="text-[8px] font-bold text-stone-500 mt-1 flex items-center gap-0.5">
-                      <Lock className="w-2.5 h-2.5" />
-                      <span>{badge.progress}/{badge.maxProgress}</span>
+              {user.badges.map((badge) => {
+                const locB = getLocalizedBadge(badge, lang);
+                return (
+                  <button
+                    key={badge.id}
+                    onClick={() => {
+                      sound.playTap();
+                      setSelectedBadgeModal(badge);
+                    }}
+                    className={`p-2.5 rounded-2xl border flex flex-col items-center justify-center min-w-[85px] max-w-[95px] transition-all cursor-pointer shadow-2xs relative ${
+                      badge.unlocked
+                        ? 'bg-gradient-to-b from-amber-50 to-orange-50/50 border-amber-300 text-amber-950'
+                        : 'bg-stone-100 border-stone-200 text-stone-400 opacity-75'
+                    }`}
+                  >
+                    <span className="text-2xl mb-1">{badge.icon}</span>
+                    <span className="text-[10px] font-black leading-tight text-center truncate max-w-full">
+                      {locB.title}
                     </span>
-                  )}
-                </button>
-              ))}
+                    {badge.unlocked ? (
+                      <span className="text-[9px] font-bold text-emerald-700 mt-1">{t.unlockedTag}</span>
+                    ) : (
+                      <span className="text-[8px] font-bold text-stone-500 mt-1 flex items-center gap-0.5">
+                        <Lock className="w-2.5 h-2.5" />
+                        <span>{badge.progress}/{badge.maxProgress}</span>
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -301,14 +304,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="flex items-center gap-1.5">
                 <ShieldAlert className="w-4 h-4 text-[#E05A3D]" />
                 <h4 className="text-xs font-bold text-[#2B6777]">
-                  Alerjen & Filtrelerim (Yemeklerden Gizlenir)
+                  {t.myAllergensTitle}
                 </h4>
               </div>
               <button
                 onClick={() => setShowAddAllergy(!showAddAllergy)}
                 className="text-[11px] font-bold text-[#2B6777] hover:underline cursor-pointer"
               >
-                + Ekle
+                + {t.addBtn}
               </button>
             </div>
 
@@ -319,21 +322,21 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   value={newAllergy}
                   onChange={(e) => setNewAllergy(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addAllergy()}
-                  placeholder="Alerjen veya sevmediğiniz yiyecek..."
+                  placeholder={t.addCustomAllergyPlaceholder}
                   className="flex-1 px-2.5 py-1.5 rounded-xl border border-stone-300 text-xs focus:outline-none focus:border-[#2B6777]"
                 />
                 <button
                   onClick={addAllergy}
                   className="px-3 py-1.5 bg-[#2B6777] text-white rounded-xl text-xs font-bold cursor-pointer"
                 >
-                  Ekle
+                  {t.addBtn}
                 </button>
               </div>
             )}
 
             <div className="flex flex-wrap gap-1.5 pt-1">
               {user.allergies.length === 0 ? (
-                <span className="text-xs text-stone-400 italic">Henüz alerjen eklenmedi. Tüm yemekler açık.</span>
+                <span className="text-xs text-stone-400 italic">{t.noAllergensYet}</span>
               ) : (
                 user.allergies.map((allergy) => (
                   <span
@@ -370,7 +373,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </div>
               <span className="absolute -bottom-1 px-2 py-0.2 rounded-full bg-emerald-500 text-white text-[9px] font-black shadow-xs flex items-center gap-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                <span>Çevrimiçi</span>
+                <span>{t.online || (lang === 'tr' ? 'Çevrimiçi' : 'Online')}</span>
               </span>
             </div>
 
@@ -380,19 +383,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   {user.partner.name}
                 </h2>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold shrink-0">
-                  Eşin ❤️
+                  {lang === 'tr' ? 'Eşin ❤️' : 'Partner ❤️'}
                 </span>
               </div>
               <p className="text-xs font-semibold text-stone-600 mt-0.5">
-                {user.partner.status || 'Seçimlerini yapıyor...'}
+                {user.partner.status || (lang === 'tr' ? 'Seçimlerini yapıyor...' : lang === 'de' ? 'Trifft Auswahl...' : 'Making choices...')}
               </p>
 
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-lg bg-white border border-stone-200 text-stone-700 font-mono font-bold">
-                  Kod: {user.partner.pairCode || 'CRV-9821'}
+                  {lang === 'tr' ? 'Kod' : 'Code'}: {user.partner.pairCode || 'CRV-9821'}
                 </span>
                 <span className="text-[10px] text-emerald-700 font-extrabold">
-                  Bağlı ✓
+                  {t.connectedTag || (lang === 'tr' ? 'Bağlı ✓' : lang === 'de' ? 'Verbunden ✓' : 'Connected ✓')}
                 </span>
               </div>
             </div>
@@ -408,7 +411,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               className="w-full py-3 px-4 rounded-2xl bg-[#E05A3D] hover:bg-[#cf4e33] text-white font-black text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>{user.partner.name} ile Sohbete Git & Hızlı Bildirim Gönder</span>
+              <span>{lang === 'tr' ? `${user.partner.name} ile Sohbete Git & Hızlı Bildirim Gönder` : lang === 'de' ? `Chatte mit ${user.partner.name} & Sende Alert` : `Chat with ${user.partner.name} & Quick Alert`}</span>
             </button>
           </div>
 
@@ -417,7 +420,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <div className="flex items-center gap-1.5">
               <ShieldAlert className="w-4 h-4 text-amber-600" />
               <h4 className="text-xs font-bold text-[#2B6777]">
-                {user.partner.name}'ın Alerjenleri & Sevmedikleri
+                {lang === 'tr' ? `${user.partner.name}'ın Alerjenleri & Sevmedikleri` : lang === 'de' ? `Allergene & Abneigungen von ${user.partner.name}` : `${user.partner.name}'s Allergens & Dislikes`}
               </h4>
             </div>
 
@@ -437,13 +440,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div className="w-full max-w-[340px] mx-auto bg-white p-3.5 rounded-3xl border border-stone-200 shadow-2xs flex items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-[10px] font-extrabold text-[#E05A3D] uppercase tracking-wider">
-                Lezzet Uyumu
+                {t.tasteSynergy || (lang === 'tr' ? 'Lezzet Uyumu' : lang === 'de' ? 'Geschmackssynergie' : 'Taste Synergy')}
               </span>
               <div className="text-lg font-black text-[#2B6777]">
-                %96 Mükemmel Çift
+                {lang === 'tr' ? '%96 Mükemmel Çift' : lang === 'de' ? '96% Perfektes Match' : '96% Perfect Match'}
               </div>
               <p className="text-[10px] text-stone-500">
-                14 ortak yemek beğendiniz
+                {lang === 'tr' ? '14 ortak yemek beğendiniz' : lang === 'de' ? '14 gemeinsame Gerichte gemocht' : '14 mutual dishes liked'}
               </p>
             </div>
 
@@ -456,7 +459,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div className="w-full max-w-[340px] mx-auto bg-white p-3.5 rounded-3xl border border-stone-200 shadow-2xs space-y-2">
             <h4 className="text-xs font-bold text-[#2B6777] flex items-center gap-1.5">
               <Heart className="w-3.5 h-3.5 fill-[#E05A3D] text-[#E05A3D]" />
-              <span>{user.partner.name}'ın Beğendiği Yemekler</span>
+              <span>{lang === 'tr' ? `${user.partner.name}'ın Beğendiği Yemekler` : lang === 'de' ? `Lieblingsgerichte von ${user.partner.name}` : `${user.partner.name}'s Liked Dishes`}</span>
             </h4>
 
             <div className="space-y-1.5 pt-0.5">
@@ -467,7 +470,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     <span className="text-xs font-bold text-[#1A3B44] truncate">{d.title}</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold">
-                    Ortak Beğeni
+                    {lang === 'tr' ? 'Ortak Beğeni' : lang === 'de' ? 'Gemeinsam' : 'Mutual Like'}
                   </span>
                 </div>
               ))}
@@ -491,10 +494,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </div>
             <div className="text-left">
               <div className="text-xs font-black text-[#2B6777]">
-                Yemek & CSV Veritabanı Yöneticisi
+                {lang === 'tr' ? 'Yemek & CSV Veritabanı Yöneticisi' : lang === 'de' ? 'Gerichte & CSV-Datenbank-Manager' : 'Food & CSV Database Manager'}
               </div>
               <div className="text-[10px] text-stone-500">
-                Google Sheets'ten yemek yükle veya dışa aktar
+                {lang === 'tr' ? "Google Sheets'ten yemek yükle veya dışa aktar" : lang === 'de' ? 'Gerichte aus Google Sheets laden oder exportieren' : 'Import dishes from Google Sheets or export'}
               </div>
             </div>
           </div>
@@ -566,7 +569,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           onClick={handleNextDuel}
           className="w-full py-1.5 text-center text-[11px] font-bold text-[#2B6777] hover:underline cursor-pointer"
         >
-          {lang === 'tr' ? 'Sıradaki Düello →' : 'Next Duel →'}
+          {lang === 'tr' ? 'Sıradaki Düello →' : lang === 'de' ? 'Nächstes Duell →' : 'Next Duel →'}
         </button>
       </div>
 
@@ -576,7 +579,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <h4 className="text-xs font-black text-emerald-950 font-['Outfit',sans-serif]">
-              📦 Projeyi Dışa Aktar (ZIP / Git)
+              {lang === 'tr' ? '📦 Projeyi Dışa Aktar (ZIP / Git)' : lang === 'de' ? '📦 Projekt exportieren (ZIP / Git)' : '📦 Export Project (ZIP / Git)'}
             </h4>
           </div>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-200/70 text-emerald-900 font-bold">
@@ -585,13 +588,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         </div>
 
         <p className="text-[11px] text-emerald-900/80 leading-snug">
-          Projeyi bilgisayarınızda veya başka bir platformda geliştirmek için tüm kaynak kodları ZIP olarak anında indirin.
+          {lang === 'tr' ? 'Projeyi bilgisayarınızda veya başka bir platformda geliştirmek için tüm kaynak kodları ZIP olarak anında indirin.' : lang === 'de' ? 'Laden Sie den Quellcode als ZIP herunter, um das Projekt lokal oder auf einem Server auszuführen.' : 'Download complete source code as a ZIP archive to run and develop anywhere.'}
         </p>
 
         {downloadSuccessToast && (
           <div className="p-2 rounded-xl bg-emerald-100 border border-emerald-300 text-[11px] font-bold text-emerald-900 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-            <span>ZIP indirmesi başlatıldı: <strong>crave-couples-app.zip</strong></span>
+            <span>{lang === 'tr' ? 'ZIP indirmesi başlatıldı: ' : lang === 'de' ? 'ZIP-Download gestartet: ' : 'ZIP download started: '}<strong>crave-couples-app.zip</strong></span>
           </div>
         )}
 
@@ -602,7 +605,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             className="w-full py-2.5 px-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            <span>Tüm Projeyi ZIP Olarak İndir</span>
+            <span>{lang === 'tr' ? 'Tüm Projeyi ZIP Olarak İndir' : lang === 'de' ? 'Gesamtes Projekt als ZIP herunterladen' : 'Download Complete Project as ZIP'}</span>
           </button>
 
           {/* Open Git & Deployment Guide */}
@@ -614,7 +617,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             className="w-full py-2 px-3 rounded-xl bg-white hover:bg-stone-50 border border-emerald-300 text-emerald-900 font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Terminal className="w-3.5 h-3.5 text-emerald-700" />
-            <span>GitHub Reposu & Kurulum Rehberini Aç</span>
+            <span>{lang === 'tr' ? 'GitHub Reposu & Kurulum Rehberini Aç' : lang === 'de' ? 'GitHub-Repo & Setup-Anleitung' : 'GitHub Repo & Deployment Guide'}</span>
           </button>
         </div>
       </div>
@@ -642,10 +645,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 </div>
                 <div>
                   <h4 className="text-sm font-black text-[#2B6777] font-['Outfit',sans-serif]">
-                    GitHub & Kurulum Rehberi
+                    {lang === 'tr' ? 'GitHub & Kurulum Rehberi' : lang === 'de' ? 'GitHub & Setup-Anleitung' : 'GitHub & Deployment Guide'}
                   </h4>
                   <p className="text-[10px] text-stone-500">
-                    Başka yerde çalıştırma ve canlıya alma
+                    {lang === 'tr' ? 'Başka yerde çalıştırma ve canlıya alma' : lang === 'de' ? 'Lokal ausführen & Bereitstellen' : 'Run anywhere and deploy to web'}
                   </p>
                 </div>
               </div>
@@ -654,11 +657,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-1.5 text-left text-xs">
                 <div className="font-extrabold text-[#2B6777] flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-[#2B6777] text-white text-[10px] flex items-center justify-center">1</span>
-                  <span>ZIP'i Açın & Bağımlılıkları Kurun</span>
+                  <span>{lang === 'tr' ? "ZIP'i Açın & Bağımlılıkları Kurun" : lang === 'de' ? 'ZIP entpacken & Pakete installieren' : 'Extract ZIP & Install Dependencies'}</span>
                 </div>
                 <div className="bg-stone-900 text-emerald-400 p-2 rounded-xl font-mono text-[11px] space-y-1">
                   <div>npm install</div>
-                  <div className="text-stone-400"># Geliştirme sunucusunu başlatın:</div>
+                  <div className="text-stone-400"># {lang === 'tr' ? 'Geliştirme sunucusunu başlatın:' : 'Start dev server:'}</div>
                   <div>npm run dev</div>
                 </div>
               </div>
@@ -667,16 +670,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-1.5 text-left text-xs">
                 <div className="font-extrabold text-[#2B6777] flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-[#2B6777] text-white text-[10px] flex items-center justify-center">2</span>
-                  <span>Kendi GitHub Reponuza Aktarın</span>
+                  <span>{lang === 'tr' ? 'Kendi GitHub Reponuza Aktarın' : lang === 'de' ? 'In eigenes GitHub-Repo pushen' : 'Push to Your GitHub Repo'}</span>
                 </div>
                 <p className="text-[11px] text-stone-600">
-                  GitHub'da yeni bir repo oluşturun (örn: <code>cravematch</code>), ardından terminalde:
+                  {lang === 'tr' ? 'GitHub\'da yeni bir repo oluşturun (örn: cravematch), ardından terminalde:' : 'Create a repo on GitHub, then in your terminal run:'}
                 </p>
                 <div className="bg-stone-900 text-emerald-400 p-2 rounded-xl font-mono text-[10px] space-y-1 overflow-x-auto">
                   <div>git init</div>
                   <div>git add .</div>
                   <div>git commit -m "CraveMatch v1"</div>
-                  <div>git remote add origin https://github.com/KULLANICI/cravematch.git</div>
+                  <div>git remote add origin https://github.com/USER/cravematch.git</div>
                   <div>git branch -M main</div>
                   <div>git push -u origin main</div>
                 </div>
@@ -686,10 +689,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5 text-left text-xs">
                 <div className="font-extrabold text-emerald-950 flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center">3</span>
-                  <span>Vercel ile Canlıya Alın (Ücretsiz)</span>
+                  <span>{lang === 'tr' ? 'Vercel ile Canlıya Alın (Ücretsiz)' : lang === 'de' ? 'Kostenlos auf Vercel hosten' : 'Free Deploy on Vercel'}</span>
                 </div>
                 <p className="text-[11px] text-emerald-900 leading-snug">
-                  <strong>Vercel.com</strong>'a GitHub ile giriş yapıp reponuzu bağlayın. 1 dakikada genel bir link oluşur. <strong>Google giriş ekranı çıkmaz</strong>, her iki telefondan doğrudan QR veya 6 haneli kodla eşleşirsiniz!
+                  {lang === 'tr' ? 'Vercel.com\'a GitHub ile giriş yapıp reponuzu bağlayın. 1 dakikada genel bir link oluşur. Her iki telefondan doğrudan QR veya 6 haneli kodla eşleşirsiniz!' : 'Import repo on Vercel.com. You will get a live URL in 1 minute. Direct instant pairing with QR and code!'}
                 </p>
               </div>
 
@@ -698,7 +701,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 className="w-full py-2.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Download className="w-4 h-4" />
-                <span>ZIP Dosyasını Şimdi İndir (126 KB)</span>
+                <span>{lang === 'tr' ? 'ZIP Dosyasını Şimdi İndir (126 KB)' : lang === 'de' ? 'ZIP jetzt herunterladen (126 KB)' : 'Download ZIP Now (126 KB)'}</span>
               </button>
             </motion.div>
           </div>
@@ -738,7 +741,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               {/* Unlock Requirement / How to earn */}
               <div className="p-3 rounded-2xl bg-stone-50 border border-stone-200 text-left text-xs space-y-1">
                 <span className="font-extrabold text-[#E05A3D] text-[10px] uppercase tracking-wider block">
-                  Nasıl Kazanılır?
+                  {lang === 'tr' ? 'Nasıl Kazanılır?' : lang === 'de' ? 'Wie freischalten?' : 'How to Unlock?'}
                 </span>
                 <p className="text-stone-700 leading-snug">
                   {lang === 'tr' ? selectedBadgeModal.howToUnlock : selectedBadgeModal.howToUnlock_en}
@@ -752,7 +755,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 return (
                   <div className="space-y-1">
                     <div className="flex justify-between text-[11px] font-bold text-stone-600">
-                      <span>İlerleme</span>
+                      <span>{t.progress || (lang === 'tr' ? 'İlerleme' : lang === 'de' ? 'Fortschritt' : 'Progress')}</span>
                       <span>{selectedBadgeModal.progress} / {max} ({percent}%)</span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
@@ -768,12 +771,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               {selectedBadgeModal.unlocked ? (
                 <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Bu Madalyayı Kazandınız!</span>
+                  <span>{t.unlockedBadge || (lang === 'tr' ? 'Bu Madalyayı Kazandınız!' : lang === 'de' ? 'Abzeichen freigeschaltet!' : 'Badge Unlocked!')}</span>
                 </div>
               ) : (
                 <div className="p-2 rounded-xl bg-stone-100 text-stone-600 text-xs font-bold flex items-center justify-center gap-1.5">
                   <Lock className="w-3.5 h-3.5" />
-                  <span>Kilitli • Görevi tamamlayın</span>
+                  <span>{t.lockedBadge || (lang === 'tr' ? 'Kilitli • Görevi tamamlayın' : lang === 'de' ? 'Gesperrt • Mission abschließen' : 'Locked • Complete quest')}</span>
                 </div>
               )}
             </motion.div>
@@ -795,7 +798,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <div className="flex items-center gap-2">
                   <Award className="w-4 h-4 text-amber-500" />
                   <h3 className="font-extrabold text-sm text-[#2B6777]">
-                    Tüm Madalyalar ({user.badges.length})
+                    {lang === 'tr' ? `Tüm Madalyalar (${user.badges.length})` : lang === 'de' ? `Alle Abzeichen (${user.badges.length})` : `All Badges (${user.badges.length})`}
                   </h3>
                 </div>
                 <button
@@ -835,7 +838,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     <div className="shrink-0 text-right">
                       {b.unlocked ? (
                         <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
-                          Kazanıldı
+                          {t.unlockedTag || (lang === 'tr' ? 'Kazanıldı' : lang === 'de' ? 'Freigeschaltet' : 'Unlocked')}
                         </span>
                       ) : (
                         <span className="text-[10px] font-bold text-stone-500">

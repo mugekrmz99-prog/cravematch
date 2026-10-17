@@ -66,23 +66,29 @@ export const PleasurePoolCartScreen: React.FC<PleasurePoolCartScreenProps> = ({
     const uncompleted = groceries.filter((g) => !g.checked);
     const completed = groceries.filter((g) => g.checked);
 
-    let text = `🛒 *CraveMatch Akşam Yemeği Alışveriş Listesi*\n`;
+    const titleText = lang === 'tr' ? 'CraveMatch Akşam Yemeği Alışveriş Listesi' : lang === 'de' ? 'CraveMatch Einkaufsliste' : 'CraveMatch Grocery List';
+    const chosenDishText = lang === 'tr' ? 'Seçilen Yemek' : lang === 'de' ? 'Gewähltes Gericht' : 'Selected Dish';
+    const toBuyText = lang === 'tr' ? 'Alınacaklar' : lang === 'de' ? 'Zu kaufen' : 'To Buy';
+    const atHomeText = lang === 'tr' ? 'Evde Olanlar / Alınanlar' : lang === 'de' ? 'Bereits vorhanden / Gekauft' : 'At Home / Purchased';
+    const withLoveText = lang === 'tr' ? 'Sevgiler' : lang === 'de' ? 'Liebe Grüße' : 'With love';
+
+    let text = `🛒 *${titleText}*\n`;
     if (selectedDish) {
-      text += `🍽️ Seçilen Yemek: *${selectedDish.title}* (${portions} kişilik)\n\n`;
+      text += `🍽️ ${chosenDishText}: *${selectedDish.title}* (${portions} ${t.servings})\n\n`;
     }
-    text += `*Alınacaklar (${uncompleted.length}):*\n`;
+    text += `*${toBuyText} (${uncompleted.length}):*\n`;
     uncompleted.forEach((item) => {
       text += `▫️ ${item.name}\n`;
     });
 
     if (completed.length > 0) {
-      text += `\n*Evde Olanlar / Alınanlar:*\n`;
+      text += `\n*${atHomeText}:*\n`;
       completed.forEach((item) => {
         text += `✅ ${item.name}\n`;
       });
     }
 
-    text += `\nSevgiler, ${user.name} ❤️`;
+    text += `\n${withLoveText}, ${user.name} ❤️`;
 
     const encoded = encodeURIComponent(text);
     window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
@@ -129,10 +135,10 @@ export const PleasurePoolCartScreen: React.FC<PleasurePoolCartScreenProps> = ({
           <div className="flex items-center justify-between pb-1.5 border-b border-white/15">
             <div className="flex items-center gap-1.5 text-amber-300 text-xs font-black uppercase tracking-wider">
               <Dices className="w-4 h-4" />
-              <span>{lang === 'tr' ? 'Zarla Belirlenen Menü' : 'Dice Winner Menu'}</span>
+              <span>{t.diceWinnerMenu}</span>
             </div>
             <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px]">
-              {portions} {lang === 'tr' ? 'Kişilik' : 'Servings'}
+              {portions} {t.servings}
             </span>
           </div>
 
@@ -159,7 +165,7 @@ export const PleasurePoolCartScreen: React.FC<PleasurePoolCartScreenProps> = ({
           {/* Portion Stepper */}
           <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between">
             <span className="text-[11px] font-semibold text-stone-200">
-              Porsiyonu Ayarla:
+              {t.adjustPortion}
             </span>
             <div className="flex items-center gap-1.5">
               {[2, 4, 6].map((p) => (
@@ -188,7 +194,7 @@ export const PleasurePoolCartScreen: React.FC<PleasurePoolCartScreenProps> = ({
             🎲
           </div>
           <h4 className="font-extrabold text-[#2B6777] text-sm">
-            {lang === 'tr' ? 'Henüz Bir Yemek Belirlenmedi' : 'No Dish Chosen Yet'}
+            {t.noDishChosenYet}
           </h4>
           <p className="text-xs text-stone-500 leading-snug">
             {t.cartEmptyNotice}
@@ -281,7 +287,7 @@ export const PleasurePoolCartScreen: React.FC<PleasurePoolCartScreenProps> = ({
 
           {groceries.length === 0 && (
             <div className="p-6 text-center text-xs text-stone-400 bg-white/70 rounded-2xl border border-stone-200">
-              Sepetinizde henüz ürün bulunmuyor.
+              {t.cartEmptyNotice}
             </div>
           )}
         </div>

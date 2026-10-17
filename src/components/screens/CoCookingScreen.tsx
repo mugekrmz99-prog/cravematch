@@ -252,7 +252,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
             >
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 animate-spin" />
-                <span className="text-xs font-bold">Step Timer:</span>
+                <span className="text-xs font-bold">{t.stepTimer || (lang === 'tr' ? 'Adım Zamanlayıcısı:' : lang === 'de' ? 'Schritt-Timer:' : 'Step Timer:')}</span>
                 <span className="font-mono text-base font-black">
                   {Math.floor(timerSeconds / 60)}:
                   {String(timerSeconds % 60).padStart(2, '0')}
@@ -307,7 +307,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
                           : 'text-[#1A3B44]'
                       }`}
                     >
-                      Step {step.id}: {step.title}
+                      {t.stepLabel || (lang === 'tr' ? 'Adım' : lang === 'de' ? 'Schritt' : 'Step')} {step.id}: {step.title}
                     </h3>
                     <p
                       className={`text-xs mt-1 leading-relaxed ${
@@ -336,7 +336,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
                     <div className="flex items-center gap-1.5">
                       {isChef1 && (
                         <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#E05A3D] text-white flex items-center gap-1 shadow-2xs">
-                          <span>Chef 1</span>
+                          <span>{t.chef1 || (lang === 'tr' ? 'Şef 1' : lang === 'de' ? 'Koch 1' : 'Chef 1')}</span>
                           <span>👩</span>
                           <span className="font-normal text-[10px] opacity-90">({user.name})</span>
                         </span>
@@ -344,7 +344,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
 
                       {isChef2 && (
                         <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#2B6777] text-white flex items-center gap-1 shadow-2xs">
-                          <span>Chef 2</span>
+                          <span>{t.chef2 || (lang === 'tr' ? 'Şef 2' : lang === 'de' ? 'Koch 2' : 'Chef 2')}</span>
                           <span>👨</span>
                           <span className="font-normal text-[10px] opacity-90">({user.partner.name})</span>
                         </span>
@@ -352,14 +352,14 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
 
                       {isBoth && (
                         <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-slate-900 flex items-center gap-1 shadow-2xs">
-                          <span>Both Chefs</span>
+                          <span>{t.bothChefs || (lang === 'tr' ? 'İki Şef Birlikte' : lang === 'de' ? 'Beide Köche' : 'Both Chefs')}</span>
                           <span>👩‍🍳👨‍🍳</span>
                         </span>
                       )}
                     </div>
                   ) : (
                     <span className="text-[11px] font-semibold text-stone-400">
-                      Solo Prep
+                      {t.soloChef || (lang === 'tr' ? 'Tek Başına' : lang === 'de' ? 'Solo-Zubereitung' : 'Solo Prep')}
                     </span>
                   )}
 
@@ -373,7 +373,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
                       className="flex items-center gap-1 text-[11px] font-bold text-[#2B6777] hover:text-[#E05A3D] bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded-xl cursor-pointer transition-colors"
                     >
                       <Play className="w-3 h-3 fill-current" />
-                      <span>{step.durationMins}m Timer</span>
+                      <span>{step.durationMins} {lang === 'tr' ? 'dk Zamanlayıcı' : lang === 'de' ? 'Min Timer' : 'm Timer'}</span>
                     </button>
                   )}
                 </div>
@@ -386,10 +386,10 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
         <div className="mt-4 p-4 rounded-3xl bg-white border border-stone-200 shadow-xs flex items-center justify-between">
           <div>
             <h4 className="text-xs font-bold text-[#2B6777]">
-              Ingredients ({dish.ingredients.length} items)
+              {t.ingredients} ({dish.ingredients.length} {lang === 'tr' ? 'ürün' : lang === 'de' ? 'Zutaten' : 'items'})
             </h4>
             <p className="text-[11px] text-stone-500">
-              Scaled for {portions} servings
+              {portions} {t.servings}
             </p>
           </div>
 
@@ -401,7 +401,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
               }}
               className="px-3 py-1.5 rounded-xl border border-[#2B6777] text-[#2B6777] text-xs font-bold hover:bg-[#2B6777]/5 cursor-pointer"
             >
-              View List
+              {t.viewIngredientsList || (lang === 'tr' ? 'Listeyi Gör' : lang === 'de' ? 'Liste' : 'View List')}
             </button>
             <button
               onClick={() => {
@@ -410,7 +410,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
               }}
               className="px-3 py-1.5 rounded-xl bg-[#2B6777] text-white text-xs font-bold hover:bg-[#235866] cursor-pointer"
             >
-              + Send to Cart
+              {t.sendIngredientsToCart || (lang === 'tr' ? '+ Sepete Gönder' : lang === 'de' ? '+ In den Warenkorb' : '+ Send to Cart')}
             </button>
           </div>
         </div>
@@ -418,7 +418,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
         {/* Bottom Recipe Progress Bar */}
         <div className="mt-4 pt-2">
           <div className="flex items-center justify-between text-xs font-bold text-stone-500 pb-1">
-            <span>Progress: {completedCount} / {steps.length} steps</span>
+            <span>{t.progress || (lang === 'tr' ? 'İlerleme' : lang === 'de' ? 'Fortschritt' : 'Progress')}: {completedCount} / {steps.length} {lang === 'tr' ? 'adım' : lang === 'de' ? 'Schritte' : 'steps'}</span>
             <span className="text-[#2B6777]">{progressPercent}%</span>
           </div>
           <div className="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
@@ -448,10 +448,10 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
               <div className="flex items-center justify-between pb-3 border-b border-stone-100">
                 <div>
                   <h3 className="font-extrabold text-[#2B6777] text-base">
-                    Recipe Ingredients
+                    {t.ingredients} ({dish.title})
                   </h3>
                   <p className="text-xs text-stone-400">
-                    Portions: {portions} people
+                    {t.portions}: {portions}
                   </p>
                 </div>
                 <button
@@ -487,7 +487,7 @@ export const CoCookingScreen: React.FC<CoCookingScreenProps> = ({
                 }}
                 className="w-full mt-2 py-2.5 rounded-xl bg-[#2B6777] text-white font-bold text-xs hover:bg-[#235866] cursor-pointer"
               >
-                Add All Ingredients to Grocery List 🛒
+                {lang === 'tr' ? 'Tüm Malzemeleri Sepete Ekle 🛒' : lang === 'de' ? 'Alle Zutaten zum Warenkorb hinzufügen 🛒' : 'Add All Ingredients to Grocery List 🛒'}
               </button>
             </motion.div>
           </motion.div>

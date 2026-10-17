@@ -106,10 +106,10 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
 
   // Cute Animal Avatars
   const animalAvatars = [
-    { label: 'Panda Şef', url: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?auto=format&fit=crop&w=400&q=80', emoji: '🐼' },
-    { label: 'Kedi Fırıncı', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80', emoji: '🐱' },
-    { label: 'Tilki Gurme', url: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?auto=format&fit=crop&w=400&q=80', emoji: '🦊' },
-    { label: 'Rakun Aşçı', url: 'https://images.unsplash.com/photo-1497752531616-c3afd9760a11?auto=format&fit=crop&w=400&q=80', emoji: '🦝' }
+    { label: lang === 'tr' ? 'Panda Şef' : lang === 'de' ? 'Panda-Koch' : 'Panda Chef', url: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?auto=format&fit=crop&w=400&q=80', emoji: '🐼' },
+    { label: lang === 'tr' ? 'Kedi Fırıncı' : lang === 'de' ? 'Katzen-Bäcker' : 'Cat Baker', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80', emoji: '🐱' },
+    { label: lang === 'tr' ? 'Tilki Gurme' : lang === 'de' ? 'Fuchs-Gourmet' : 'Fox Gourmet', url: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?auto=format&fit=crop&w=400&q=80', emoji: '🦊' },
+    { label: lang === 'tr' ? 'Rakun Aşçı' : lang === 'de' ? 'Waschbär-Koch' : 'Raccoon Cook', url: 'https://images.unsplash.com/photo-1497752531616-c3afd9760a11?auto=format&fit=crop&w=400&q=80', emoji: '🦝' }
   ];
 
   const commonAllergens = [
@@ -181,6 +181,8 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
     const msg = encodeURIComponent(
       lang === 'tr'
         ? `CraveMatch'te bu akşam ne yiyeceğimizi birlikte seçelim! Eşleşme Kodumuz: ${pairCode}\nBağlantıya tıkla: ${liveCloudUrl}`
+        : lang === 'de'
+        ? `Lass uns bei CraveMatch gemeinsam das Abendessen wählen! Paar-Code: ${pairCode}\nHier klicken: ${liveCloudUrl}`
         : `Let's decide dinner together on CraveMatch! Pair Code: ${pairCode}\nConnect here: ${liveCloudUrl}`
     );
     window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
@@ -203,7 +205,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
     } catch {
       // fallback
     }
-    const simulated = partnerName || (lang === 'tr' ? 'Partnerim' : 'Partner');
+    const simulated = partnerName || (lang === 'tr' ? 'Partnerim' : lang === 'de' ? 'Partner' : 'Partner');
     setPartnerConnected(true);
     setPartnerName(simulated);
     setPairError(null);
@@ -232,7 +234,13 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
       pairingSync.broadcast('PARTNER_CONNECTED', myDisplayName, { name: myDisplayName, pairCode: cleanCode });
     } else {
       sound.playTap();
-      setPairError(lang === 'tr' ? 'Lütfen geçerli bir kod girin (Örn: CRAVE-9821)' : 'Please enter a valid code');
+      setPairError(
+        lang === 'tr'
+          ? 'Lütfen geçerli bir kod girin (Örn: CRAVE-9821)'
+          : lang === 'de'
+          ? 'Bitte gültigen Code eingeben (z.B. CRAVE-9821)'
+          : 'Please enter a valid code (e.g. CRAVE-9821)'
+      );
     }
   };
 
@@ -355,10 +363,10 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     <span className="text-2xl shrink-0">👋</span>
                     <div className="space-y-0.5">
                       <div className="text-xs font-black text-[#2B6777]">
-                        <strong>{partnerName}</strong> seni CraveMatch'e davet etti!
+                        <strong>{partnerName}</strong> {t.invitedToMatch}
                       </div>
                       <p className="text-[11px] font-medium text-emerald-950 leading-snug">
-                        Birlikte bu akşam ne yiyeceğinize karar vereceksiniz. Adını ve tercihlerini girerek masaya katıl:
+                        {t.invitedDesc}
                       </p>
                     </div>
                   </div>
@@ -375,7 +383,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2B6777]/10 hover:bg-[#2B6777]/20 text-[#2B6777] text-[11px] font-bold transition-all cursor-pointer border border-[#2B6777]/30"
                   >
                     <KeyRound className="w-3 h-3 text-[#E05A3D]" />
-                    <span>Partnerin koduna katılmak veya QR okutmak için tıkla →</span>
+                    <span>{t.joinPartnerCodeCta}</span>
                   </button>
                 )}
               </div>
@@ -440,13 +448,13 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   </div>
                   <div className="flex-1 text-left">
                     <span className="text-[10px] font-bold text-[#E05A3D] uppercase block">
-                      Seçili Karakter
+                      {t.selectedCharacter}
                     </span>
                     <span className="text-xs font-black text-[#1A3B44]">
-                      {name || (lang === 'tr' ? 'Adınız' : 'Your Name')}
+                      {name || (lang === 'tr' ? 'Adınız' : lang === 'de' ? 'Dein Name' : 'Your Name')}
                     </span>
                     <p className="text-[10px] text-stone-500">
-                      Partnerin seçim yaparken seni bu resimle görecek.
+                      {t.partnerWillSeeYouHint}
                     </p>
                   </div>
                 </div>
@@ -515,7 +523,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     <label className="block w-full py-2.5 px-3 rounded-2xl border-2 border-dashed border-[#2B6777]/40 bg-[#2B6777]/5 hover:bg-[#2B6777]/10 text-[#2B6777] text-center cursor-pointer transition-colors">
                       <Upload className="w-4 h-4 mx-auto mb-1 text-[#2B6777]" />
                       <span className="text-xs font-bold block">{t.uploadButton}</span>
-                      <span className="text-[10px] text-stone-500">JPG, PNG veya GIF</span>
+                      <span className="text-[10px] text-stone-500">{t.photoFormatsHint}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -529,7 +537,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                         type="text"
                         value={customPhotoUrl}
                         onChange={(e) => setCustomPhotoUrl(e.target.value)}
-                        placeholder="veya resim linki yapıştırın..."
+                        placeholder={t.orPastePhotoUrl}
                         className="flex-1 px-2.5 py-1.5 rounded-xl border border-stone-300 text-[11px] text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
                       />
                       <button
@@ -544,7 +552,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                         }}
                         className="px-2 py-1 bg-[#2B6777] text-white text-[11px] font-bold rounded-lg cursor-pointer"
                       >
-                        Kullan
+                        {t.usePhotoBtn}
                       </button>
                     </div>
                   </div>
@@ -606,8 +614,8 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
               {/* Active Allergens Pill Summary */}
               {allergies.length > 0 && (
                 <div className="p-2 rounded-xl bg-amber-50 border border-amber-200 text-[11px] font-semibold text-amber-900 flex items-center justify-between">
-                  <span>{allergies.length} alerjen filtrelendi (Yemeklerden gizlenecek)</span>
-                  <span className="text-emerald-700 font-bold">Aktif ✓</span>
+                  <span>{allergies.length} {t.allergensFilteredNotice}</span>
+                  <span className="text-emerald-700 font-bold">{t.activeFilterTag}</span>
                 </div>
               )}
 
@@ -650,7 +658,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   value={customAllergy}
                   onChange={(e) => setCustomAllergy(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addCustomAllergy()}
-                  placeholder={lang === 'tr' ? 'Farklı bir alerjen veya sevmediğin yemek yaz...' : 'Add custom allergy or dislike...'}
+                  placeholder={t.addCustomAllergyPlaceholder}
                   className="flex-1 px-3 py-2 rounded-xl bg-white border border-stone-300 text-xs text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
                 />
                 <button
@@ -680,7 +688,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   {t.partnerConnectTitle}
                 </h2>
                 <p className="text-[11px] text-stone-500 mt-0.5">
-                  Eşin kamerasıyla okutarak veya WhatsApp linkiyle saniyeler içinde bağlanabilir.
+                  {t.partnerConnectHint}
                 </p>
               </div>
 
@@ -696,7 +704,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                 />
                 <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-[#2B6777] text-[9px] font-black text-white flex items-center gap-1 shadow-2xs">
                   <Globe className="w-2.5 h-2.5 text-[#F2A900]" />
-                  <span>Canlı Bağlantı</span>
+                  <span>{t.liveConnectionPill}</span>
                 </div>
               </div>
 
@@ -712,7 +720,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     className="text-[10px] text-stone-500 hover:text-stone-800 font-bold ml-1 cursor-pointer flex items-center gap-1"
                   >
                     <Copy className="w-2.5 h-2.5" />
-                    <span>{copiedLink ? 'Kopyalandı!' : 'Kodu Kopyala'}</span>
+                    <span>{copiedLink ? t.codeCopied : t.copyCode}</span>
                   </button>
                 </div>
               </div>
@@ -736,18 +744,18 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
               <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[10px] text-emerald-950 text-left leading-tight space-y-1.5">
                 <div className="font-extrabold text-[#2B6777] flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-[#E05A3D]" />
-                  <span>Kamera & Başka Telefondan Bağlantı:</span>
+                  <span>{t.cameraConnectionTip}</span>
                 </div>
                 <p>
-                  QR kod ve WhatsApp linki doğrudan canlı internet adresini taşır. İki telefon farklı Wi-Fi veya mobil veride olsa dahi çalışır.
+                  {t.cameraConnectionDesc}
                 </p>
                 <div className="bg-amber-100/90 p-1.5 rounded-lg border border-amber-300 text-amber-950 font-bold space-y-0.5">
                   <div className="text-[10px] text-amber-800 flex items-center gap-1">
                     <span>⚠️</span>
-                    <span>Telefonda Güvenlik Uyarısı Çıkarsa:</span>
+                    <span>{t.securityWarningTip}</span>
                   </div>
                   <p className="text-[9.5px] font-medium leading-normal text-amber-900">
-                    "Action required to load your app" uyarısı çıkarsa, alttaki <strong>"Close and continue"</strong> butonuna basmanız yeterlidir. Sayfa açılınca eşleşme anında aktif olur.
+                    {t.securityWarningDesc}
                   </p>
                 </div>
               </div>
@@ -760,7 +768,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                   className="w-full py-2.5 px-4 rounded-xl bg-[#2B6777] hover:bg-[#225360] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <Sparkles className="w-4 h-4 text-[#F2A900]" />
-                  <span>Partnerim Okuttu (Bağlantıyı Onayla)</span>
+                  <span>{t.partnerScannedConfirm}</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-1.5">
@@ -770,7 +778,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer transition-all active:scale-95"
                   >
                     <Share2 className="w-3.5 h-3.5" />
-                    <span>WhatsApp Linki</span>
+                    <span>{t.whatsAppLink}</span>
                   </button>
 
                   {/* Open As Partner in New Tab (Test Instantly) */}
@@ -779,7 +787,7 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     className="py-2 px-3 rounded-xl bg-stone-800 hover:bg-stone-900 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer transition-all active:scale-95"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Linki Yeni Sekmede Aç</span>
+                    <span>{t.openLinkInNewTab}</span>
                   </button>
                 </div>
 
@@ -789,14 +797,14 @@ export const SurveyScreen: React.FC<SurveyScreenProps> = ({
                     type="text"
                     value={inputPairCode}
                     onChange={(e) => setInputPairCode(e.target.value)}
-                    placeholder="Partnerinin kodunu yaz (örn: CRAVE-9821)..."
+                    placeholder={t.enterPartnerCodePlaceholder}
                     className="flex-1 px-2.5 py-1.5 bg-white border border-stone-300 rounded-xl text-[11px] font-mono uppercase text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
                   />
                   <button
                     onClick={handleManualPairCodeSubmit}
                     className="px-3 py-1.5 bg-[#E05A3D] text-white font-bold text-xs rounded-xl hover:bg-[#cf4e33] cursor-pointer"
                   >
-                    Bağlan
+                    {t.connectBtn}
                   </button>
                 </div>
                 {pairError && <div className="text-[10px] text-rose-600 font-bold">{pairError}</div>}

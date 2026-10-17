@@ -1,3 +1,5 @@
+import { Dish, BadgeItem, TasteDuel } from '../types';
+
 export type Language = 'tr' | 'en' | 'de';
 
 export const translations = {
@@ -26,6 +28,48 @@ export const translations = {
     continueToApp: 'Uygulamaya Başla',
     next: 'İleri',
     back: 'Geri',
+
+    // Onboarding Screen
+    startDinnerTable: 'Akşam Yemeği Masasını Başlat',
+    connectViaQr: 'QR Kod ile Bağlan',
+    enterTablePin: 'Masa Kodu Gir',
+    liveDbSyncActive: 'Canlı Veritabanı & Çift Senkronizasyonu Aktif',
+    openAndPairOnPhone: 'Telefonda Aç & Eşleş',
+    scanQrWithCameraDesc: 'Partnerinizin telefon kamerasıyla bu QR kodu okutun. Doğrudan bağlı oda açılır!',
+    homeWifi: 'Ev Wi-Fi',
+    internetTunnel: 'İnternet Tüneli',
+    joinByCodeTitle: 'Masa Koduna Katıl',
+    joinByCodeDesc: 'Partnerinizin ekranında görünen masa kodunu ve kendi adınızı girerek masaya anında bağlanın.',
+    yourNameLabel: 'Senin Adın',
+    tableCodeLabel: 'Masa Kodu (PIN)',
+    joinTableAndStart: 'Masaya Katıl & Başla',
+    cancel: 'İptal',
+
+    // Survey Screen Additions
+    invitedToMatch: 'seni CraveMatch’e davet etti!',
+    invitedDesc: 'Birlikte bu akşam ne yiyeceğinize karar vereceksiniz. Adını ve tercihlerini girerek masaya katıl:',
+    joinPartnerCodeCta: 'Partnerin koduna katılmak veya QR okutmak için tıkla →',
+    selectedCharacter: 'Seçili Karakter',
+    partnerWillSeeYouHint: 'Partnerin seçim yaparken seni bu resimle görecek.',
+    photoFormatsHint: 'JPG, PNG veya GIF',
+    orPastePhotoUrl: 'veya resim linki yapıştırın...',
+    usePhotoBtn: 'Kullan',
+    allergensFilteredNotice: 'alerjen filtrelendi (Yemeklerden gizlenecek)',
+    activeFilterTag: 'Aktif ✓',
+    addCustomAllergyPlaceholder: 'Farklı bir alerjen veya sevmediğin yemek yaz...',
+    partnerConnectHint: 'Partnerin kamerasıyla okutarak veya WhatsApp linkiyle saniyeler içinde bağlanabilir.',
+    liveConnectionPill: 'Canlı Bağlantı',
+    copyCode: 'Kodu Kopyala',
+    codeCopied: 'Kopyalandı!',
+    cameraConnectionTip: 'Kamera & Başka Telefondan Bağlantı:',
+    cameraConnectionDesc: 'QR kod ve WhatsApp linki doğrudan canlı internet adresini taşır. İki telefon farklı Wi-Fi veya mobil veride olsa dahi çalışır.',
+    securityWarningTip: 'Telefonda Güvenlik Uyarısı Çıkarsa:',
+    securityWarningDesc: '"Action required to load your app" uyarısı çıkarsa, alttaki "Close and continue" butonuna basmanız yeterlidir. Sayfa açılınca eşleşme anında aktif olur.',
+    partnerScannedConfirm: 'Partnerim Okuttu (Bağlantıyı Onayla)',
+    whatsAppLink: 'WhatsApp Linki',
+    openLinkInNewTab: 'Linki Yeni Sekmede Aç',
+    enterPartnerCodePlaceholder: 'Partnerinin kodunu yaz (örn: CRAVE-9821)...',
+    connectBtn: 'Bağlan',
 
     // Avatar Selection
     chooseAvatar: 'Profil Resmi Seç veya Yükle',
@@ -58,6 +102,8 @@ export const translations = {
     addToDice: "Bu Akşamın Zarına Ekle 🎲",
     cookTogetherNow: 'Birlikte Pişirmeye Başla 👩‍🍳',
     keepSwiping: 'Keşfetmeye Devam Et',
+    partnerLikedNotice: 'bunu beğendi!',
+    partnerSecretPick: 'gizli seçimi 🔒',
 
     // Dice Screen
     diceTab: 'Zar',
@@ -72,6 +118,12 @@ export const translations = {
     cookThisRecipe: 'Birlikte Pişir (Co-Cooking)',
     sendIngredientsToCart: 'Malzemeleri Sepete Gönder 🛒',
     rollAgain: 'Tekrar At veya Kapat',
+    chooseAtLeastOneDish: 'Lütfen zarda yarışacak en az bir yemek seçin!',
+    ingredientsAutoAdded: 'Malzemeler market sepetine otomatik eklendi! 🛒',
+    cravingInputPrompt: 'Canının çektiği yemeği yaz:',
+    cravingInputPlaceholder: 'Örn: Ev Yapımı Trüflü Pizza...',
+    addToRoll: 'Zara Ekle',
+    ingredientsInCart: '✓ Malzemeler Sepete Eklendi',
 
     // Cart & Grocery List
     cartTab: 'Sepet',
@@ -87,6 +139,10 @@ export const translations = {
     dairyCategory: 'Süt, Peynir & Şarküteri',
     pantryCategory: 'Temel Gıda & Baharatlar',
     meatCategory: 'Et & Deniz Ürünleri',
+    diceWinnerMenu: 'Zarla Belirlenen Menü',
+    servings: 'Kişilik',
+    adjustPortion: 'Porsiyonu Ayarla:',
+    noDishChosenYet: 'Henüz Bir Yemek Belirlenmedi',
 
     // Chat Screen
     chatTab: 'Sohbet',
@@ -99,6 +155,11 @@ export const translations = {
     typeMessagePlaceholder: 'Partnerine bir mesaj yaz...',
     sendMessage: 'Gönder',
     simulatedPartnerReply: 'Harika bir fikir! Ben de tam menüyü inceliyordum.',
+    matchedTag: 'Eşleşti ❤️',
+    onlineBrowsing: 'Çevrimiçi • Menü seçiyor',
+    mePill: '(Ben)',
+    quickAlertTimeOut: '⏰ Zamanımız Doluyor!',
+    quickAlertDiceTime: '🎲 Zar Zamanı!',
 
     // Co-Cooking Screen
     recipeTab: 'Tarif',
@@ -131,6 +192,31 @@ export const translations = {
     tasteDuels: 'Damak Zevki Düelloları',
     voteNow: 'OY VER!',
     changeVote: 'Oyu Değiştir',
+    badgesAndAchievements: 'Madalyalar & Başarılar',
+    seeAll: 'Tümünü Gör',
+    unlockedTag: 'Kazanıldı ✓',
+    myAllergensTitle: 'Alerjen & Filtrelerim (Yemeklerden Gizlenir)',
+    noAllergensYet: 'Henüz alerjen eklenmedi. Tüm yemekler açık.',
+    partnerAllergensTitle: 'Alerjenleri & Sevmedikleri',
+    tasteSynergy: 'Lezzet Uyumu',
+    perfectCouple: 'Mükemmel Çift',
+    mutualDishesLikedText: 'ortak yemek beğendiniz',
+    online: 'Çevrimiçi',
+    connectedTag: 'Bağlı ✓',
+    partnerProfileTitle: 'Profili',
+    chatWithPartnerCta: 'ile Sohbete Git & Hızlı Bildirim Gönder',
+
+    // Device Frame & Top Bar
+    createProfilePrompt: 'Profilinizi Oluşturun',
+    atTableWith: 'ile Masadasınız',
+    tableCodeLabelShort: 'Masa Kodu',
+    pairedSuccessNotification: 'ile Eşleşildi!',
+    ok: 'Tamam',
+    fullScreen: 'Tam Ekran',
+    deviceFrame: 'iPhone Çerçevesi',
+    soundOn: 'Sesi Aç',
+    soundOff: 'Sesi Kapat',
+    toggleView: 'Görünüm Değiştir',
 
     // Settings Modal
     settings: 'Ayarlar & Yönetim Paneli',
@@ -148,8 +234,8 @@ export const translations = {
     cancelResetBtn: 'Vazgeç',
 
     // Categories
-    catAll: 'Hepsi',
-    catSpicy: 'Acı',
+    catAll: 'Tümü',
+    catSpicy: 'Acılı',
     catVegetarian: 'Vejetaryen',
     catSweet: 'Tatlı',
     catFastFood: 'Fast Food',
@@ -157,11 +243,10 @@ export const translations = {
     catSeafood: 'Deniz Ürünleri',
     catItalian: 'İtalyan'
   },
-
   en: {
     appName: 'CraveMatch',
-    tagline: 'Find Your Flavor',
-    subtagline: 'Discover local bites with a playful twist. Settle dinner debates together.',
+    tagline: 'Discover Your Crave',
+    subtagline: 'Discover recipes with a playful spin. Settle dinner debates together.',
     getStarted: 'Get Started',
     signIn: 'Sign In',
     surveyTitle: 'Create Your Profile',
@@ -183,6 +268,48 @@ export const translations = {
     continueToApp: 'Start Exploring',
     next: 'Next',
     back: 'Back',
+
+    // Onboarding Screen
+    startDinnerTable: 'Start Dinner Table',
+    connectViaQr: 'Connect via QR',
+    enterTablePin: 'Enter Table PIN',
+    liveDbSyncActive: 'Live DB & Couple Sync Active',
+    openAndPairOnPhone: 'Open & Pair on Phone',
+    scanQrWithCameraDesc: 'Scan this QR code with your partner\'s phone camera to instantly join the room!',
+    homeWifi: 'Home Wi-Fi',
+    internetTunnel: 'Internet Tunnel',
+    joinByCodeTitle: 'Join Table by Code',
+    joinByCodeDesc: 'Enter your name and the table code shown on your partner\'s screen to connect instantly.',
+    yourNameLabel: 'Your Name',
+    tableCodeLabel: 'Table Code (PIN)',
+    joinTableAndStart: 'Join Table & Start',
+    cancel: 'Cancel',
+
+    // Survey Screen Additions
+    invitedToMatch: 'invited you to CraveMatch!',
+    invitedDesc: 'Decide tonight\'s dinner together. Enter your name and preferences to join:',
+    joinPartnerCodeCta: 'Click to join partner\'s code or scan QR →',
+    selectedCharacter: 'Selected Character',
+    partnerWillSeeYouHint: 'Your partner will see you with this avatar during meal selection.',
+    photoFormatsHint: 'JPG, PNG or GIF',
+    orPastePhotoUrl: 'or paste image URL...',
+    usePhotoBtn: 'Use',
+    allergensFilteredNotice: 'allergens filtered (will be hidden from recipes)',
+    activeFilterTag: 'Active ✓',
+    addCustomAllergyPlaceholder: 'Add custom allergy or disliked food...',
+    partnerConnectHint: 'Your partner can scan with their camera or open the WhatsApp link to connect instantly.',
+    liveConnectionPill: 'Live Connection',
+    copyCode: 'Copy Code',
+    codeCopied: 'Copied!',
+    cameraConnectionTip: 'Camera & Cross-Phone Connection:',
+    cameraConnectionDesc: 'The QR code and WhatsApp link use a live cloud URL. Works seamlessly across different Wi-Fi and mobile data networks.',
+    securityWarningTip: 'If Security Prompt Appears on Phone:',
+    securityWarningDesc: 'If you see "Action required", simply tap "Close and continue" at the bottom to proceed.',
+    partnerScannedConfirm: 'Partner Scanned (Confirm Connection)',
+    whatsAppLink: 'WhatsApp Link',
+    openLinkInNewTab: 'Open Link in Tab',
+    enterPartnerCodePlaceholder: 'Enter partner code (e.g. CRAVE-9821)...',
+    connectBtn: 'Connect',
 
     // Avatar Selection
     chooseAvatar: 'Choose or Upload Avatar',
@@ -215,6 +342,8 @@ export const translations = {
     addToDice: "Add to Tonight's Dice 🎲",
     cookTogetherNow: 'Start Cooking Together 👩‍🍳',
     keepSwiping: 'Keep Swiping',
+    partnerLikedNotice: 'liked this!',
+    partnerSecretPick: 'secret pick 🔒',
 
     // Dice Screen
     diceTab: 'Dice',
@@ -229,6 +358,12 @@ export const translations = {
     cookThisRecipe: 'Cook Together (Co-Cooking)',
     sendIngredientsToCart: 'Send Ingredients to Cart 🛒',
     rollAgain: 'Roll Again or Close',
+    chooseAtLeastOneDish: 'Please select at least one dish to roll!',
+    ingredientsAutoAdded: 'Ingredients automatically added to grocery cart! 🛒',
+    cravingInputPrompt: 'Type what you are craving:',
+    cravingInputPlaceholder: 'e.g. Homemade Truffle Pizza...',
+    addToRoll: 'Add to Roll',
+    ingredientsInCart: '✓ Ingredients in Cart',
 
     // Cart & Grocery List
     cartTab: 'Cart',
@@ -244,64 +379,98 @@ export const translations = {
     dairyCategory: 'Dairy, Cheese & Deli',
     pantryCategory: 'Pantry & Spices',
     meatCategory: 'Meat & Seafood',
+    diceWinnerMenu: 'Dice Winner Menu',
+    servings: 'Servings',
+    adjustPortion: 'Adjust Servings:',
+    noDishChosenYet: 'No Dish Chosen Yet',
 
     // Chat Screen
     chatTab: 'Chat',
     chatWithPartner: 'Chat with',
-    quickAlerts: 'Send Quick Alert',
+    quickAlerts: 'Quick Alert Prompts',
     timeRunningOut: '⏰ Time is running out!',
-    diceTimeAlert: "🎲 It's dice roll time!",
-    cartReadyAlert: '🛒 Cart is ready, can you grab groceries?',
-    whatToEatAlert: "❤️ What are we craving tonight?",
-    typeMessagePlaceholder: 'Type a message to your partner...',
+    diceTimeAlert: '🎲 Time to roll the dice!',
+    cartReadyAlert: '🛒 Grocery cart ready, can you grab them?',
+    whatToEatAlert: '❤️ What should we eat tonight?',
+    typeMessagePlaceholder: 'Write a message to partner...',
     sendMessage: 'Send',
-    simulatedPartnerReply: 'Great idea! I was just looking through the choices.',
+    simulatedPartnerReply: 'Sounds great! I was just looking at the menu.',
+    matchedTag: 'Matched ❤️',
+    onlineBrowsing: 'Online • Browsing menu',
+    mePill: '(Me)',
+    quickAlertTimeOut: '⏰ Time is Running Out!',
+    quickAlertDiceTime: '🎲 Time to Roll Dice!',
 
     // Co-Cooking Screen
     recipeTab: 'Recipe',
     portions: 'Portions',
     cookTogether: 'Cook Together',
-    cookTogetherSubtitle: 'Divvy up the steps with your partner!',
+    cookTogetherSubtitle: 'Split the cooking steps with your partner playfully!',
     soloChef: 'Solo Chef',
     taskSharing: 'Task Sharing',
     chef1: 'Chef 1',
     chef2: 'Chef 2',
-    bothChefs: 'Both Chefs',
+    bothChefs: 'Both Chefs Together',
     ingredients: 'Ingredients',
-    scaledFor: 'scaled for servings',
-    viewIngredientsList: 'View List',
-    sendToCart: '+ Send to Cart',
+    scaledFor: 'scaled for portions',
+    viewIngredientsList: 'View Ingredients',
+    sendToCart: '+ Add to Cart',
     stepTimer: 'Step Timer',
     progress: 'Progress',
 
     // Profile Screen & Badges
     profileTab: 'Profile',
     masterChef: 'Master Chef',
-    myBadges: 'My Medals & Badges',
+    myBadges: 'My Badges & Achievements',
     viewAllBadges: 'View All',
-    badgesEarned: 'Badges Unlocked',
+    badgesEarned: 'Badges Earned',
     howToUnlockLabel: 'How to Unlock?',
-    lockedBadge: 'Locked Medal',
+    lockedBadge: 'Locked Badge',
     unlockedBadge: 'Unlocked ✓',
-    allergies: 'Allergies & Dislikes',
+    allergies: 'Allergies & Restrictions',
     addAllergy: 'Add Allergy',
     tasteDuels: 'Taste Duels',
     voteNow: 'VOTE NOW!',
     changeVote: 'Change Vote',
+    badgesAndAchievements: 'Badges & Achievements',
+    seeAll: 'View All',
+    unlockedTag: 'Unlocked ✓',
+    myAllergensTitle: 'My Allergens & Filters (Hidden from deck)',
+    noAllergensYet: 'No allergens added yet. All dishes visible.',
+    partnerAllergensTitle: 'Allergens & Dislikes',
+    tasteSynergy: 'Taste Synergy',
+    perfectCouple: 'Perfect Match Pair',
+    mutualDishesLikedText: 'mutual dishes liked',
+    online: 'Online',
+    connectedTag: 'Connected ✓',
+    partnerProfileTitle: 'Profile',
+    chatWithPartnerCta: 'Go to Chat & Send Quick Alerts',
+
+    // Device Frame & Top Bar
+    createProfilePrompt: 'Create Your Profile',
+    atTableWith: 'at table with',
+    tableCodeLabelShort: 'Table Code',
+    pairedSuccessNotification: 'Paired Successfully with',
+    ok: 'OK',
+    fullScreen: 'Full Screen',
+    deviceFrame: 'Device Frame',
+    soundOn: 'Unmute',
+    soundOff: 'Mute',
+    toggleView: 'Toggle Frame',
 
     // Settings Modal
     settings: 'Settings & Pro Panel',
-    languageOption: 'Language Option',
-    partnerQrSection: 'Partner QR & Pairing',
+    languageOption: 'Language',
+    partnerQrSection: 'Partner Pairing & QR',
     proFeatures: 'CraveMatch Pro Manager',
-    addCustomDish: 'Add Custom Recipe (Menu Editor)',
-    googleSheetSync: 'Google Sheets / CSV Sync',
+    addCustomDish: 'Add Custom Dish (Menu Editor)',
+    googleSheetSync: 'Google Sheets / CSV Integration',
     exportToSheets: 'Export to CSV / Sheets',
     importFromSheets: 'Import from CSV / Sheets',
     resetAllData: 'Reset All Data (Test Mode)',
     resetConfirmTitle: 'Reset Entire Application?',
-    resetConfirmDesc: 'All survey data, partner connections, and matches will be completely erased and returned to the initial onboarding.',
-    confirmResetBtn: 'Yes, Reset',
+    resetConfirmDesc: 'All profile choices, survey responses, and dishes will be cleared.',
+    confirmResetBtn: 'Yes, Reset All',
     cancelResetBtn: 'Cancel',
 
     // Categories
@@ -314,7 +483,6 @@ export const translations = {
     catSeafood: 'Seafood',
     catItalian: 'Italian'
   },
-
   de: {
     appName: 'CraveMatch',
     tagline: 'Finde Deinen Geschmack',
@@ -340,6 +508,48 @@ export const translations = {
     continueToApp: 'App starten',
     next: 'Weiter',
     back: 'Zurück',
+
+    // Onboarding Screen
+    startDinnerTable: 'Abendessentisch starten',
+    connectViaQr: 'Per QR verbinden',
+    enterTablePin: 'Tisch-Code eingeben',
+    liveDbSyncActive: 'Live-DB & Paar-Synchronisation aktiv',
+    openAndPairOnPhone: 'Auf Smartphone öffnen & verbinden',
+    scanQrWithCameraDesc: 'Scanne diesen QR-Code mit der Smartphone-Kamera deines Partners, um sofort beizutreten!',
+    homeWifi: 'Heim-WLAN',
+    internetTunnel: 'Internet-Tunnel',
+    joinByCodeTitle: 'Tisch per Code beitreten',
+    joinByCodeDesc: 'Gib deinen Namen und den Tisch-Code ein, um dich sofort zu verbinden.',
+    yourNameLabel: 'Dein Name',
+    tableCodeLabel: 'Tisch-Code (PIN)',
+    joinTableAndStart: 'Dem Tisch beitreten & Starten',
+    cancel: 'Abbrechen',
+
+    // Survey Screen Additions
+    invitedToMatch: 'hat dich zu CraveMatch eingeladen!',
+    invitedDesc: 'Entscheidet gemeinsam über das Abendessen. Gib deinen Namen und Vorlieben ein:',
+    joinPartnerCodeCta: 'Klicken, um Partner-Code einzugeben oder QR zu scannen →',
+    selectedCharacter: 'Ausgewählter Charakter',
+    partnerWillSeeYouHint: 'Dein Partner sieht dich bei der Auswahl mit diesem Avatar.',
+    photoFormatsHint: 'JPG, PNG oder GIF',
+    orPastePhotoUrl: 'oder Bild-URL einfügen...',
+    usePhotoBtn: 'Verwenden',
+    allergensFilteredNotice: 'Allergene gefiltert (werden ausgeblendet)',
+    activeFilterTag: 'Aktiv ✓',
+    addCustomAllergyPlaceholder: 'Allergie oder Abneigung hinzufügen...',
+    partnerConnectHint: 'Dein Partner kann mit der Kamera scannen oder den WhatsApp-Link öffnen.',
+    liveConnectionPill: 'Live-Verbindung',
+    copyCode: 'Code kopieren',
+    codeCopied: 'Kopiert!',
+    cameraConnectionTip: 'Kamera & Verbindung von anderem Telefon:',
+    cameraConnectionDesc: 'QR-Code und WhatsApp-Link nutzen eine Live-URL. Funktioniert auch in unterschiedlichen Netzwerken.',
+    securityWarningTip: 'Falls Sicherheitsabfrage erscheint:',
+    securityWarningDesc: 'Bei "Action required", einfach unten auf "Close and continue" tippen.',
+    partnerScannedConfirm: 'Partner hat gescannt (Bestätigen)',
+    whatsAppLink: 'WhatsApp-Link',
+    openLinkInNewTab: 'In neuem Tab öffnen',
+    enterPartnerCodePlaceholder: 'Partner-Code eingeben (z.B. CRAVE-9821)...',
+    connectBtn: 'Verbinden',
 
     // Avatar Selection
     chooseAvatar: 'Avatar auswählen oder hochladen',
@@ -372,6 +582,8 @@ export const translations = {
     addToDice: 'Zum Entscheidungswürfel hinzufügen 🎲',
     cookTogetherNow: 'Jetzt gemeinsam kochen 👩‍🍳',
     keepSwiping: 'Weiterswipen',
+    partnerLikedNotice: 'gefällt das!',
+    partnerSecretPick: 'Geheimtipp 🔒',
 
     // Dice Screen
     diceTab: 'Würfel',
@@ -386,6 +598,12 @@ export const translations = {
     cookThisRecipe: 'Gemeinsam Kochen (Co-Cooking)',
     sendIngredientsToCart: 'Zutaten in den Warenkorb 🛒',
     rollAgain: 'Nochmal würfeln',
+    chooseAtLeastOneDish: 'Bitte wähle mindestens ein Gericht für den Würfel!',
+    ingredientsAutoAdded: 'Zutaten automatisch zum Warenkorb hinzugefügt! 🛒',
+    cravingInputPrompt: 'Schreibe, worauf du Lust hast:',
+    cravingInputPlaceholder: 'z.B. Selbstgemachte Trüffelpizza...',
+    addToRoll: 'Zum Würfel',
+    ingredientsInCart: '✓ Zutaten im Warenkorb',
 
     // Cart & Grocery List
     cartTab: 'Warenkorb',
@@ -401,6 +619,10 @@ export const translations = {
     dairyCategory: 'Milchprodukte & Feinkost',
     pantryCategory: 'Vorrat & Gewürze',
     meatCategory: 'Fleisch & Meeresfrüchte',
+    diceWinnerMenu: 'Gewürfeltes Menü',
+    servings: 'Portionen',
+    adjustPortion: 'Portionen anpassen:',
+    noDishChosenYet: 'Noch kein Gericht gewählt',
 
     // Chat Screen
     chatTab: 'Chat',
@@ -413,6 +635,11 @@ export const translations = {
     typeMessagePlaceholder: 'Schreibe deinem Partner...',
     sendMessage: 'Senden',
     simulatedPartnerReply: 'Tolle Idee! Ich habe mir gerade die Auswahl angesehen.',
+    matchedTag: 'Verbunden ❤️',
+    onlineBrowsing: 'Online • Wählt Menü',
+    mePill: '(Ich)',
+    quickAlertTimeOut: '⏰ Die Zeit läuft ab!',
+    quickAlertDiceTime: '🎲 Zeit zum Würfeln!',
 
     // Co-Cooking Screen
     recipeTab: 'Rezept',
@@ -445,6 +672,31 @@ export const translations = {
     tasteDuels: 'Geschmacks-Duelle',
     voteNow: 'JETZT ABSTIMMEN!',
     changeVote: 'Stimme ändern',
+    badgesAndAchievements: 'Medaillen & Erfolge',
+    seeAll: 'Alle anzeigen',
+    unlockedTag: 'Freigeschaltet ✓',
+    myAllergensTitle: 'Meine Allergene & Filter (Ausgeblendet)',
+    noAllergensYet: 'Noch keine Allergene hinzugefügt. Alle Gerichte sichtbar.',
+    partnerAllergensTitle: 'Allergene & Abneigungen',
+    tasteSynergy: 'Geschmacks-Harmonie',
+    perfectCouple: 'Perfektes Paar',
+    mutualDishesLikedText: 'gemeinsame Gerichte gemocht',
+    online: 'Online',
+    connectedTag: 'Verbunden ✓',
+    partnerProfileTitle: 'Profil',
+    chatWithPartnerCta: 'Zum Chat & Schnell-Benachrichtigung senden',
+
+    // Device Frame & Top Bar
+    createProfilePrompt: 'Erstelle dein Profil',
+    atTableWith: 'am Tisch mit',
+    tableCodeLabelShort: 'Tisch-Code',
+    pairedSuccessNotification: 'Erfolgreich verbunden mit',
+    ok: 'OK',
+    fullScreen: 'Vollbild',
+    deviceFrame: 'Geräterahmen',
+    soundOn: 'Ton an',
+    soundOff: 'Stumm',
+    toggleView: 'Rahmen umschalten',
 
     // Settings Modal
     settings: 'Einstellungen & Pro-Menü',
@@ -472,3 +724,66 @@ export const translations = {
     catItalian: 'Italienisch'
   }
 };
+
+export function getLocalizedDish(dish: Dish, lang: Language): { title: string; subtitle: string; description: string } {
+  if (lang === 'en') {
+    return {
+      title: dish.title_en || dish.title,
+      subtitle: dish.subtitle_en || dish.subtitle || '',
+      description: dish.description_en || dish.description
+    };
+  }
+  if (lang === 'de') {
+    return {
+      title: dish.title_de || dish.title,
+      subtitle: dish.subtitle_de || dish.subtitle || '',
+      description: dish.description_de || dish.description
+    };
+  }
+  return {
+    title: dish.title,
+    subtitle: dish.subtitle || '',
+    description: dish.description
+  };
+}
+
+export function getLocalizedBadge(badge: BadgeItem, lang: Language): { title: string; description: string; howToUnlock: string } {
+  if (lang === 'en') {
+    return {
+      title: badge.title_en || badge.title,
+      description: badge.description_en || badge.description,
+      howToUnlock: badge.howToUnlock_en || badge.howToUnlock
+    };
+  }
+  if (lang === 'de') {
+    return {
+      title: badge.title_de || badge.title,
+      description: badge.description_de || badge.description,
+      howToUnlock: badge.howToUnlock_de || badge.howToUnlock
+    };
+  }
+  return {
+    title: badge.title,
+    description: badge.description,
+    howToUnlock: badge.howToUnlock
+  };
+}
+
+export function getLocalizedDuel(duel: TasteDuel, lang: Language): { title: string; subtitle: string } {
+  if (lang === 'en') {
+    return {
+      title: duel.title_en || duel.title,
+      subtitle: duel.subtitle_en || duel.subtitle || ''
+    };
+  }
+  if (lang === 'de') {
+    return {
+      title: duel.title_de || duel.title,
+      subtitle: duel.subtitle_de || duel.subtitle || ''
+    };
+  }
+  return {
+    title: duel.title,
+    subtitle: duel.subtitle || ''
+  };
+}

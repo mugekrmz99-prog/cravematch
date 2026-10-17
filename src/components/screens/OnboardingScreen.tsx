@@ -89,6 +89,8 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
     const text = encodeURIComponent(
       lang === 'tr'
         ? `CraveMatch üzerinden bu akşam ne yiyeceğimizi seçelim! Bağlantıya tıkla: ${livePairUrl}`
+        : lang === 'de'
+        ? `Lass uns bei CraveMatch gemeinsam das Abendessen wählen! Hier klicken: ${livePairUrl}`
         : `Let's decide dinner together on CraveMatch! Connect here: ${livePairUrl}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
@@ -221,7 +223,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
             className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#E05A3D] to-[#e86c52] hover:opacity-95 active:scale-[0.98] text-white font-black text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>🍽️</span>
-            <span>{lang === 'tr' ? 'Akşam Yemeği Masasını Başlat' : 'Start Dinner Table'}</span>
+            <span>{t.startDinnerTable}</span>
             <span>→</span>
           </button>
 
@@ -237,7 +239,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
               className="py-2.5 px-3 rounded-xl bg-white border border-stone-200 hover:border-[#2B6777] active:scale-[0.98] text-[#2B6777] font-extrabold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <QrCode className="w-3.5 h-3.5 text-[#E05A3D]" />
-              <span>{lang === 'tr' ? 'QR Kod ile Bağlan' : 'Connect via QR'}</span>
+              <span>{t.connectViaQr}</span>
             </button>
 
             {/* Manual PIN / Code Option */}
@@ -250,7 +252,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
               className="py-2.5 px-3 rounded-xl bg-white border border-stone-200 hover:border-[#2B6777] active:scale-[0.98] text-[#2B6777] font-extrabold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <KeyRound className="w-3.5 h-3.5 text-[#E05A3D]" />
-              <span>{lang === 'tr' ? 'Masa Kodu Gir' : 'Enter Table PIN'}</span>
+              <span>{t.enterTablePin}</span>
             </button>
           </div>
         </motion.div>
@@ -258,7 +260,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
         {/* Live Status indicator */}
         <div className="pt-0.5 flex items-center justify-center gap-2 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Canlı Veritabanı & Çift Senkronizasyonu Aktif</span>
+          <span>{t.liveDbSyncActive}</span>
         </div>
       </div>
 
@@ -281,7 +283,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                 <div className="flex items-center gap-2">
                   <QrCode className="w-5 h-5 text-[#E05A3D]" />
                   <h3 className="font-extrabold text-sm text-[#2B6777]">
-                    Telefonda Aç & Eşleş
+                    {t.openAndPairOnPhone}
                   </h3>
                 </div>
                 <button
@@ -294,7 +296,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
 
               <div className="space-y-2 text-center">
                 <p className="text-xs text-stone-600 leading-snug">
-                  Partnerinizin telefon kamerasıyla bu QR kodu okutun. Doğrudan bağlı oda açılır!
+                  {t.scanQrWithCameraDesc}
                 </p>
 
                 {/* QR Code Container */}
@@ -322,7 +324,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                     }`}
                   >
                     <Wifi className="w-3 h-3" />
-                    <span>Ev Wi-Fi</span>
+                    <span>{t.homeWifi}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -335,7 +337,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                         : 'bg-stone-100 text-stone-600 border-stone-300'
                     }`}
                   >
-                    <span>🌐 İnternet Tüneli</span>
+                    <span>🌐 {t.internetTunnel}</span>
                   </button>
                 </div>
 
@@ -350,7 +352,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                     className="py-2 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-stone-300"
                   >
                     <Copy className="w-3.5 h-3.5" />
-                    <span>{copiedLink ? 'Kopyalandı!' : 'Linki Kopyala'}</span>
+                    <span>{copiedLink ? t.codeCopied : t.copyLink}</span>
                   </button>
 
                   <button
@@ -386,7 +388,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                 <div className="flex items-center gap-2">
                   <KeyRound className="w-5 h-5 text-[#E05A3D]" />
                   <h3 className="font-extrabold text-sm text-[#2B6777]">
-                    {lang === 'tr' ? 'Masa Koduna Katıl' : 'Join Table by Code'}
+                    {t.joinByCodeTitle}
                   </h3>
                 </div>
                 <button
@@ -399,21 +401,19 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
 
               <div className="space-y-3">
                 <p className="text-xs text-stone-600 leading-relaxed">
-                  {lang === 'tr'
-                    ? 'Partnerinizin ekranında görünen masa kodunu ve kendi adınızı girerek masaya anında bağlanın.'
-                    : "Enter your name and the table code shown on your partner's screen to connect."}
+                  {t.joinByCodeDesc}
                 </p>
 
                 {/* Name input */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-bold text-stone-700 block">
-                    {lang === 'tr' ? 'Senin Adın' : 'Your Name'}
+                    {t.yourNameLabel}
                   </label>
                   <input
                     type="text"
                     value={inputName}
                     onChange={(e) => setInputName(e.target.value)}
-                    placeholder={lang === 'tr' ? 'Örn: Deniz' : 'e.g. Alex'}
+                    placeholder={t.namePlaceholder}
                     className="w-full px-3 py-2 text-sm font-bold rounded-xl border border-stone-300 bg-white text-[#1A3B44] focus:outline-none focus:border-[#2B6777]"
                   />
                 </div>
@@ -421,7 +421,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                 {/* Code input */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-bold text-stone-700 block">
-                    {lang === 'tr' ? 'Masa Kodu (PIN)' : 'Table Code (PIN)'}
+                    {t.tableCodeLabel}
                   </label>
                   <input
                     type="text"
@@ -440,14 +440,14 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
                   className="w-full py-3 rounded-2xl bg-[#2B6777] hover:bg-[#204e5a] text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Check className="w-4 h-4" />
-                  <span>{lang === 'tr' ? 'Masaya Katıl & Başla' : 'Join Table & Start'}</span>
+                  <span>{t.joinTableAndStart}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowPairModal(false)}
                   className="w-full py-2 text-stone-500 font-bold text-xs hover:text-stone-800 cursor-pointer"
                 >
-                  {lang === 'tr' ? 'İptal' : 'Cancel'}
+                  {t.cancel}
                 </button>
               </div>
             </motion.div>

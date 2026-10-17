@@ -120,7 +120,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   const handleRoll = () => {
     const active = contenders.filter(c => c.selected);
     if (active.length === 0) {
-      setWarningMessage(lang === 'tr' ? 'Lütfen zarda yarışacak en az bir yemek seçin!' : 'Please select at least one dish to roll!');
+      setWarningMessage(t.chooseAtLeastOneDish);
       setTimeout(() => setWarningMessage(null), 2500);
       return;
     }
@@ -398,7 +398,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
               {/* Automatic Cart Notice */}
               <div className="mb-3 p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold flex items-center justify-center gap-1">
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
-                <span>Malzemeler market sepetine otomatik eklendi! 🛒</span>
+                <span>{t.ingredientsAutoAdded}</span>
               </div>
 
               <div className="space-y-2">
@@ -432,7 +432,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
                     }`}
                   >
                     <ShoppingBag className="w-4 h-4" />
-                    <span>{cartAdded ? (lang === 'tr' ? '✓ Malzemeler Sepete Eklendi' : lang === 'de' ? '✓ Zutaten im Warenkorb' : '✓ Ingredients in Cart') : t.sendIngredientsToCart}</span>
+                    <span>{cartAdded ? t.ingredientsInCart : t.sendIngredientsToCart}</span>
                   </button>
                 )}
 
@@ -462,13 +462,13 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
                 {t.addContender}
               </h4>
               <p className="text-xs text-stone-500 mb-3">
-                {lang === 'tr' ? 'Canının çektiği yemeği yaz:' : 'Type what you have a craving for:'}
+                {t.cravingInputPrompt}
               </p>
               <input
                 type="text"
                 value={newDishName}
                 onChange={(e) => setNewDishName(e.target.value)}
-                placeholder="Örn: Ev Yapımı Trüflü Pizza..."
+                placeholder={t.cravingInputPlaceholder}
                 className="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:outline-none focus:border-[#2B6777] mb-3"
                 autoFocus
                 onKeyDown={(e) => e.key === 'Enter' && handleAddCustomContender()}
@@ -478,13 +478,13 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
                   onClick={() => setShowAddModal(false)}
                   className="flex-1 py-2 rounded-xl border border-stone-200 text-xs font-semibold text-stone-600 hover:bg-stone-50 cursor-pointer"
                 >
-                  {lang === 'tr' ? 'Vazgeç' : 'Cancel'}
+                  {t.cancel}
                 </button>
                 <button
                   onClick={handleAddCustomContender}
                   className="flex-1 py-2 rounded-xl bg-[#2B6777] text-white text-xs font-bold hover:bg-[#235866] cursor-pointer"
                 >
-                  {lang === 'tr' ? 'Zara Ekle' : 'Add to Roll'}
+                  {t.addToRoll}
                 </button>
               </div>
             </div>

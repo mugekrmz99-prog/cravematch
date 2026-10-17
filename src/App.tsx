@@ -23,6 +23,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { sound } from './utils/sound';
 import confetti from 'canvas-confetti';
 import { pairingSync } from './utils/pairingSync';
+import { translations } from './utils/i18n';
 
 export default function App() {
   const [lang, setLang] = useState<Language>(() => {
@@ -511,21 +512,24 @@ export default function App() {
 
   // Cart total badge
   const uncompletedGroceryCount = groceries.filter((g) => !g.checked).length;
+  const t = translations[lang];
 
   return (
-    <DeviceFrame activeTabTitle={currentTab}>
+    <DeviceFrame activeTabTitle={currentTab} lang={lang}>
       <div className="relative w-full h-full flex flex-col justify-between overflow-hidden bg-[#F7F5F2]">
         {/* Device Status Bar */}
         <div className="bg-[#2B6777] text-white px-3 py-1 flex items-center justify-between text-[10px] font-bold shadow-2xs select-none z-30">
           <div className="flex items-center gap-1.5 truncate">
             <span className={`w-2 h-2 rounded-full shrink-0 ${user.partner.isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
             <span className="truncate">
-              👤 <strong>{user.name || (lang === 'tr' ? 'Profilinizi Oluşturun' : 'Create Profile')}</strong>
+              👤 <strong>{user.name || t.createProfilePrompt}</strong>
             </span>
             {user.partner.isConnected && user.partner.name ? (
-              <span className="text-emerald-200 ml-1 truncate">💑 {user.partner.name} ile Masadasınız</span>
+              <span className="text-emerald-200 ml-1 truncate">
+                💑 {user.partner.name} {t.atTableWith}
+              </span>
             ) : (
-              <span className="text-amber-200 ml-1 truncate">({user.partner.pairCode || 'Masa Kodu'})</span>
+              <span className="text-amber-200 ml-1 truncate">({user.partner.pairCode || t.tableCodeLabelShort})</span>
             )}
           </div>
           {user.partner.pairCode && (
@@ -542,10 +546,10 @@ export default function App() {
               <span className="text-lg">🎉</span>
               <div className="text-left">
                 <div className="text-xs font-black">
-                  {partnerWelcomeBanner.partnerName} ile Eşleşildi!
+                  {partnerWelcomeBanner.partnerName} {t.pairedSuccessNotification}
                 </div>
                 <div className="text-[10px] text-emerald-200">
-                  {user.name ? `${user.name} olarak ortak yemek havuzuna bağlandınız.` : 'Akşam yemeği seçimini birlikte yapabilirsiniz!'}
+                  {user.name ? `${user.name} • ${t.mysteryChoice}` : t.invitedDesc}
                 </div>
               </div>
             </div>
@@ -553,7 +557,7 @@ export default function App() {
               onClick={() => setPartnerWelcomeBanner(null)}
               className="text-white/90 hover:text-white text-[11px] font-bold px-2 py-1 bg-white/20 hover:bg-white/30 rounded-lg cursor-pointer ml-1"
             >
-              Tamam
+              {t.ok}
             </button>
           </div>
         )}
