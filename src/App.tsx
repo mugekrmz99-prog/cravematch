@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ScreenTab, Dish, GroceryItem, TasteDuel, UserProfile, Language, ChatMessage } from './types';
+import { ScreenTab, Dish, GroceryItem, TasteDuel, UserProfile, Language, ChatMessage, DailyAdventure, FeastHistoryItem } from './types';
 import {
   INITIAL_USER,
   INITIAL_DISHES,
@@ -15,10 +15,11 @@ import { OnboardingScreen } from './components/screens/OnboardingScreen';
 import { SurveyScreen } from './components/screens/SurveyScreen';
 import { SwipesScreen } from './components/screens/SwipesScreen';
 import { DiceScreen } from './components/screens/DiceScreen';
-import { PleasurePoolCartScreen } from './components/screens/PleasurePoolCartScreen';
+import { TodaysMealScreen } from './components/screens/TodaysMealScreen';
 import { CoCookingScreen } from './components/screens/CoCookingScreen';
 import { ProfileScreen } from './components/screens/ProfileScreen';
 import { ChatScreen } from './components/screens/ChatScreen';
+import { DiningAdventureModal } from './components/DiningAdventureModal';
 import { SettingsModal } from './components/SettingsModal';
 import { sound } from './utils/sound';
 import confetti from 'canvas-confetti';
@@ -84,19 +85,30 @@ export default function App() {
     };
   });
 
-  // Persistent Dishes
+  // Persistent Dishes (Clean 110 authentic dishes with 0 likes initially)
   const [dishes, setDishes] = useState<Dish[]>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('cravematch_dishes');
+      const saved = localStorage.getItem('cravematch_dishes_v4');
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= 100) {
+            return parsed;
+          }
         } catch {
           // fallback
         }
       }
     }
-    return INITIAL_DISHES;
+    const cleanCatalog = INITIAL_DISHES.map((d) => ({
+      ...d,
+      userLiked: false,
+      partnerLiked: false
+    }));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cravematch_dishes_v4', JSON.stringify(cleanCatalog));
+    }
+    return cleanCatalog;
   });
 
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -105,13 +117,28 @@ export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT_MESSAGES);
   const [unreadChatCount, setUnreadChatCount] = useState<number>(1);
 
-  // Selected dish for Co-Cooking recipe & Cart
-  const [selectedRecipeDish, setSelectedRecipeDish] = useState<Dish | null>(
-    INITIAL_DISHES.find((d) => d.id === 'dish-1') || INITIAL_DISHES[0]
-  );
+  // Selected dish for today's meal (null initially until matched or rolled)
+  const [selectedRecipeDish, setSelectedRecipeDish] = useState<Dish | null>(null);
 
   // Dish passed into dice roll
   const [diceContenderDish, setDiceContenderDish] = useState<Dish | null>(null);
+
+  // Daily Dining Adventure modal state (romantic, family, feast)
+  const [isAdventureModalOpen, setIsAdventureModalOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cravematch_user');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const todayStr = new Date().toISOString().split('T')[0];
+          if (parsed?.todayAdventure?.date === todayStr) {
+            return false;
+          }
+        } catch {}
+      }
+    }
+    return true;
+  });
 
   // Partner Welcome Banner state
   const [partnerWelcomeBanner, setPartnerWelcomeBanner] = useState<{
@@ -245,9 +272,21 @@ export default function App() {
     pairingSync.broadcast('CART_UPDATE', user.name || 'User', updatedGroceries);
   };
 
+  // Handle daily dining adventure selection (Romantic / Family / Grand Feast)
+  const handleSelectAdventure = (adventure: DailyAdventure) => {
+    setUser((prev) => ({
+      ...prev,
+      todayAdventure: adventure
+    }));
+    setIsAdventureModalOpen(false);
+    pairingSync.broadcast('ADVENTURE_SELECT', user.name || 'User', adventure);
+    sound.playSuccess();
+  };
+
   // Handle adding recipe ingredients to grocery cart automatically with MQTT broadcast
-  const handleAddIngredientsToGrocery = (dish: Dish, portions: number = 2) => {
-    const ratio = portions / (dish.basePortions || 2);
+  const handleAddIngredientsToGrocery = (dish: Dish, portions?: number) => {
+    const p = portions || user.todayAdventure?.portions || 2;
+    const ratio = p / (dish.basePortions || 2);
     setGroceries((prev) => {
       const existingNames = new Set(prev.map((item) => item.name.toLowerCase().trim()));
       const newItems: GroceryItem[] = (dish.ingredients || [])
@@ -363,11 +402,21 @@ export default function App() {
             );
           }
         }
+      } else if (payload.type === 'ADVENTURE_SELECT') {
+        const incomingAdv = payload.data as DailyAdventure;
+        if (incomingAdv) {
+          setUser((prev) => ({
+            ...prev,
+            todayAdventure: incomingAdv
+          }));
+          setIsAdventureModalOpen(false);
+          sound.playSuccess();
+        }
       } else if (payload.type === 'DICE_ROLL') {
         const rollData = payload.data as any;
         if (rollData && rollData.winnerDish) {
           setSelectedRecipeDish(rollData.winnerDish);
-          handleAddIngredientsToGrocery(rollData.winnerDish, 2);
+          handleAddIngredientsToGrocery(rollData.winnerDish, user.todayAdventure?.portions || 2);
         }
       } else if (payload.type === 'DISH_MATCH') {
         const matchData = payload.data as any;
@@ -375,6 +424,9 @@ export default function App() {
           setDishes((prev) =>
             prev.map((d) => (d.id === matchData.dishId ? { ...d, partnerLiked: true } : d))
           );
+          if (matchData.dish) {
+            setSelectedRecipeDish(matchData.dish);
+          }
         }
         sound.playSuccess();
         try {
@@ -397,14 +449,14 @@ export default function App() {
     });
 
     return unsub;
-  }, [user.name, user.partner.pairCode]);
+  }, [user.name, user.partner.pairCode, user.todayAdventure?.portions]);
 
   // Save changes to localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('cravematch_lang', lang);
       localStorage.setItem('cravematch_user', JSON.stringify(user));
-      localStorage.setItem('cravematch_dishes', JSON.stringify(dishes));
+      localStorage.setItem('cravematch_dishes_v4', JSON.stringify(dishes));
     }
   }, [lang, user, dishes]);
 
@@ -724,30 +776,43 @@ export default function App() {
                   dishes={dishes}
                   lang={lang}
                   initialSelectedDish={diceContenderDish}
-                  onCookRecipe={handleOpenRecipe}
-                  onAddToCart={(dish) => {
-                    handleAddIngredientsToGrocery(dish, 2);
+                  onCookRecipe={(dish) => {
+                    setSelectedRecipeDish(dish);
+                    handleAddIngredientsToGrocery(dish, user.todayAdventure?.portions || 2);
+                    setCurrentTab('todaysMeal');
                   }}
+                  onAddToCart={(dish) => {
+                    handleAddIngredientsToGrocery(dish, user.todayAdventure?.portions || 2);
+                    setCurrentTab('todaysMeal');
+                  }}
+                  onNavigateToSwipes={() => setCurrentTab('swipes')}
                 />
               </motion.div>
             )}
 
-            {currentTab === 'cart' && (
+            {currentTab === 'todaysMeal' && (
               <motion.div
-                key="cart"
+                key="todaysMeal"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="w-full h-full"
               >
-                <PleasurePoolCartScreen
+                <TodaysMealScreen
                   user={user}
+                  dish={selectedRecipeDish}
                   groceries={groceries}
-                  selectedDish={selectedRecipeDish}
+                  adventure={user.todayAdventure}
                   lang={lang}
                   onUpdateGroceries={handleUpdateGroceries}
                   onNavigateToDice={() => setCurrentTab('dice')}
-                  onNavigateToRecipe={handleOpenRecipe}
+                  onNavigateToSwipes={() => setCurrentTab('swipes')}
+                  onCompleteFeast={(item) => {
+                    setUser((prev) => ({
+                      ...prev,
+                      feastHistory: [item, ...(prev.feastHistory || [])]
+                    }));
+                  }}
                 />
               </motion.div>
             )}
@@ -805,6 +870,12 @@ export default function App() {
                   onNavigateToSwipes={() => setCurrentTab('swipes')}
                   onNavigateToChat={() => setCurrentTab('chat')}
                   onOpenSettings={() => setIsSettingsOpen(true)}
+                  onSelectDishForRecipe={(dish) => {
+                    setSelectedRecipeDish(dish);
+                    handleAddIngredientsToGrocery(dish, user.todayAdventure?.portions || 2);
+                    setCurrentTab('todaysMeal');
+                  }}
+                  onNavigateToDice={handleNavigateToDice}
                 />
               </motion.div>
             )}
@@ -828,6 +899,13 @@ export default function App() {
             unreadChatCount={unreadChatCount}
           />
         )}
+
+        {/* Daily Dining Adventure Modal (Romantic / Family / Feast) */}
+        <DiningAdventureModal
+          isOpen={isAdventureModalOpen && currentTab !== 'onboarding' && currentTab !== 'survey'}
+          onSelectAdventure={handleSelectAdventure}
+          lang={lang}
+        />
 
         {/* Settings & Pro Menu Modal */}
         <SettingsModal

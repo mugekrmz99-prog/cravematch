@@ -18,7 +18,11 @@ export interface SyncPayload<T = unknown> {
     | 'PROFILE_UPDATE'
     | 'INITIAL_STATE'
     | 'GROCERY_UPDATE'
-    | 'ROLL_DICE';
+    | 'ROLL_DICE'
+    | 'ADVENTURE_SELECT'
+    | 'COOK_START'
+    | 'COOK_FINISH'
+    | 'SEND_HEARTS';
   pairCode: string;
   sender: string;
   sessionId?: string;

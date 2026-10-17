@@ -52,15 +52,21 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       )
     },
     {
-      id: 'cart' as ScreenTab,
-      label: t.cartTab,
+      id: 'todaysMeal' as ScreenTab,
+      label: lang === 'tr' ? 'Bugün Ne Yiyeceğiz?' : 'Today’s Meal',
       badge: cartCount > 0 ? cartCount : undefined,
       icon: (active: boolean) => (
-        <ShoppingCart
-          className={`w-5 h-5 transition-all ${
-            active ? 'text-[#2B6777] stroke-[2.5]' : 'text-stone-400 stroke-[1.8]'
-          }`}
-        />
+        <div className="relative flex items-center justify-center">
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+              active
+                ? 'bg-[#E05A3D] text-white shadow-md shadow-[#E05A3D]/30 scale-110'
+                : 'bg-stone-200/80 text-stone-600 hover:bg-stone-300'
+            }`}
+          >
+            <span className="text-sm animate-pulse">🍲</span>
+          </div>
+        </div>
       )
     },
     {

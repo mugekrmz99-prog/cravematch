@@ -1,6 +1,35 @@
 export type Language = 'tr' | 'en' | 'de';
 
-export type ScreenTab = 'onboarding' | 'survey' | 'swipes' | 'dice' | 'cart' | 'chat' | 'profile' | 'recipe';
+export type ScreenTab = 'onboarding' | 'survey' | 'swipes' | 'dice' | 'todaysMeal' | 'cart' | 'chat' | 'profile' | 'recipe';
+
+export type DiningAdventureType = 'romantic_couple' | 'family_dinner' | 'grand_feast';
+
+export interface DailyAdventure {
+  date: string; // YYYY-MM-DD
+  type: DiningAdventureType;
+  portions: number;
+  status: 'deciding' | 'shopping' | 'cooking' | 'finished';
+  chosenDish?: Dish;
+  completedIngredientsCount: number;
+  totalIngredientsCount: number;
+  cookingStartedAt?: number;
+  cookingDurationMinutes?: number;
+  finishedAt?: number;
+  finishedPhotoUrl?: string;
+  partnerLoveHearts?: number;
+}
+
+export interface FeastHistoryItem {
+  id: string;
+  date: string;
+  dishId: string;
+  dishTitle: string;
+  dishImage: string;
+  photoUrl?: string;
+  hearts: number;
+  adventureType: DiningAdventureType;
+  portions: number;
+}
 
 export interface CookingStep {
   id: number;
@@ -114,6 +143,8 @@ export interface ChatMessage {
   timestamp: string;
   author?: string;
   type?: 'text' | 'action_prompt' | 'dice_alert' | 'cart_alert' | 'timer_alert';
+  photoUrl?: string;
+  heartsCount?: number;
 }
 
 export interface UserProfile {
@@ -130,4 +161,7 @@ export interface UserProfile {
   partner: PartnerInfo;
   isSurveyCompleted: boolean;
   badges: BadgeItem[];
+  likedDishes?: string[];
+  todayAdventure?: DailyAdventure;
+  feastHistory?: FeastHistoryItem[];
 }

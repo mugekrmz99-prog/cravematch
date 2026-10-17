@@ -208,7 +208,7 @@ export const translations = {
 
     // Device Frame & Top Bar
     createProfilePrompt: 'Profilinizi Oluşturun',
-    atTableWith: 'ile Masadasınız',
+    atTableWith: 'ile karar aşamasındasınız 💭',
     tableCodeLabelShort: 'Masa Kodu',
     pairedSuccessNotification: 'ile Eşleşildi!',
     ok: 'Tamam',
@@ -448,7 +448,7 @@ export const translations = {
 
     // Device Frame & Top Bar
     createProfilePrompt: 'Create Your Profile',
-    atTableWith: 'at table with',
+    atTableWith: 'deciding dinner together 💭',
     tableCodeLabelShort: 'Table Code',
     pairedSuccessNotification: 'Paired Successfully with',
     ok: 'OK',
@@ -688,7 +688,7 @@ export const translations = {
 
     // Device Frame & Top Bar
     createProfilePrompt: 'Erstelle dein Profil',
-    atTableWith: 'am Tisch mit',
+    atTableWith: 'entscheidet gemeinsam 💭',
     tableCodeLabelShort: 'Tisch-Code',
     pairedSuccessNotification: 'Erfolgreich verbunden mit',
     ok: 'OK',

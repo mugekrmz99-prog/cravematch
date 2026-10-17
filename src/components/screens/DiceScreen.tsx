@@ -26,6 +26,7 @@ interface DiceScreenProps {
   initialSelectedDish?: Dish | null;
   onCookRecipe: (dish: Dish) => void;
   onAddToCart: (dish: Dish) => void;
+  onNavigateToSwipes?: () => void;
 }
 
 export const DiceScreen: React.FC<DiceScreenProps> = ({
@@ -34,13 +35,14 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   lang = 'tr',
   initialSelectedDish,
   onCookRecipe,
-  onAddToCart
+  onAddToCart,
+  onNavigateToSwipes
 }) => {
   const t = translations[lang];
   const myName = user.name || (lang === 'tr' ? 'Ben' : 'Me');
   const partnerName = user.partner.name || (lang === 'tr' ? 'Partnerim' : 'Partner');
 
-  // Helper to build initial contenders dynamically from authentic dishes
+  // Helper to build initial contenders ONLY from genuinely liked dishes
   const buildInitialContenders = (): ContenderItem[] => {
     const list: ContenderItem[] = [];
     const addedIds = new Set<string>();
@@ -58,7 +60,7 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
       addedIds.add(initialSelectedDish.id);
     }
 
-    // 1. Prioritize dishes liked by user or partner
+    // 1. Prioritize dishes genuinely liked by user or partner
     const likedDishes = (dishes || []).filter(
       (d) => (d.userLiked || d.partnerLiked) && !addedIds.has(d.id)
     );
@@ -76,55 +78,9 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
         ]
       });
       addedIds.add(d.id);
-      if (list.length >= 6) break;
     }
 
-    // 2. If fewer than 4 contenders, supplement with popular authentic Turkish recipes
-    const popularTitles = [
-      'Karnıyarık',
-      'Kayseri Mantısı',
-      'Bursa İskender Kebabı',
-      'Süzme Kırmızı Mercimek Çorbası',
-      'Gaziantep Baklavası',
-      'Hünkar Beğendi'
-    ];
-
-    for (const popTitle of popularTitles) {
-      if (list.length >= 4) break;
-      const found = (dishes || []).find(
-        (d) => !addedIds.has(d.id) && d.title.toLowerCase().includes(popTitle.toLowerCase())
-      );
-      if (found) {
-        list.push({
-          id: found.id,
-          name: found.title,
-          matchScore: found.matchScore || 90,
-          selected: true,
-          dishRef: found,
-          image: found.image,
-          partners: [myName, partnerName]
-        });
-        addedIds.add(found.id);
-      }
-    }
-
-    // 3. Fallback: take first available dishes if still < 4
-    for (const d of dishes || []) {
-      if (list.length >= 4) break;
-      if (!addedIds.has(d.id)) {
-        list.push({
-          id: d.id,
-          name: d.title,
-          matchScore: d.matchScore || 85,
-          selected: true,
-          dishRef: d,
-          image: d.image,
-          partners: [myName, partnerName]
-        });
-        addedIds.add(d.id);
-      }
-    }
-
+    // Return only genuine contenders (empty if none yet)
     return list;
   };
 
@@ -136,6 +92,23 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
   const [showAddModal, setShowAddModal] = useState(false);
   const [newDishName, setNewDishName] = useState('');
   const [warningMessage, setWarningMessage] = useState<string | null>(null);
+
+  // Helper to fill 4 random authentic dishes if user wants immediate roll
+  const handleFillRandomContenders = () => {
+    sound.playSuccess();
+    const shuffled = [...(dishes || [])].sort(() => 0.5 - Math.random());
+    const pickedDishes = shuffled.slice(0, 4);
+    const newItems: ContenderItem[] = pickedDishes.map((d) => ({
+      id: d.id,
+      name: d.title,
+      matchScore: d.matchScore || 90,
+      selected: true,
+      dishRef: d,
+      image: d.image,
+      partners: [myName, partnerName]
+    }));
+    setContenders(newItems);
+  };
 
   // If initial dish provided and not present, select or prepend it
   useEffect(() => {
@@ -346,142 +319,184 @@ export const DiceScreen: React.FC<DiceScreenProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Main 3D Decision Dice Card */}
-      <div className="w-full max-w-[340px] mx-auto bg-[#2B6777] rounded-3xl p-4 text-white shadow-xl relative overflow-hidden flex flex-col items-center my-1 border-2 border-[#377A8C]">
-        {/* Glow corners */}
-        <div className="absolute top-2 left-2 w-8 h-8 rounded-tl-2xl border-t-2 border-l-2 border-emerald-300/40 pointer-events-none" />
-        <div className="absolute top-2 right-2 w-8 h-8 rounded-tr-2xl border-t-2 border-r-2 border-emerald-300/40 pointer-events-none" />
-
-        <div className="text-center mb-1 z-10">
-          <h2 className="text-lg font-black tracking-wider text-[#F2A900] uppercase font-['Outfit',sans-serif]">
-            {t.decisionDice}
-          </h2>
-          <p className="text-[11px] text-stone-200 font-medium">
-            {t.rollToSettle}
-          </p>
-        </div>
-
-        {/* 3D Dice Component */}
-        <div className="my-2 py-1 z-10 cursor-pointer" onClick={!isRolling ? handleRoll : undefined}>
-          <ThreeDDice
-            size={84}
-            isRolling={isRolling}
-            targetFace={diceFace}
-            showTrails={true}
-          />
-        </div>
-
-        {/* TAP TO ROLL BUTTON */}
-        <button
-          onClick={handleRoll}
-          disabled={isRolling}
-          className="mt-1 w-full max-w-[210px] py-2.5 px-5 rounded-2xl bg-[#E05A3D] hover:bg-[#cf4e33] active:scale-95 text-white font-extrabold text-xs shadow-lg shadow-black/25 transition-all flex items-center justify-center gap-2 cursor-pointer z-10 disabled:opacity-75 uppercase tracking-wide"
-        >
-          <span>{isRolling ? t.rolling : t.tapToRoll}</span>
-          <span>🎲</span>
-        </button>
-      </div>
-
-      {/* TONIGHT'S CONTENDERS LIST */}
-      <div className="w-full max-w-[340px] mx-auto flex-1 mt-2.5 flex flex-col">
-        <div className="flex items-center justify-between pb-1.5 px-1">
-          <h3 className="text-sm font-extrabold text-[#2B6777] tracking-tight uppercase font-['Outfit',sans-serif]">
-            {t.tonightContenders}
+      {/* WHEN CONTENDERS POOL IS EMPTY: GAME INTRO & INTUITION CARD */}
+      {contenders.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-4 my-auto">
+          <div className="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mb-3 shadow-md">
+            🎲
+          </div>
+          <h3 className="text-lg font-black text-[#2B6777] font-['Outfit',sans-serif] mb-1">
+            {lang === 'tr' ? 'Ne Yiyeceğinizi Bilemiyor musunuz?' : 'Can’t Settle Dinner?'}
           </h3>
-          <span className="text-[11px] font-semibold text-stone-500">
-            {contenders.filter(c => c.selected).length} {t.inPool}
-          </span>
-        </div>
+          <p className="text-xs text-stone-500 max-w-[280px] mb-5 leading-relaxed">
+            {lang === 'tr'
+              ? 'Keşfet sekmesinde beğendiğiniz lezzetler bu akşamın karar zarında yarışır. Eğer henüz adayınız yoksa hemen 4 lezzet çekip zarı sallayabilirsiniz!'
+              : 'Dishes you like in the Swipes deck appear here. Pick 4 random dishes or explore the deck to roll!'}
+          </p>
 
-        {/* Contender Rows */}
-        <div className="space-y-1.5 max-h-[220px] overflow-y-auto no-scrollbar pr-0.5">
-          {contenders.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => handleToggleSelect(item.id)}
-              className={`flex items-center justify-between p-2 rounded-2xl border transition-all cursor-pointer ${
-                item.selected
-                  ? 'bg-white border-[#2B6777]/30 shadow-xs'
-                  : 'bg-white/50 border-stone-200 opacity-60'
-              }`}
+          <div className="flex flex-col w-full max-w-[260px] gap-2.5">
+            <button
+              onClick={handleFillRandomContenders}
+              className="w-full py-3 rounded-2xl bg-[#E05A3D] text-white font-extrabold text-xs shadow-lg hover:bg-[#cf4e33] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
             >
-              {/* Checkbox and Food preview */}
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div
-                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    item.selected
-                      ? 'border-[#2B6777] bg-[#2B6777] text-white'
-                      : 'border-stone-300 bg-white'
-                  }`}
-                >
-                  {item.selected && <Check className="w-3 h-3 stroke-[3]" />}
-                </div>
+              <span>🎲</span>
+              <span>{lang === 'tr' ? 'Şansına 4 Aday Getir & Zar At' : 'Pick 4 Random & Roll Dice'}</span>
+            </button>
 
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-9 h-9 rounded-xl object-cover shrink-0"
-                />
-
-                <div className="truncate">
-                  <h4 className="font-bold text-xs text-[#1A3B44] truncate">
-                    {item.name}
-                  </h4>
-                  {item.dishRef && (
-                    <span className="text-[10px] text-stone-400">
-                      ⏱️ {item.dishRef.prepTime}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Match tag & avatars */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <div className="flex -space-x-1.5 items-center">
-                  {(item.partners.includes(myName) || item.partners.length >= 1) && (
-                    <img
-                      src={user.avatarUrl}
-                      alt={myName}
-                      className="w-5 h-5 rounded-full object-cover border border-white"
-                      title={myName}
-                    />
-                  )}
-                  {(item.partners.includes(partnerName) || item.partners.length >= 2) && (
-                    <img
-                      src={user.partner.avatarUrl}
-                      alt={partnerName}
-                      className="w-5 h-5 rounded-full object-cover border border-white"
-                      title={partnerName}
-                    />
-                  )}
-                </div>
-
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    item.matchScore >= 90
-                      ? 'bg-[#2B6777] text-white'
-                      : 'bg-stone-100 text-stone-600'
-                  }`}
-                >
-                  %{item.matchScore}
-                </span>
-              </div>
-            </div>
-          ))}
-
-          {/* Add Contender Button */}
-          <button
-            onClick={() => {
-              sound.playTap();
-              setShowAddModal(true);
-            }}
-            className="w-full py-2 px-3 rounded-2xl border-2 border-dashed border-[#2B6777]/40 text-[#2B6777] hover:bg-[#2B6777]/5 transition-all text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>{t.addContender}</span>
-          </button>
+            {onNavigateToSwipes && (
+              <button
+                onClick={() => {
+                  sound.playTap();
+                  onNavigateToSwipes();
+                }}
+                className="w-full py-2.5 rounded-2xl border-2 border-[#2B6777] text-[#2B6777] font-bold text-xs hover:bg-[#2B6777]/5 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>🍽️</span>
+                <span>{lang === 'tr' ? 'Yemekleri Keşfet' : 'Explore Dishes'}</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Main 3D Decision Dice Card */}
+          <div className="w-full max-w-[340px] mx-auto bg-[#2B6777] rounded-3xl p-4 text-white shadow-xl relative overflow-hidden flex flex-col items-center my-1 border-2 border-[#377A8C]">
+            {/* Glow corners */}
+            <div className="absolute top-2 left-2 w-8 h-8 rounded-tl-2xl border-t-2 border-l-2 border-emerald-300/40 pointer-events-none" />
+            <div className="absolute top-2 right-2 w-8 h-8 rounded-tr-2xl border-t-2 border-r-2 border-emerald-300/40 pointer-events-none" />
+
+            <div className="text-center mb-1 z-10">
+              <h2 className="text-lg font-black tracking-wider text-[#F2A900] uppercase font-['Outfit',sans-serif]">
+                {t.decisionDice}
+              </h2>
+              <p className="text-[11px] text-stone-200 font-medium">
+                {t.rollToSettle}
+              </p>
+            </div>
+
+            {/* 3D Dice Component */}
+            <div className="my-2 py-1 z-10 cursor-pointer" onClick={!isRolling ? handleRoll : undefined}>
+              <ThreeDDice
+                size={84}
+                isRolling={isRolling}
+                targetFace={diceFace}
+                showTrails={true}
+              />
+            </div>
+
+            {/* TAP TO ROLL BUTTON */}
+            <button
+              onClick={handleRoll}
+              disabled={isRolling}
+              className="mt-1 w-full max-w-[210px] py-2.5 px-5 rounded-2xl bg-[#E05A3D] hover:bg-[#cf4e33] active:scale-95 text-white font-extrabold text-xs shadow-lg shadow-black/25 transition-all flex items-center justify-center gap-2 cursor-pointer z-10 disabled:opacity-75 uppercase tracking-wide"
+            >
+              <span>{isRolling ? t.rolling : t.tapToRoll}</span>
+              <span>🎲</span>
+            </button>
+          </div>
+
+          {/* TONIGHT'S CONTENDERS LIST */}
+          <div className="w-full max-w-[340px] mx-auto flex-1 mt-2.5 flex flex-col">
+            <div className="flex items-center justify-between pb-1.5 px-1">
+              <h3 className="text-sm font-extrabold text-[#2B6777] tracking-tight uppercase font-['Outfit',sans-serif]">
+                {t.tonightContenders}
+              </h3>
+              <span className="text-[11px] font-semibold text-stone-500">
+                {contenders.filter(c => c.selected).length} {t.inPool}
+              </span>
+            </div>
+
+            {/* Contender Rows */}
+            <div className="space-y-1.5 max-h-[220px] overflow-y-auto no-scrollbar pr-0.5">
+              {contenders.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => handleToggleSelect(item.id)}
+                  className={`flex items-center justify-between p-2 rounded-2xl border transition-all cursor-pointer ${
+                    item.selected
+                      ? 'bg-white border-[#2B6777]/30 shadow-xs'
+                      : 'bg-white/50 border-stone-200 opacity-60'
+                  }`}
+                >
+                  {/* Checkbox and Food preview */}
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                        item.selected
+                          ? 'border-[#2B6777] bg-[#2B6777] text-white'
+                          : 'border-stone-300 bg-white'
+                      }`}
+                    >
+                      {item.selected && <Check className="w-3 h-3 stroke-[3]" />}
+                    </div>
+
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-9 h-9 rounded-xl object-cover shrink-0"
+                    />
+
+                    <div className="truncate">
+                      <h4 className="font-bold text-xs text-[#1A3B44] truncate">
+                        {item.name}
+                      </h4>
+                      {item.dishRef && (
+                        <span className="text-[10px] text-stone-400">
+                          ⏱️ {item.dishRef.prepTime}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Match tag & avatars */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex -space-x-1.5 items-center">
+                      {(item.partners.includes(myName) || item.partners.length >= 1) && (
+                        <img
+                          src={user.avatarUrl}
+                          alt={myName}
+                          className="w-5 h-5 rounded-full object-cover border border-white"
+                          title={myName}
+                        />
+                      )}
+                      {(item.partners.includes(partnerName) || item.partners.length >= 2) && (
+                        <img
+                          src={user.partner.avatarUrl}
+                          alt={partnerName}
+                          className="w-5 h-5 rounded-full object-cover border border-white"
+                          title={partnerName}
+                        />
+                      )}
+                    </div>
+
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        item.matchScore >= 90
+                          ? 'bg-[#2B6777] text-white'
+                          : 'bg-stone-100 text-stone-600'
+                      }`}
+                    >
+                      %{item.matchScore}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Add Contender Button */}
+              <button
+                onClick={() => {
+                  sound.playTap();
+                  setShowAddModal(true);
+                }}
+                className="w-full py-2 px-3 rounded-2xl border-2 border-dashed border-[#2B6777]/40 text-[#2B6777] hover:bg-[#2B6777]/5 transition-all text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{t.addContender}</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Winner Modal Announcement */}
       <AnimatePresence>
