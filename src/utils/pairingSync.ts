@@ -22,7 +22,11 @@ export interface SyncPayload<T = unknown> {
     | 'ADVENTURE_SELECT'
     | 'COOK_START'
     | 'COOK_FINISH'
-    | 'SEND_HEARTS';
+    | 'SEND_HEARTS'
+    | 'KITCHEN_PHOTO'
+    | 'SEND_REACTION'
+    | 'FEAST_COMPLETED'
+    | 'MEAL_STATE_UPDATE';
   pairCode: string;
   sender: string;
   sessionId?: string;

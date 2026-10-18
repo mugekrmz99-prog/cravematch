@@ -61,15 +61,8 @@
           "type": "timer_alert"
         }
       ],
-      "swipes": {
-        "dish-1": {
-          "Müge": true,
-          "Cihat": true
-        }
-      },
-      "matches": [
-        "dish-1"
-      ],
+      "swipes": {},
+      "matches": [],
       "cart": [
         {
           "id": "g-1",
@@ -548,6 +541,62 @@
       "messages": [
         {
           "id": "msg-1792279729734",
+          "sender": "usr-1",
+          "author": "Deniz",
+          "text": "Bu akşam ne yiyoruz? 🍕",
+          "timestamp": "19:30"
+        }
+      ],
+      "swipes": {
+        "dish-1": {
+          "Deniz": true,
+          "Baran": true
+        }
+      },
+      "matches": [
+        "dish-1"
+      ],
+      "cart": [
+        {
+          "id": "item-1",
+          "name": "Domates",
+          "amount": 500,
+          "unit": "g",
+          "checked": false
+        },
+        {
+          "id": "item-2",
+          "name": "Fettuccine",
+          "amount": 1,
+          "unit": "paket",
+          "checked": true
+        }
+      ],
+      "diceWinner": null
+    },
+    "CRAVE-TEST-2647": {
+      "pairCode": "CRAVE-TEST-2647",
+      "hostName": "Deniz",
+      "createdAt": 1792281880076,
+      "users": {
+        "Deniz": {
+          "id": "usr-1",
+          "name": "Deniz",
+          "title": "Gurme Şef",
+          "level": 1,
+          "matchesCount": 0,
+          "badgesCount": 0,
+          "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+          "allergies": [
+            "Glüten"
+          ],
+          "isSurveyCompleted": true,
+          "joinedAt": 1792281880114
+        }
+      },
+      "messages": [
+        {
+          "id": "msg-1792281880121",
           "sender": "usr-1",
           "author": "Deniz",
           "text": "Bu akşam ne yiyoruz? 🍕",

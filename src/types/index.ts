@@ -142,9 +142,23 @@ export interface ChatMessage {
   text: string;
   timestamp: string;
   author?: string;
-  type?: 'text' | 'action_prompt' | 'dice_alert' | 'cart_alert' | 'timer_alert';
+  type?: 'text' | 'action_prompt' | 'dice_alert' | 'cart_alert' | 'timer_alert' | 'photo';
   photoUrl?: string;
   heartsCount?: number;
+  rosesCount?: number;
+}
+
+export interface TodaysMealState {
+  dish: Dish | null;
+  adventure: DailyAdventure | null;
+  isCooking: boolean;
+  cookingStartedAt: number | null;
+  cookingSecondsLeft: number;
+  kitchenPhotoUrl: string | null;
+  partnerHearts: number;
+  partnerRoses: number;
+  isFeastCompleted: boolean;
+  lastPhotoAuthor?: string;
 }
 
 export interface UserProfile {

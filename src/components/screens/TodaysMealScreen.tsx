@@ -24,7 +24,8 @@ import {
   UserProfile,
   Language,
   DailyAdventure,
-  FeastHistoryItem
+  FeastHistoryItem,
+  TodaysMealState
 } from '../../types';
 import { CraveLogo } from '../CraveLogo';
 import { sound } from '../../utils/sound';
@@ -36,8 +37,13 @@ interface TodaysMealScreenProps {
   dish: Dish | null;
   groceries: GroceryItem[];
   adventure?: DailyAdventure;
+  mealState: TodaysMealState;
   lang?: Language;
   onUpdateGroceries: (groceries: GroceryItem[]) => void;
+  onUpdateMealState: (updater: Partial<TodaysMealState>) => void;
+  onStartCooking: () => void;
+  onPhotoUploadedAndSharedToChat: (photoUrl: string) => void;
+  onSendHeartReaction: () => void;
   onNavigateToDice: () => void;
   onNavigateToSwipes: () => void;
   onCompleteFeast: (item: FeastHistoryItem) => void;
@@ -48,8 +54,13 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
   dish,
   groceries,
   adventure,
+  mealState,
   lang = 'tr',
   onUpdateGroceries,
+  onUpdateMealState,
+  onStartCooking,
+  onPhotoUploadedAndSharedToChat,
+  onSendHeartReaction,
   onNavigateToDice,
   onNavigateToSwipes,
   onCompleteFeast
@@ -61,15 +72,16 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
   const portions = adventure?.portions || dish?.basePortions || 2;
   const isRomantic = portions <= 2;
 
-  // Cooking state
-  const [isCooking, setIsCooking] = useState<boolean>(false);
-  const [cookingSecondsLeft, setCookingSecondsLeft] = useState<number>(() => {
-    return (dish?.prepTimeMinutes || 30) * 60;
-  });
-  const [kitchenPhotoUrl, setKitchenPhotoUrl] = useState<string | null>(null);
-  const [partnerHearts, setPartnerHearts] = useState<number>(0);
+  // Fully Synchronized & Persistent Cooking State from App props
+  const isCooking = mealState.isCooking;
+  const cookingSecondsLeft = mealState.cookingSecondsLeft;
+  const kitchenPhotoUrl = mealState.kitchenPhotoUrl;
+  const partnerHearts = mealState.partnerHearts;
+  const partnerRoses = mealState.partnerRoses;
+  const isFeastCompleted = mealState.isFeastCompleted;
+
+  // Local celebration modal trigger
   const [showCandleCelebration, setShowCandleCelebration] = useState<boolean>(false);
-  const [isFeastCompleted, setIsFeastCompleted] = useState<boolean>(false);
 
   // Grocery progress
   const totalItems = groceries.length;
@@ -100,46 +112,17 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
     let interval: any = null;
     if (isCooking && cookingSecondsLeft > 0) {
       interval = setInterval(() => {
-        setCookingSecondsLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setIsCooking(false);
-            triggerCelebration();
-            return 0;
-          }
-          return prev - 1;
-        });
+        const next = Math.max(0, cookingSecondsLeft - 1);
+        onUpdateMealState({ cookingSecondsLeft: next });
+        if (next <= 0) {
+          clearInterval(interval);
+          onUpdateMealState({ isCooking: false });
+          triggerCelebration();
+        }
       }, 1000);
     }
     return () => clearInterval(interval);
   }, [isCooking, cookingSecondsLeft]);
-
-  // Real-time synchronization for cooking, photo, and hearts
-  useEffect(() => {
-    const unsub = pairingSync.subscribe((payload) => {
-      if (payload.type === 'COOK_START') {
-        setIsCooking(true);
-        sound.playSuccess();
-      } else if (payload.type === 'COOK_FINISH') {
-        const data = payload.data as any;
-        if (data?.photoUrl) setKitchenPhotoUrl(data.photoUrl);
-        triggerCelebration();
-      } else if (payload.type === 'SEND_HEARTS') {
-        sound.playSuccess();
-        setPartnerHearts((prev) => prev + 1);
-        try {
-          confetti({
-            particleCount: 40,
-            spread: 60,
-            origin: { y: 0.6 },
-            colors: ['#E05A3D', '#F2A900', '#FF4D6D']
-          });
-        } catch {}
-      }
-    });
-
-    return unsub;
-  }, []);
 
   const triggerCelebration = () => {
     setShowCandleCelebration(true);
@@ -156,8 +139,7 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
 
   const handleStartCooking = () => {
     sound.playTap();
-    setIsCooking(true);
-    pairingSync.broadcast('COOK_START', myName, { startedAt: Date.now() });
+    onStartCooking();
   };
 
   const handleToggleGrocery = (id: string) => {
@@ -170,16 +152,7 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
 
   const handleSendHeartReaction = () => {
     sound.playTap();
-    setPartnerHearts((prev) => prev + 1);
-    pairingSync.broadcast('SEND_HEARTS', myName, { count: 1 });
-    try {
-      confetti({
-        particleCount: 30,
-        spread: 50,
-        origin: { y: 0.7 },
-        colors: ['#FF4D6D', '#E05A3D']
-      });
-    } catch {}
+    onSendHeartReaction();
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -188,8 +161,7 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         const url = reader.result as string;
-        setKitchenPhotoUrl(url);
-        pairingSync.broadcast('COOK_FINISH', myName, { photoUrl: url });
+        onPhotoUploadedAndSharedToChat(url);
         triggerCelebration();
       };
       reader.readAsDataURL(file);
@@ -198,7 +170,7 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
 
   const handleFinishCelebration = () => {
     setShowCandleCelebration(false);
-    setIsFeastCompleted(true);
+    onUpdateMealState({ isFeastCompleted: true });
     if (dish) {
       const feastItem: FeastHistoryItem = {
         id: `feast-${Date.now()}`,
@@ -211,11 +183,12 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
         dishTitle: dish.title,
         dishImage: dish.image,
         photoUrl: kitchenPhotoUrl || dish.image,
-        hearts: partnerHearts || 5,
+        hearts: (partnerHearts || 0) + (partnerRoses || 0) + 5,
         adventureType: adventure?.type || 'romantic_couple',
         portions
       };
       onCompleteFeast(feastItem);
+      pairingSync.broadcast('FEAST_COMPLETED', myName, feastItem);
     }
   };
 
@@ -476,6 +449,21 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
                   </label>
                 </div>
               )}
+
+              {/* Photo preview if taken */}
+              {kitchenPhotoUrl && (
+                <div className="mt-2 relative rounded-2xl overflow-hidden border-2 border-emerald-400 shadow-md">
+                  <img
+                    src={kitchenPhotoUrl}
+                    alt="Mutfaktan fotoğraf"
+                    className="w-full max-h-48 object-cover"
+                  />
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                    <span>📸</span>
+                    <span>{lang === 'tr' ? 'Mutfaktan Canlı Fotoğraf' : 'Live from Kitchen'}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -483,14 +471,15 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
           <div className="w-full max-w-[340px] mx-auto bg-white/90 rounded-2xl p-2.5 shadow-xs border border-stone-200 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-xs font-bold text-[#1A3B44] truncate">
               <span>❤️ {lang === 'tr' ? 'Partner Sevgisi:' : 'Partner Love:'}</span>
-              <span className="font-mono text-[#E05A3D] font-extrabold">
-                {partnerHearts} {lang === 'tr' ? 'Kalp' : 'Hearts'}
+              <span className="font-mono text-[#E05A3D] font-extrabold flex items-center gap-1.5">
+                <span>{partnerHearts} ❤️</span>
+                {Number(partnerRoses || 0) > 0 && <span>{partnerRoses} 🌹</span>}
               </span>
             </div>
 
             <button
               onClick={handleSendHeartReaction}
-              className="py-1.5 px-3 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-95 transition-all text-xs font-extrabold flex items-center gap-1.5 cursor-pointer border border-rose-200"
+              className="py-1.5 px-3 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-95 transition-all text-xs font-extrabold flex items-center gap-1.5 cursor-pointer border border-rose-200 shadow-2xs"
             >
               <Heart className="w-3.5 h-3.5 fill-rose-500" />
               <span>{lang === 'tr' ? 'Kalp Gönder' : 'Send Love'}</span>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'motion/react';
 import { RotateCcw, X, Heart, Star, Bell, ChefHat, Sparkles, Flame, Clock, Lock, Unlock, Settings as SettingsIcon, Filter, ShieldAlert } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Dish, UserProfile, Language } from '../../types';
@@ -35,7 +35,7 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   onSwipe
 }) => {
   const t = translations[lang];
-  const [deck, setDeck] = useState<Dish[]>(dishes);
+  const [swipedDishIds, setSwipedDishIds] = useState<Set<string>>(() => new Set());
   const [history, setHistory] = useState<Dish[]>([]);
   const [matchModalDish, setMatchModalDish] = useState<Dish | null>(null);
   const [biteCardId, setBiteCardId] = useState<string | null>(null);
@@ -49,14 +49,14 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  // Category filter synchronizer
-  useEffect(() => {
-    setDeck(dishes);
-    setHistory([]);
-  }, [dishes, activeCategory]);
+  // Active deck based on unswiped dishes in the filtered list
+  const activeDeck = useMemo(() => {
+    return dishes.filter((d) => !swipedDishIds.has(d.id));
+  }, [dishes, swipedDishIds]);
 
-  // Current top dish
-  const currentDish = deck.length > 0 ? deck[0] : null;
+  // Current top dish and next card in stack
+  const currentDish = activeDeck.length > 0 ? activeDeck[0] : null;
+  const nextDish = activeDeck.length > 1 ? activeDeck[1] : null;
 
   // Motion drag values
   const x = useMotionValue(0);
@@ -102,20 +102,20 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
   const handleSwipe = (direction: 'like' | 'pass' | 'super') => {
     if (!currentDish || isSwipingActive) return;
     const dishToSwipe = currentDish;
+    setIsSwipingActive(true);
 
     if (direction === 'like' || direction === 'super') {
-      setIsSwipingActive(true);
-      // 1. Play realistic crunch bite sound ("Hırt chomp!")
+      // 1. Play crunch bite sound and show bite marks
       sound.playCrunchBite();
       setBiteCardId(dishToSwipe.id);
+      animate(x, 420, { duration: 0.32, ease: 'easeOut' });
 
       // Check mutual match (partner also liked this dish)
       const isMutual = Boolean(dishToSwipe.partnerLiked);
 
-      // 2. Keep the bitten card visible for 380ms with the teeth scalloped mark and flying crumbs
       setTimeout(() => {
         setHistory((prev) => [dishToSwipe, ...prev]);
-        setDeck((prev) => prev.slice(1));
+        setSwipedDishIds((prev) => new Set(prev).add(dishToSwipe.id));
         x.set(0);
         setBiteCardId(null);
         setIsSwipingActive(false);
@@ -127,16 +127,21 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
         if (isMutual) {
           triggerMatchCelebration(dishToSwipe);
         }
-      }, 380);
+      }, 340);
     } else {
+      animate(x, -420, { duration: 0.28, ease: 'easeOut' });
       sound.playSwipe('pass');
-      setHistory((prev) => [dishToSwipe, ...prev]);
-      setDeck((prev) => prev.slice(1));
-      x.set(0);
 
-      if (onSwipe) {
-        onSwipe(dishToSwipe, 'pass');
-      }
+      setTimeout(() => {
+        setHistory((prev) => [dishToSwipe, ...prev]);
+        setSwipedDishIds((prev) => new Set(prev).add(dishToSwipe.id));
+        x.set(0);
+        setIsSwipingActive(false);
+
+        if (onSwipe) {
+          onSwipe(dishToSwipe, 'pass');
+        }
+      }, 290);
     }
   };
 
@@ -145,12 +150,16 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
     sound.playTap();
     const last = history[0];
     setHistory((prev) => prev.slice(1));
-    setDeck((prev) => [last, ...prev]);
+    setSwipedDishIds((prev) => {
+      const next = new Set(prev);
+      next.delete(last.id);
+      return next;
+    });
   };
 
   const resetDeck = () => {
     sound.playTap();
-    setDeck(dishes);
+    setSwipedDishIds(new Set());
     setHistory([]);
   };
 
@@ -347,35 +356,36 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
         {currentDish ? (
           <div className="relative w-full max-w-[340px] h-[390px]">
             {/* Background stack shadow card */}
-            {deck.length > 1 && (
+            {nextDish && (
               <div className="absolute inset-0 top-3 scale-[0.95] rounded-3xl overflow-hidden shadow-md bg-stone-300 opacity-60 pointer-events-none">
                 <img
-                  src={deck[1].image}
-                  alt={deck[1].title}
-                  className="w-full h-full object-cover filter blur-[1px]"
+                  src={nextDish.image}
+                  alt={nextDish.title}
+                  className="w-full h-full object-cover filter blur-[1px] pointer-events-none select-none"
+                  draggable={false}
                 />
               </div>
             )}
 
             {/* Top Swiping Card - Touch-friendly & smooth */}
             <motion.div
+              key={currentDish.id}
               style={{ x, rotate }}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.8}
+              dragElastic={0.7}
+              dragSnapToOrigin={true}
               onDragEnd={(_, info) => {
                 const offsetX = info.offset.x;
                 const velocityX = info.velocity.x;
-                if (offsetX > 70 || velocityX > 250) {
+                if (offsetX > 60 || velocityX > 200) {
                   handleSwipe('like');
-                } else if (offsetX < -70 || velocityX < -250) {
+                } else if (offsetX < -60 || velocityX < -200) {
                   handleSwipe('pass');
-                } else {
-                  x.set(0);
                 }
               }}
               whileTap={{ cursor: 'grabbing' }}
-              className={`absolute inset-0 rounded-3xl overflow-hidden shadow-2xl bg-black cursor-grab select-none touch-none border-2 border-white/60 transition-transform ${
+              className={`absolute inset-0 rounded-3xl overflow-hidden shadow-2xl bg-black cursor-grab select-none touch-none border-2 border-white/60 ${
                 biteCardId === currentDish.id ? 'scale-98' : ''
               }`}
             >
@@ -383,7 +393,7 @@ export const SwipesScreen: React.FC<SwipesScreenProps> = ({
               <img
                 src={currentDish.image}
                 alt={currentDish.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover pointer-events-none select-none"
                 draggable={false}
               />
 

@@ -22,7 +22,8 @@ interface ChatScreenProps {
   messages: ChatMessage[];
   lang?: Language;
   onSendMessage: (msg: ChatMessage) => void;
-  onNavigateToTab?: (tab: 'dice' | 'cart' | 'swipes' | 'recipe' | 'profile') => void;
+  onSendReaction?: (type: 'heart' | 'rose', messageId?: string) => void;
+  onNavigateToTab?: (tab: 'dice' | 'todaysMeal' | 'swipes' | 'recipe' | 'profile' | 'cart') => void;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
@@ -30,6 +31,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   messages,
   lang = 'tr',
   onSendMessage,
+  onSendReaction,
   onNavigateToTab
 }) => {
   const t = translations[lang];
@@ -286,6 +288,66 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                 <p className="text-xs font-medium leading-relaxed">{msg.text}</p>
 
+                {/* Rich Kitchen Photo Preview */}
+                {msg.photoUrl && (
+                  <div className="relative my-2 rounded-xl overflow-hidden border border-white/20 shadow-md group">
+                    <img
+                      src={msg.photoUrl}
+                      alt="Mutfak fotoğrafı"
+                      onClick={() => {
+                        sound.playSuccess();
+                        if (onSendReaction) onSendReaction('heart', msg.id);
+                      }}
+                      className="w-full max-h-56 object-cover cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform select-none"
+                    />
+                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-white text-[9px] font-bold flex items-center gap-1 pointer-events-none">
+                      <span>📸</span>
+                      <span>{lang === 'tr' ? 'Mutfaktan Canlı' : 'Live from Kitchen'}</span>
+                    </div>
+
+                    <div className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full bg-white/95 text-[#E05A3D] text-[9px] font-black shadow-xs pointer-events-none animate-pulse">
+                      {lang === 'tr' ? 'Dokun & Kalp Gönder ❤️' : 'Tap to send love ❤️'}
+                    </div>
+                  </div>
+                )}
+
+                {/* Reaction buttons for photo message */}
+                {msg.photoUrl && (
+                  <div className="flex items-center gap-2 pt-1 pb-1">
+                    <button
+                      onClick={() => {
+                        sound.playSuccess();
+                        if (onSendReaction) onSendReaction('heart', msg.id);
+                      }}
+                      className="flex-1 py-1 px-2 rounded-xl bg-white/25 hover:bg-white/40 active:scale-95 text-white font-black text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-white/30 shadow-2xs"
+                    >
+                      <span className="text-sm">❤️</span>
+                      <span>{lang === 'tr' ? 'Kalp' : 'Heart'}</span>
+                      {Number(msg.heartsCount || 0) > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+                          {msg.heartsCount}
+                        </span>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        sound.playSuccess();
+                        if (onSendReaction) onSendReaction('rose', msg.id);
+                      }}
+                      className="flex-1 py-1 px-2 rounded-xl bg-white/25 hover:bg-white/40 active:scale-95 text-white font-black text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-white/30 shadow-2xs"
+                    >
+                      <span className="text-sm">🌹</span>
+                      <span>{lang === 'tr' ? 'Gül' : 'Rose'}</span>
+                      {Number(msg.rosesCount || 0) > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[10px] font-bold">
+                          {msg.rosesCount}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                )}
+
                 {msg.type === 'dice_alert' && onNavigateToTab && (
                   <button
                     onClick={() => onNavigateToTab('dice')}
@@ -298,10 +360,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                 {msg.type === 'cart_alert' && onNavigateToTab && (
                   <button
-                    onClick={() => onNavigateToTab('cart')}
+                    onClick={() => onNavigateToTab('todaysMeal')}
                     className="mt-2 w-full py-1.5 px-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-[10px] font-black flex items-center justify-center gap-1 cursor-pointer transition-colors"
                   >
-                    <span>{lang === 'tr' ? 'Sepeti Görüntüle' : 'View Cart'}</span>
+                    <span>{lang === 'tr' ? 'Bugün Ne Yiyeceğiz?' : "Today's Meal"}</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 )}

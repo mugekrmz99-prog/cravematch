@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ScreenTab, Dish, GroceryItem, TasteDuel, UserProfile, Language, ChatMessage, DailyAdventure, FeastHistoryItem } from './types';
+import { ScreenTab, Dish, GroceryItem, TasteDuel, UserProfile, Language, ChatMessage, DailyAdventure, FeastHistoryItem, TodaysMealState } from './types';
 import {
   INITIAL_USER,
   INITIAL_DISHES,
@@ -122,6 +122,30 @@ export default function App() {
 
   // Dish passed into dice roll
   const [diceContenderDish, setDiceContenderDish] = useState<Dish | null>(null);
+
+  // Fully synchronized & persistent meal state for "Bugün Ne Yiyeceğiz?"
+  const [todaysMealState, setTodaysMealState] = useState<TodaysMealState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cravematch_todays_meal_v3');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') return parsed;
+        } catch {}
+      }
+    }
+    return {
+      dish: null,
+      adventure: null,
+      isCooking: false,
+      cookingStartedAt: null,
+      cookingSecondsLeft: 25 * 60,
+      kitchenPhotoUrl: null,
+      partnerHearts: 0,
+      partnerRoses: 0,
+      isFeastCompleted: false
+    };
+  });
 
   // Daily Dining Adventure modal state (romantic, family, feast)
   const [isAdventureModalOpen, setIsAdventureModalOpen] = useState<boolean>(() => {
@@ -424,15 +448,91 @@ export default function App() {
           setDishes((prev) =>
             prev.map((d) => (d.id === matchData.dishId ? { ...d, partnerLiked: true } : d))
           );
-          if (matchData.dish) {
-            setSelectedRecipeDish(matchData.dish);
-          }
         }
         sound.playSuccess();
         try {
           confetti({ particleCount: 100, spread: 90, origin: { y: 0.5 } });
         } catch {
           // ignore
+        }
+      } else if (payload.type === 'COOK_START') {
+        const cData = payload.data as any;
+        setTodaysMealState((prev) => ({
+          ...prev,
+          isCooking: true,
+          cookingStartedAt: cData?.startedAt || Date.now()
+        }));
+        sound.playSuccess();
+      } else if (payload.type === 'KITCHEN_PHOTO') {
+        const photoData = payload.data as any;
+        if (photoData?.photoUrl) {
+          setTodaysMealState((prev) => ({
+            ...prev,
+            kitchenPhotoUrl: photoData.photoUrl,
+            lastPhotoAuthor: payload.sender
+          }));
+          sound.playSuccess();
+        }
+      } else if (payload.type === 'SEND_REACTION' || payload.type === 'SEND_HEARTS') {
+        const rData = payload.data as any;
+        const reactionType = rData?.reactionType || 'heart';
+        const msgId = rData?.messageId;
+
+        if (reactionType === 'heart') {
+          setTodaysMealState((prev) => ({
+            ...prev,
+            partnerHearts: (prev.partnerHearts || 0) + 1
+          }));
+        } else {
+          setTodaysMealState((prev) => ({
+            ...prev,
+            partnerRoses: (prev.partnerRoses || 0) + 1
+          }));
+        }
+
+        if (msgId) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === msgId
+                ? {
+                    ...m,
+                    heartsCount: reactionType === 'heart' ? (m.heartsCount || 0) + 1 : m.heartsCount,
+                    rosesCount: reactionType === 'rose' ? (m.rosesCount || 0) + 1 : m.rosesCount
+                  }
+                : m
+            )
+          );
+        }
+
+        sound.playSuccess();
+        try {
+          confetti({
+            particleCount: 50,
+            spread: 75,
+            origin: { y: 0.5 },
+            colors: reactionType === 'heart' ? ['#FF4D6D', '#E05A3D'] : ['#E63946', '#D62828']
+          });
+        } catch {}
+      } else if (payload.type === 'FEAST_COMPLETED') {
+        const feast = payload.data as any;
+        setTodaysMealState((prev) => ({
+          ...prev,
+          isFeastCompleted: true
+        }));
+        if (feast && feast.dishTitle) {
+          setUser((prev) => ({
+            ...prev,
+            feastHistory: [feast, ...(prev.feastHistory || [])]
+          }));
+        }
+        sound.playSuccess();
+      } else if (payload.type === 'MEAL_STATE_UPDATE') {
+        const updatedState = payload.data as TodaysMealState;
+        if (updatedState) {
+          setTodaysMealState((prev) => ({
+            ...prev,
+            ...updatedState
+          }));
         }
       } else if (payload.type === 'PROFILE_UPDATE') {
         const profile = payload.data as any;
@@ -603,6 +703,99 @@ export default function App() {
     };
     setMessages((prev) => [...prev, outboundMsg]);
     pairingSync.broadcast('CHAT_MESSAGE', user.name || 'User', outboundMsg);
+  };
+
+  // Update meal state helper
+  const handleUpdateMealState = (updater: Partial<TodaysMealState>) => {
+    setTodaysMealState((prev) => {
+      const next = { ...prev, ...updater };
+      pairingSync.broadcast('MEAL_STATE_UPDATE', user.name || 'User', next);
+      return next;
+    });
+  };
+
+  // Start cooking handler with broadcast
+  const handleStartCooking = () => {
+    setTodaysMealState((prev) => ({
+      ...prev,
+      isCooking: true,
+      cookingStartedAt: Date.now()
+    }));
+    pairingSync.broadcast('COOK_START', user.name || 'User', { startedAt: Date.now() });
+    sound.playSuccess();
+  };
+
+  // Photo upload and automatic chat sharing
+  const handlePhotoUploadAndShareToChat = (photoUrl: string) => {
+    setTodaysMealState((prev) => ({
+      ...prev,
+      kitchenPhotoUrl: photoUrl,
+      lastPhotoAuthor: user.name
+    }));
+
+    pairingSync.broadcast('KITCHEN_PHOTO', user.name || 'User', {
+      photoUrl,
+      author: user.name
+    });
+
+    const photoMsg: ChatMessage = {
+      id: `photo-msg-${Date.now()}`,
+      sender: 'me',
+      author: user.name || (lang === 'tr' ? 'Ben' : 'Me'),
+      text: lang === 'tr' ? '📸 Mutfaktan ilk kare! Yemeğimizi hazırlıyoruz 👩‍🍳' : '📸 Fresh from the kitchen! Cooking our meal 👩‍🍳',
+      timestamp: new Date().toLocaleTimeString(lang === 'tr' ? 'tr-TR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+      type: 'photo',
+      photoUrl,
+      heartsCount: 0,
+      rosesCount: 0
+    };
+    handleSendMessage(photoMsg);
+    sound.playSuccess();
+  };
+
+  // Love / Rose reaction handler
+  const handleSendReaction = (type: 'heart' | 'rose', messageId?: string) => {
+    sound.playSuccess();
+    if (type === 'heart') {
+      setTodaysMealState((prev) => ({
+        ...prev,
+        partnerHearts: (prev.partnerHearts || 0) + 1
+      }));
+    } else {
+      setTodaysMealState((prev) => ({
+        ...prev,
+        partnerRoses: (prev.partnerRoses || 0) + 1
+      }));
+    }
+
+    if (messageId) {
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id === messageId) {
+            return {
+              ...m,
+              heartsCount: type === 'heart' ? (m.heartsCount || 0) + 1 : m.heartsCount,
+              rosesCount: type === 'rose' ? (m.rosesCount || 0) + 1 : m.rosesCount
+            };
+          }
+          return m;
+        })
+      );
+    }
+
+    pairingSync.broadcast('SEND_REACTION', user.name || 'User', {
+      reactionType: type,
+      messageId
+    });
+
+    try {
+      confetti({
+        particleCount: 50,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: type === 'heart' ? ['#FF4D6D', '#E05A3D', '#FF758F'] : ['#E63946', '#D62828', '#007f5f']
+      });
+    } catch {}
   };
 
   // Pair with PIN / Code handler (universal code join for any couple)
@@ -778,10 +971,13 @@ export default function App() {
                   initialSelectedDish={diceContenderDish}
                   onCookRecipe={(dish) => {
                     setSelectedRecipeDish(dish);
+                    setTodaysMealState((prev) => ({ ...prev, dish }));
                     handleAddIngredientsToGrocery(dish, user.todayAdventure?.portions || 2);
                     setCurrentTab('todaysMeal');
                   }}
                   onAddToCart={(dish) => {
+                    setSelectedRecipeDish(dish);
+                    setTodaysMealState((prev) => ({ ...prev, dish }));
                     handleAddIngredientsToGrocery(dish, user.todayAdventure?.portions || 2);
                     setCurrentTab('todaysMeal');
                   }}
@@ -800,11 +996,16 @@ export default function App() {
               >
                 <TodaysMealScreen
                   user={user}
-                  dish={selectedRecipeDish}
+                  dish={selectedRecipeDish || todaysMealState.dish}
                   groceries={groceries}
-                  adventure={user.todayAdventure}
+                  adventure={user.todayAdventure || todaysMealState.adventure || undefined}
+                  mealState={todaysMealState}
                   lang={lang}
                   onUpdateGroceries={handleUpdateGroceries}
+                  onUpdateMealState={handleUpdateMealState}
+                  onStartCooking={handleStartCooking}
+                  onPhotoUploadedAndSharedToChat={handlePhotoUploadAndShareToChat}
+                  onSendHeartReaction={() => handleSendReaction('heart')}
                   onNavigateToDice={() => setCurrentTab('dice')}
                   onNavigateToSwipes={() => setCurrentTab('swipes')}
                   onCompleteFeast={(item) => {
@@ -830,7 +1031,8 @@ export default function App() {
                   messages={messages}
                   lang={lang}
                   onSendMessage={handleSendMessage}
-                  onNavigateToTab={(tab) => setCurrentTab(tab)}
+                  onSendReaction={handleSendReaction}
+                  onNavigateToTab={(tab) => setCurrentTab(tab as ScreenTab)}
                 />
               </motion.div>
             )}
