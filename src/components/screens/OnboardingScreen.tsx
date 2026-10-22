@@ -26,7 +26,7 @@ import { pairingSync } from '../../utils/pairingSync';
 interface OnboardingScreenProps {
   lang: Language;
   onSelectLang: (lang: Language) => void;
-  onStart: () => void;
+  onStart: (name?: string) => void;
   onSignIn: () => void;
   onPairWithCode?: (code: string, myName: string, partnerName: string) => void;
 }
@@ -42,7 +42,18 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   const [showPairModal, setShowPairModal] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
   const [inputCode, setInputCode] = useState('CRAVE-9821');
-  const [inputName, setInputName] = useState('');
+  const [inputName, setInputName] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedUserStr = localStorage.getItem('cravematch_user');
+      if (savedUserStr) {
+        try {
+          const parsed = JSON.parse(savedUserStr);
+          if (parsed?.name) return parsed.name;
+        } catch {}
+      }
+    }
+    return '';
+  });
   const [copiedLink, setCopiedLink] = useState(false);
   const [preferWifi, setPreferWifi] = useState(false);
 
@@ -58,7 +69,8 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
 
   const handleStart = () => {
     sound.playTap();
-    onStart();
+    const cleanName = inputName.trim();
+    onStart(cleanName);
   };
 
   const handleJoinWithCode = () => {
@@ -216,6 +228,26 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="w-full space-y-2"
         >
+          {/* User Name Input Card */}
+          <div className="w-full text-left space-y-1 bg-white/90 p-2.5 rounded-2xl border border-stone-200/90 shadow-2xs">
+            <label className="text-[11px] font-black text-[#1A3B44] flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#E05A3D]">👤</span>
+                <span>{lang === 'tr' ? 'Adınız / Takma Adınız' : lang === 'de' ? 'Dein Name' : 'Your Name'}</span>
+              </span>
+              <span className="text-[10px] text-stone-400 font-bold">
+                {lang === 'tr' ? 'Zorunlu' : 'Required'}
+              </span>
+            </label>
+            <input
+              type="text"
+              value={inputName}
+              onChange={(e) => setInputName(e.target.value)}
+              placeholder={lang === 'tr' ? 'Örn: Can, Deniz, Cihat, Müge...' : 'e.g. Alex, Sam...'}
+              className="w-full px-3 py-2 text-xs font-bold rounded-xl border border-stone-300 bg-stone-50 text-[#1A3B44] focus:bg-white focus:outline-none focus:border-[#2B6777] focus:ring-1 focus:ring-[#2B6777]/30 transition-all"
+            />
+          </div>
+
           {/* Main Primary CTA */}
           <button
             type="button"

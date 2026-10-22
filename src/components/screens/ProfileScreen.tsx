@@ -20,6 +20,7 @@ import { CraveLogo } from '../CraveLogo';
 import { sound } from '../../utils/sound';
 import { translations } from '../../utils/i18n';
 import { pairingSync } from '../../utils/pairingSync';
+import { compressImage } from '../../utils/imageCompressor';
 
 interface ProfileScreenProps {
   user: UserProfile;
@@ -56,24 +57,24 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const myFavoriteDishes = dishes.filter((d) => d.userLiked);
 
   // Handle avatar photo change directly from device
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const url = reader.result as string;
+      try {
+        const compressedUrl = await compressImage(file, 400, 0.7);
         sound.playSuccess();
         const updated: UserProfile = {
           ...user,
-          avatarUrl: url
+          avatarUrl: compressedUrl
         };
         onUpdateUser(updated);
         pairingSync.broadcast('PROFILE_UPDATE', user.name, {
           name: user.name,
-          avatarUrl: url
+          avatarUrl: compressedUrl
         });
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error('Avatar error:', err);
+      }
     }
   };
 

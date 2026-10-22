@@ -114,7 +114,18 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [groceries, setGroceries] = useState<GroceryItem[]>(INITIAL_GROCERY_ITEMS);
   const [duels, setDuels] = useState<TasteDuel[]>(INITIAL_TASTE_DUELS);
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT_MESSAGES);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cravematch_chat_messages_v2');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch {}
+      }
+    }
+    return INITIAL_CHAT_MESSAGES;
+  });
   const [unreadChatCount, setUnreadChatCount] = useState<number>(1);
 
   // Selected dish for today's meal (null initially until matched or rolled)
@@ -471,6 +482,21 @@ export default function App() {
             kitchenPhotoUrl: photoData.photoUrl,
             lastPhotoAuthor: payload.sender
           }));
+          const incomingPhotoMsg: ChatMessage = {
+            id: `photo-msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            sender: 'partner',
+            author: payload.sender || user.partner.name || (lang === 'tr' ? 'Partner' : 'Partner'),
+            text: lang === 'tr' ? '📸 Mutfaktan ilk kare! Yemeğimizi hazırlıyoruz 👩‍🍳' : '📸 Fresh from the kitchen! Cooking our meal 👩‍🍳',
+            timestamp: new Date().toLocaleTimeString(lang === 'tr' ? 'tr-TR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+            type: 'photo',
+            photoUrl: photoData.photoUrl,
+            heartsCount: 0,
+            rosesCount: 0
+          };
+          setMessages((prev) => {
+            if (prev.some((m) => m.photoUrl === photoData.photoUrl)) return prev;
+            return [...prev, incomingPhotoMsg];
+          });
           sound.playSuccess();
         }
       } else if (payload.type === 'SEND_REACTION' || payload.type === 'SEND_HEARTS') {
@@ -536,12 +562,15 @@ export default function App() {
         }
       } else if (payload.type === 'PROFILE_UPDATE') {
         const profile = payload.data as any;
-        if (profile && profile.name === user.partner.name) {
+        const senderName = payload.sender || profile?.name;
+        if (senderName && senderName !== user.name) {
           setUser((prev) => ({
             ...prev,
             partner: {
               ...prev.partner,
-              avatarUrl: profile.avatarUrl || prev.partner.avatarUrl
+              name: profile.name || prev.partner.name || senderName,
+              avatarUrl: profile.avatarUrl || prev.partner.avatarUrl,
+              isConnected: true
             }
           }));
         }
@@ -554,11 +583,17 @@ export default function App() {
   // Save changes to localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('cravematch_lang', lang);
-      localStorage.setItem('cravematch_user', JSON.stringify(user));
-      localStorage.setItem('cravematch_dishes_v4', JSON.stringify(dishes));
+      try {
+        localStorage.setItem('cravematch_lang', lang);
+        localStorage.setItem('cravematch_user', JSON.stringify(user));
+        localStorage.setItem('cravematch_dishes_v4', JSON.stringify(dishes));
+        localStorage.setItem('cravematch_todays_meal_v3', JSON.stringify(todaysMealState));
+        localStorage.setItem('cravematch_chat_messages_v2', JSON.stringify(messages));
+      } catch (err) {
+        console.warn('Could not persist state to localStorage', err);
+      }
     }
-  }, [lang, user, dishes]);
+  }, [lang, user, dishes, todaysMealState, messages]);
 
   // Robust Allergen & Category Filter
   // When user has allergies or dislikes selected, dishes containing matching allergens or ingredients are genuinely HIDDEN!
@@ -639,10 +674,6 @@ export default function App() {
         dishTitle: dish.title,
         dish
       });
-      sound.playSuccess();
-      try {
-        confetti({ particleCount: 100, spread: 90, origin: { y: 0.5 } });
-      } catch {}
     }
   };
 
@@ -902,7 +933,14 @@ export default function App() {
                 <OnboardingScreen
                   lang={lang}
                   onSelectLang={setLang}
-                  onStart={() => setCurrentTab('survey')}
+                  onStart={(enteredName) => {
+                    const cleanName = enteredName?.trim() || user.name;
+                    if (cleanName) {
+                      setUser((prev) => ({ ...prev, name: cleanName }));
+                      pairingSync.setActiveUser(cleanName);
+                    }
+                    setCurrentTab('survey');
+                  }}
                   onSignIn={() => {
                     if (user.isSurveyCompleted) {
                       setCurrentTab('swipes');

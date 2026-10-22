@@ -4,24 +4,17 @@ import { QRCodeSVG } from 'qrcode.react';
 import {
   X,
   Globe,
-  PlusCircle,
-  FileSpreadsheet,
-  Download,
-  Upload,
   RotateCcw,
   Sparkles,
   Share2,
-  Check,
   AlertTriangle,
   KeyRound,
-  CheckCircle2,
-  Folder
+  CheckCircle2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Language, UserProfile, Dish } from '../types';
 import { translations } from '../utils/i18n';
 import { sound } from '../utils/sound';
-import { CsvDatabaseManager } from './CsvDatabaseManager';
 import { getPublicPairingUrl } from '../utils/pairingUrl';
 import { pairingSync } from '../utils/pairingSync';
 
@@ -31,9 +24,9 @@ interface SettingsModalProps {
   lang: Language;
   onSelectLang: (lang: Language) => void;
   user: UserProfile;
-  dishes: Dish[];
-  onAddCustomDish: (dish: Dish) => void;
-  onImportDishesFromCSV: (dishes: Dish[]) => void;
+  dishes?: Dish[];
+  onAddCustomDish?: (dish: Dish) => void;
+  onImportDishesFromCSV?: (dishes: Dish[]) => void;
   onResetAllData: () => void;
 }
 
@@ -43,66 +36,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   lang,
   onSelectLang,
   user,
-  dishes,
-  onAddCustomDish,
-  onImportDishesFromCSV,
   onResetAllData
 }) => {
   const t = translations[lang];
-  const [activeTab, setActiveTab] = useState<'general' | 'addDish' | 'sheets' | 'qr'>('sheets');
+  const [activeTab, setActiveTab] = useState<'qr' | 'general'>('qr');
   const [showResetConfirmDialog, setShowResetConfirmDialog] = useState(false);
   const [partnerConnectedInModal, setPartnerConnectedInModal] = useState(user.partner.isConnected);
-
-  // Custom Dish Form
-  const [dishTitle, setDishTitle] = useState('');
-  const [dishSubtitle, setDishSubtitle] = useState('');
-  const [dishPrepTime, setDishPrepTime] = useState('25 dk');
-  const [dishCategory, setDishCategory] = useState('Vegetarian');
-  const [dishImage, setDishImage] = useState('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80');
-  const [dishIngredientsText, setDishIngredientsText] = useState('200g Domates, 100g Peynir, 1 demet Fesleğen');
-  const [dishAddedNotification, setDishAddedNotification] = useState(false);
-
-  const handleCreateDish = () => {
-    if (!dishTitle.trim()) return;
-    sound.playSuccess();
-
-    const ingredients = dishIngredientsText.split(',').map((item) => ({
-      name: item.trim(),
-      amount: 100,
-      unit: 'g',
-      category: 'Pantry'
-    }));
-
-    const newDish: Dish = {
-      id: `custom-${Date.now()}`,
-      title: dishTitle.trim(),
-      subtitle: dishSubtitle.trim() || 'Özel mutfak tarifi',
-      description: dishSubtitle.trim() || 'Ev yapımı nefis lezzet.',
-      image: dishImage,
-      prepTime: dishPrepTime,
-      prepTimeMinutes: 25,
-      difficulty: 'Easy',
-      rating: 5.0,
-      reviewCount: 1,
-      tags: [dishCategory, 'Custom Recipe'],
-      allergens: [],
-      basePortions: 2,
-      matchScore: 100,
-      partnerLiked: true,
-      isCustom: true,
-      ingredients: ingredients.length > 0 ? ingredients : [{ name: 'Temel Malzeme', amount: 1, unit: 'adet' }],
-      steps: [
-        { id: 1, title: 'Malzemeleri Hazırla', description: 'Tüm malzemeleri yıkayıp doğrayın.', chef: 'chef1', chefName: user.name, durationMins: 5 },
-        { id: 2, title: 'Pişir ve Servis Et', description: 'Birlikte tavada pişirip taze servis yapın.', chef: 'chef2', chefName: user.partner.name, durationMins: 15 }
-      ]
-    };
-
-    onAddCustomDish(newDish);
-    setDishAddedNotification(true);
-    setTimeout(() => setDishAddedNotification(false), 2500);
-    setDishTitle('');
-    setDishSubtitle('');
-  };
 
   const pairCode = user.partner.pairCode || 'CRAVE-9821';
   const inviteUrl = getPublicPairingUrl(pairCode, user.name);
@@ -168,69 +107,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        {/* Sub-navigation tabs */}
+        {/* Sub-navigation tabs: QR & General ONLY */}
         <div className="flex items-center bg-stone-100/90 border-b border-stone-200 p-1 text-[11px] font-bold">
-          <button
-            onClick={() => {
-              sound.playTap();
-              setActiveTab('sheets');
-            }}
-            className={`flex-1 py-1.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 ${
-              activeTab === 'sheets' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
-            }`}
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5" />
-            <span>{lang === 'tr' ? 'CSV / Menü' : 'CSV / Menu'}</span>
-          </button>
           <button
             onClick={() => {
               sound.playTap();
               setActiveTab('qr');
             }}
-            className={`flex-1 py-1.5 rounded-xl transition-all cursor-pointer ${
-              activeTab === 'qr' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
+            className={`flex-1 py-2 rounded-xl transition-all cursor-pointer ${
+              activeTab === 'qr' ? 'bg-white text-[#2B6777] shadow-2xs font-black' : 'text-stone-500'
             }`}
           >
-            {lang === 'tr' ? 'QR & Eşleşme' : lang === 'de' ? 'QR & Paarung' : 'QR & Pairing'}
-          </button>
-          <button
-            onClick={() => {
-              sound.playTap();
-              setActiveTab('addDish');
-            }}
-            className={`flex-1 py-1.5 rounded-xl transition-all cursor-pointer ${
-              activeTab === 'addDish' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
-            }`}
-          >
-            {lang === 'tr' ? '+ Tek Yemek' : lang === 'de' ? '+ Einzelgericht' : '+ Single Dish'}
+            {lang === 'tr' ? '📱 QR & Eşleşme' : lang === 'de' ? '📱 QR & Kopplung' : '📱 QR & Pairing'}
           </button>
           <button
             onClick={() => {
               sound.playTap();
               setActiveTab('general');
             }}
-            className={`flex-1 py-1.5 rounded-xl transition-all cursor-pointer ${
-              activeTab === 'general' ? 'bg-white text-[#2B6777] shadow-2xs' : 'text-stone-500'
+            className={`flex-1 py-2 rounded-xl transition-all cursor-pointer ${
+              activeTab === 'general' ? 'bg-white text-[#2B6777] shadow-2xs font-black' : 'text-stone-500'
             }`}
           >
-            {lang === 'tr' ? 'Genel' : lang === 'de' ? 'Allgemein' : 'General'}
+            {lang === 'tr' ? '⚙️ Genel & Dil' : lang === 'de' ? '⚙️ Allgemein' : '⚙️ General & Lang'}
           </button>
         </div>
 
         {/* Tab Content */}
         <div className="p-3.5 overflow-y-auto no-scrollbar space-y-3 flex-1">
-          {/* TAB 1: CSV DATABASE & GOOGLE SHEETS & FOLDER SYSTEM */}
-          {activeTab === 'sheets' && (
-            <CsvDatabaseManager
-              dishes={dishes}
-              lang={lang}
-              onUpdateDishes={(newDishes) => {
-                onImportDishesFromCSV(newDishes);
-              }}
-            />
-          )}
-
-          {/* TAB 2: QR & PAIRING CODE WITH RELIABLE LOCALHOST FIX */}
+          {/* TAB 1: QR & PAIRING CODE */}
           {activeTab === 'qr' && (
             <div className="space-y-3 text-center">
               <div>
@@ -238,7 +143,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   {lang === 'tr' ? 'Partner QR & Eşleşme' : lang === 'de' ? 'Partner QR & Kopplung' : 'Partner QR & Pairing'}
                 </h4>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  {lang === 'tr' ? 'Eşinizle aynı masada bağlanmak için QR veya kodu kullanın' : lang === 'de' ? 'Verwende QR oder Code, um dich zu verbinden' : 'Scan QR or use code to join table'}
+                  {lang === 'tr' ? 'Eşinizle aynı masada bağlanmak için QR veya kodu kullanın' : 'Scan QR or use code to join table'}
                 </p>
               </div>
 
@@ -272,25 +177,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 {partnerConnectedInModal ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold shadow-2xs">
                     <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
-                    <span>{lang === 'tr' ? `${user.partner.name} Bağlandı! ✓` : lang === 'de' ? `${user.partner.name} Verbunden! ✓` : `${user.partner.name} Connected! ✓`}</span>
+                    <span>{lang === 'tr' ? `${user.partner.name || 'Partner'} Bağlandı! ✓` : `${user.partner.name || 'Partner'} Connected! ✓`}</span>
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                    <span>{lang === 'tr' ? 'Bağlantı Bekleniyor' : lang === 'de' ? 'Warten auf Verbindung' : 'Waiting for connection'}</span>
+                    <span>{lang === 'tr' ? 'Bağlantı Bekleniyor' : 'Waiting for connection'}</span>
                   </span>
                 )}
-              </div>
-
-              {/* Explanatory Callout */}
-              <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[10px] text-emerald-950 text-left leading-tight space-y-1">
-                <div className="font-extrabold text-[#2B6777] flex items-center gap-1">
-                  <span>✨</span>
-                  <span>{lang === 'tr' ? 'Canlı Bağlantı Hazır:' : lang === 'de' ? 'Live-Verbindung bereit:' : 'Live Connection Ready:'}</span>
-                </div>
-                <p>
-                  {lang === 'tr' ? 'QR kod doğrudan internet bulut bağlantısını taşır. Eşiniz kamera ile okuttuğunda sayfa anında açılır!' : lang === 'de' ? 'Der QR-Code öffnet die Web-App direkt auf jedem Smartphone.' : 'QR code contains live cloud URL. Open with iPhone or Android camera to connect instantly!'}
-                </p>
               </div>
 
               {/* Actions */}
@@ -323,107 +217,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           )}
 
-          {/* TAB 3: ADD SINGLE CUSTOM DISH (PRO) */}
-          {activeTab === 'addDish' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-extrabold text-[#2B6777] text-sm">
-                  {t.addCustomDish}
-                </h4>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">
-                  Pro
-                </span>
-              </div>
-
-              {dishAddedNotification && (
-                <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5">
-                  <Check className="w-4 h-4 stroke-[3]" />
-                  <span>{lang === 'tr' ? 'Yeni yemek başarıyla menüye eklendi!' : lang === 'de' ? 'Gericht erfolgreich hinzugefügt!' : 'Dish added to menu successfully!'}</span>
-                </div>
-              )}
-
-              <div>
-                <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  {lang === 'tr' ? 'Yemek Adı' : lang === 'de' ? 'Gerichtsname' : 'Dish Title'}
-                </label>
-                <input
-                  type="text"
-                  value={dishTitle}
-                  onChange={(e) => setDishTitle(e.target.value)}
-                  placeholder={lang === 'tr' ? 'Örn: Ev Yapımı Fırın Lazanya...' : 'e.g. Homemade Lasagna...'}
-                  className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  {lang === 'tr' ? 'Kısa Açıklama' : lang === 'de' ? 'Kurzbeschreibung' : 'Short Description'}
-                </label>
-                <input
-                  type="text"
-                  value={dishSubtitle}
-                  onChange={(e) => setDishSubtitle(e.target.value)}
-                  placeholder={lang === 'tr' ? 'Örn: Bolonez sos ve fırınlanmış beşamel...' : 'e.g. Rich Bolognese sauce with bechamel...'}
-                  className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                    {lang === 'tr' ? 'Hazırlık Süresi' : lang === 'de' ? 'Zubereitungszeit' : 'Prep Time'}
-                  </label>
-                  <input
-                    type="text"
-                    value={dishPrepTime}
-                    onChange={(e) => setDishPrepTime(e.target.value)}
-                    placeholder="25 dk"
-                    className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                    {lang === 'tr' ? 'Kategori' : lang === 'de' ? 'Kategorie' : 'Category'}
-                  </label>
-                  <select
-                    value={dishCategory}
-                    onChange={(e) => setDishCategory(e.target.value)}
-                    className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
-                  >
-                    <option value="Italian">{lang === 'tr' ? 'İtalyan' : 'Italian'}</option>
-                    <option value="Vegetarian">{lang === 'tr' ? 'Vejetaryen' : 'Vegetarian'}</option>
-                    <option value="Spicy">{lang === 'tr' ? 'Acı' : 'Spicy'}</option>
-                    <option value="Fast Food">Fast Food</option>
-                    <option value="Healthy">{lang === 'tr' ? 'Sağlıklı' : 'Healthy'}</option>
-                    <option value="Sweet">{lang === 'tr' ? 'Tatlı' : 'Sweet'}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                  {lang === 'tr' ? 'Malzemeler (Virgülle ayırın)' : lang === 'de' ? 'Zutaten (mit Komma trennen)' : 'Ingredients (comma separated)'}
-                </label>
-                <input
-                  type="text"
-                  value={dishIngredientsText}
-                  onChange={(e) => setDishIngredientsText(e.target.value)}
-                  placeholder="250g Kıyma, 400g Lazanya yaprağı, Kaşar"
-                  className="w-full px-3 py-1.5 bg-white rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:border-[#2B6777]"
-                />
-              </div>
-
-              <button
-                onClick={handleCreateDish}
-                className="w-full py-2.5 rounded-xl bg-[#2B6777] text-white font-bold text-xs hover:bg-[#235866] transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>{lang === 'tr' ? 'Yemeği Desteye Ekle' : lang === 'de' ? 'Gericht hinzufügen' : 'Add Dish to Deck'}</span>
-              </button>
-            </div>
-          )}
-
-          {/* TAB 4: GENERAL & LANGUAGE & RESET DATA */}
+          {/* TAB 2: GENERAL & LANGUAGE & RESET DATA */}
           {activeTab === 'general' && (
             <div className="space-y-4">
               {/* Language Selection */}
@@ -461,10 +255,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {/* Reset App Data Danger Zone */}
               <div className="pt-2 border-t border-stone-200">
                 <label className="text-xs font-bold text-rose-700 block mb-1.5">
-                  {lang === 'tr' ? 'Verileri Sıfırlama (Test Modu)' : lang === 'de' ? 'Daten zurücksetzen (Test)' : 'Reset Data (Test Mode)'}
+                  {lang === 'tr' ? 'Verileri Sıfırlama (Test Modu)' : 'Reset Data (Test Mode)'}
                 </label>
                 <p className="text-[11px] text-stone-500 mb-2 leading-tight">
-                  {lang === 'tr' ? 'Tüm eşleşmeleri, seçilen yemekleri ve anket tercihlerini sıfırlayarak baştan test edin.' : lang === 'de' ? 'Setzt alle Einstellungen und Matches zurück.' : 'Reset all matches, selections and survey answers to test from scratch.'}
+                  {lang === 'tr' ? 'Tüm eşleşmeleri, seçilen yemekleri ve anket tercihlerini sıfırlayarak baştan test edin.' : 'Reset all matches, selections and survey answers to test from scratch.'}
                 </p>
 
                 <button
@@ -475,7 +269,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="w-full py-2.5 px-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 font-extrabold text-xs flex items-center justify-center gap-2 hover:bg-rose-100 transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4 text-rose-600" />
-                  <span>{t.resetAllData || (lang === 'tr' ? 'Tüm Uygulamayı Sıfırla' : lang === 'de' ? 'App zurücksetzen' : 'Reset All App Data')}</span>
+                  <span>{t.resetAllData || (lang === 'tr' ? 'Tüm Uygulamayı Sıfırla' : 'Reset All App Data')}</span>
                 </button>
               </div>
             </div>
@@ -498,7 +292,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
                 <div>
                   <h4 className="text-base font-black text-rose-950 font-['Outfit',sans-serif]">
-                    {t.resetConfirmTitle || (lang === 'tr' ? 'Uygulama Sıfırlansın mı?' : lang === 'de' ? 'App zurücksetzen?' : 'Reset Entire Application?')}
+                    {t.resetConfirmTitle || (lang === 'tr' ? 'Uygulama Sıfırlansın mı?' : 'Reset Entire Application?')}
                   </h4>
                   <p className="text-xs text-stone-600 mt-1 leading-snug">
                     {t.resetConfirmDesc || (lang === 'tr' ? 'Tüm anket cevapları, tercihler ve eşleşmeler temizlenip giriş ekranına dönülecektir.' : 'All responses, preferences and pairs will be cleared.')}
@@ -510,7 +304,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onClick={() => setShowResetConfirmDialog(false)}
                     className="flex-1 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs cursor-pointer"
                   >
-                    {t.cancel || (lang === 'tr' ? 'İptal' : lang === 'de' ? 'Abbrechen' : 'Cancel')}
+                    {t.cancel || (lang === 'tr' ? 'İptal' : 'Cancel')}
                   </button>
                   <button
                     onClick={() => {
@@ -521,7 +315,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     }}
                     className="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs cursor-pointer shadow-xs"
                   >
-                    {t.confirmResetBtn || (lang === 'tr' ? 'Evet, Sıfırla' : lang === 'de' ? 'Ja, zurücksetzen' : 'Yes, Reset All')}
+                    {t.confirmResetBtn || (lang === 'tr' ? 'Evet, Sıfırla' : 'Yes, Reset All')}
                   </button>
                 </div>
               </motion.div>

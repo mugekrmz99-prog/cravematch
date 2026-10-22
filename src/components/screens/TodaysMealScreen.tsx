@@ -31,6 +31,7 @@ import { CraveLogo } from '../CraveLogo';
 import { sound } from '../../utils/sound';
 import { translations } from '../../utils/i18n';
 import { pairingSync } from '../../utils/pairingSync';
+import { compressImage } from '../../utils/imageCompressor';
 
 interface TodaysMealScreenProps {
   user: UserProfile;
@@ -155,16 +156,16 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
     onSendHeartReaction();
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const url = reader.result as string;
-        onPhotoUploadedAndSharedToChat(url);
+      try {
+        const compressedUrl = await compressImage(file, 750, 0.65);
+        onPhotoUploadedAndSharedToChat(compressedUrl);
         triggerCelebration();
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error('Kitchen photo upload error:', err);
+      }
     }
   };
 
@@ -413,21 +414,34 @@ export const TodaysMealScreen: React.FC<TodaysMealScreenProps> = ({
             {/* COOK BUTTON (Unlocks when shopping done or can be clicked directly) */}
             <div className="pt-2 border-t border-stone-100 mt-2">
               {!isCooking ? (
-                <button
-                  onClick={handleStartCooking}
-                  className={`w-full py-2.5 rounded-2xl font-extrabold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
-                    isShoppingComplete
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse'
-                      : 'bg-[#2B6777] hover:bg-[#235866] text-white'
-                  }`}
-                >
-                  <ChefHat className="w-4 h-4" />
-                  <span>
-                    {isShoppingComplete
-                      ? lang === 'tr' ? 'Alışveriş Tamamlandı! Yemeği Pişir 👩‍🍳' : 'Shopping Complete! Cook Now 👩‍🍳'
-                      : lang === 'tr' ? 'Yemeği Pişirmeye Başla 👩‍🍳' : 'Start Cooking Recipe 👩‍🍳'}
-                  </span>
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={handleStartCooking}
+                    className={`w-full py-2.5 rounded-2xl font-extrabold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
+                      isShoppingComplete
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse'
+                        : 'bg-[#2B6777] hover:bg-[#235866] text-white'
+                    }`}
+                  >
+                    <ChefHat className="w-4 h-4" />
+                    <span>
+                      {isShoppingComplete
+                        ? lang === 'tr' ? 'Alışveriş Tamamlandı! Yemeği Pişir 👩‍🍳' : 'Shopping Complete! Cook Now 👩‍🍳'
+                        : lang === 'tr' ? 'Yemeği Pişirmeye Başla 👩‍🍳' : 'Start Cooking Recipe 👩‍🍳'}
+                    </span>
+                  </button>
+
+                  <label className="w-full py-2 px-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <Camera className="w-3.5 h-3.5 text-[#E05A3D]" />
+                    <span>{lang === 'tr' ? 'Mutfaktan Fotoğraf Paylaş 📸' : 'Share Kitchen Photo 📸'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+                  </label>
+                </div>
               ) : (
                 <div className="flex items-center justify-between gap-2 p-2 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900">
                   <div className="flex items-center gap-2">
